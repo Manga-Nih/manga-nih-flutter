@@ -98,34 +98,40 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
           children: [
             HeaderProfile(onPressed: _profileAction),
             const SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CapsuleButton(
-                  onPressed: () {
-                    setState(() => _typeManga = TypeManga.popular);
-                  },
-                  label: 'Popular',
-                ),
-                CapsuleButton(
-                  onPressed: () {
-                    setState(() => _typeManga = TypeManga.manhua);
-                  },
-                  label: 'Manhua',
-                ),
-                CapsuleButton(
-                  onPressed: () {
-                    setState(() => _typeManga = TypeManga.manga);
-                  },
-                  label: 'Manga',
-                ),
-                CapsuleButton(
-                  onPressed: () {
-                    setState(() => _typeManga = TypeManga.manhwa);
-                  },
-                  label: 'Manhwa',
-                ),
-              ],
+            Container(
+              height: 30.0,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  CapsuleButton(
+                    onPressed: () {
+                      setState(() => _typeManga = TypeManga.popular);
+                    },
+                    label: 'Popular',
+                  ),
+                  const SizedBox(width: 5.0),
+                  CapsuleButton(
+                    onPressed: () {
+                      setState(() => _typeManga = TypeManga.manhua);
+                    },
+                    label: 'Manhua',
+                  ),
+                  const SizedBox(width: 5.0),
+                  CapsuleButton(
+                    onPressed: () {
+                      setState(() => _typeManga = TypeManga.manga);
+                    },
+                    label: 'Manga',
+                  ),
+                  const SizedBox(width: 5.0),
+                  CapsuleButton(
+                    onPressed: () {
+                      setState(() => _typeManga = TypeManga.manhwa);
+                    },
+                    label: 'Manhwa',
+                  ),
+                ],
+              ),
             ),
           ],
         ),

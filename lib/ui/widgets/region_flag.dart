@@ -14,6 +14,8 @@ class RegionFlag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Stack(
       children: [
         Container(
@@ -36,7 +38,7 @@ class RegionFlag extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  width: 150.0,
+                  width: screenSize.width * 0.25,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.asset(

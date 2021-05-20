@@ -15,6 +15,7 @@ class MangaCard<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     String? thumb, type, typeImage, title, uploadOn;
     String? chapter;
 
@@ -67,8 +68,8 @@ class MangaCard<T> extends StatelessWidget {
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey,
-                                  blurRadius: 7.0,
-                                  offset: Offset(1, 2),
+                                  blurRadius: 5.0,
+                                  offset: Offset(1, 1),
                                 )
                               ],
                             ),
@@ -143,7 +144,7 @@ class MangaCard<T> extends StatelessWidget {
                                 ),
                         ],
                       ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 5.0),
                 isLoading
                     ? Shimmer.fromColors(
                         baseColor: Colors.grey.shade300,
@@ -157,21 +158,26 @@ class MangaCard<T> extends StatelessWidget {
                         ),
                       )
                     : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: 300.0,
+                            width: screenSize.width * 0.5,
                             child: Text(
                               title!,
-                              style: Theme.of(context).textTheme.headline6,
+                              style: Theme.of(context).textTheme.bodyText1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const Spacer(),
-                          Icon(Icons.timer_sharp, size: 20.0),
-                          const SizedBox(width: 5.0),
-                          Text(
-                            uploadOn!,
-                            style: Theme.of(context).textTheme.bodyText2,
+                          // const Spacer(),
+                          Row(
+                            children: [
+                              Icon(Icons.timer_sharp, size: 20.0),
+                              const SizedBox(width: 5.0),
+                              Text(
+                                uploadOn!,
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ),
+                            ],
                           ),
                         ],
                       ),
