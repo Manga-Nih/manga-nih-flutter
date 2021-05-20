@@ -4,9 +4,15 @@ import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
+import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
+  void _profileAction(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final PopularMangaBloc popularMangaBloc =
@@ -44,7 +50,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            HeaderProfile(),
+            HeaderProfile(onPressed: _profileAction),
             const SizedBox(height: 20.0),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
