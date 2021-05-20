@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
@@ -11,6 +12,38 @@ class HomeScreen extends StatelessWidget {
   void _profileAction(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+  }
+
+  void _popularMangaAction(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListMangaScreen(typeManga: TypeManga.popular),
+        ));
+  }
+
+  void _manhuaAction(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListMangaScreen(typeManga: TypeManga.manhua),
+        ));
+  }
+
+  void _mangaAction(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListMangaScreen(typeManga: TypeManga.manga),
+        ));
+  }
+
+  void _manhwaAction(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListMangaScreen(typeManga: TypeManga.manhwa),
+        ));
   }
 
   @override
@@ -45,9 +78,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
+    return SliverPadding(
+      padding: const EdgeInsets.all(10.0),
+      sliver: SliverToBoxAdapter(
         child: Column(
           children: [
             HeaderProfile(onPressed: _profileAction),
@@ -111,12 +144,12 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildPopularManga(
       BuildContext context, PopularMangaBloc popularMangaBloc) {
-    return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -125,45 +158,45 @@ class HomeScreen extends StatelessWidget {
                 ),
                 MaterialButton(
                   child: Icon(Icons.more_horiz),
-                  onPressed: () {},
+                  onPressed: () => _popularMangaAction(context),
                   shape: CircleBorder(),
                   padding: const EdgeInsets.all(10.0),
                 ),
               ],
             ),
-          ),
-          Container(
-            height: 200.0,
-            child: BlocBuilder<PopularMangaBloc, PopularMangaState>(
-              builder: (context, state) {
-                if (state is PopularMangaFetchSuccess) {
+            Container(
+              height: 200.0,
+              child: BlocBuilder<PopularMangaBloc, PopularMangaState>(
+                builder: (context, state) {
+                  if (state is PopularMangaFetchSuccess) {
+                    return ListView.builder(
+                      itemCount: 10,
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        PopularManga popularManga = state.listPopular[index];
+
+                        return MangaItem(
+                          popularManga: popularManga,
+                          isLoading: false,
+                        );
+                      },
+                    );
+                  }
+
                   return ListView.builder(
-                    itemCount: 10,
+                    itemCount: 4,
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      PopularManga popularManga = state.listPopular[index];
-
-                      return MangaItem(
-                        popularManga: popularManga,
-                        isLoading: false,
-                      );
+                      return MangaItem(isLoading: true);
                     },
                   );
-                }
-
-                return ListView.builder(
-                  itemCount: 4,
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return MangaItem(isLoading: true);
-                  },
-                );
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -248,14 +281,17 @@ class HomeScreen extends StatelessWidget {
           RegionFlag(
             pathFlag: 'images/china_flag.png',
             label: 'Manhua',
+            onTap: _manhuaAction,
           ),
           RegionFlag(
             pathFlag: 'images/japan_flag.png',
             label: 'Manga',
+            onTap: _mangaAction,
           ),
           RegionFlag(
             pathFlag: 'images/korea_flag.png',
             label: 'Manhwa',
+            onTap: _manhwaAction,
           ),
         ],
       ),

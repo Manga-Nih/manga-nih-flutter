@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class RegionFlag extends StatelessWidget {
   final String pathFlag;
   final String label;
+  final Function(BuildContext) onTap;
 
   const RegionFlag({
     Key? key,
     required this.pathFlag,
     required this.label,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -58,7 +60,7 @@ class RegionFlag extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(10.0),
-              onTap: () {},
+              onTap: () => onTap(context),
             ),
           ),
         ),
