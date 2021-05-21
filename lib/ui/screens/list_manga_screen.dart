@@ -28,7 +28,6 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   @override
   void initState() {
     super.initState();
-    print('heyaa');
 
     // init bloc
     _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);

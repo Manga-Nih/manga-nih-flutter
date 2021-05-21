@@ -10,11 +10,6 @@ class PopularMangaUninitialized extends PopularMangaState {
   List<Object?> get props => [];
 }
 
-class PopularMangaError extends PopularMangaState {
-  @override
-  List<Object?> get props => [];
-}
-
 class PopularMangaLoading extends PopularMangaState {
   @override
   List<Object?> get props => [];

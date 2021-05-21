@@ -10,11 +10,6 @@ class GenreUninitialized extends GenreState {
   List<Object?> get props => [];
 }
 
-class GenreError extends GenreState {
-  @override
-  List<Object?> get props => [];
-}
-
 class GenreLoading extends GenreState {
   @override
   List<Object?> get props => [];

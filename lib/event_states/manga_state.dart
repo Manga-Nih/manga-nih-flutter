@@ -10,11 +10,6 @@ class MangaUninitialized extends MangaState {
   List<Object?> get props => [];
 }
 
-class MangaError extends MangaState {
-  @override
-  List<Object?> get props => [];
-}
-
 class MangaLoading extends MangaState {
   @override
   List<Object?> get props => [];

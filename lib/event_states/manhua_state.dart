@@ -10,11 +10,6 @@ class ManhuaUninitialized extends ManhuaState {
   List<Object?> get props => [];
 }
 
-class ManhuaError extends ManhuaState {
-  @override
-  List<Object?> get props => [];
-}
-
 class ManhuaLoading extends ManhuaState {
   @override
   List<Object?> get props => [];

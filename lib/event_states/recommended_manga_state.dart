@@ -10,11 +10,6 @@ class RecommendedMangaUninitialized extends RecommendedMangaState {
   List<Object?> get props => [];
 }
 
-class RecommendedMangaError extends RecommendedMangaState {
-  @override
-  List<Object?> get props => [];
-}
-
 class RecommendedMangaLoading extends RecommendedMangaState {
   @override
   List<Object?> get props => [];

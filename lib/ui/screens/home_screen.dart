@@ -64,14 +64,21 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            _buildHeader(context),
-            _buildRecommendedManga(),
-            _buildPopularManga(context, popularMangaBloc),
-            _buildFooter(context, genreBloc),
-          ],
+        child: BlocListener<ErrorBloc, ErrorState>(
+          listener: (context, state) {
+            if (state is ErrorShowing) {
+              showSnackbar(context, state.error.message);
+            }
+          },
+          child: CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              _buildHeader(context),
+              _buildRecommendedManga(),
+              _buildPopularManga(context, popularMangaBloc),
+              _buildFooter(context, genreBloc),
+            ],
+          ),
         ),
       ),
     );
@@ -249,7 +256,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     itemCount: (state is GenreFetchSuccess)
                         ? state.listGenre.length
-                        : 8,
+                        : 9,
                     itemBuilder: (context, index) {
                       if (state is GenreFetchSuccess) {
                         Genre genre = state.listGenre[index];

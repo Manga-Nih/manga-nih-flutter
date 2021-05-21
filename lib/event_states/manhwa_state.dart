@@ -10,11 +10,6 @@ class ManhwaUninitialized extends ManhwaState {
   List<Object?> get props => [];
 }
 
-class ManhwaError extends ManhwaState {
-  @override
-  List<Object?> get props => [];
-}
-
 class ManhwaLoading extends ManhwaState {
   @override
   List<Object?> get props => [];
