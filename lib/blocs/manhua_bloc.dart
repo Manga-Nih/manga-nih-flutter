@@ -9,6 +9,7 @@ import 'package:manga_nih/services/services.dart';
 
 class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
   final ErrorBloc _errorBloc;
+  final List<Manga> _listManhua = [];
 
   ManhuaBloc(this._errorBloc) : super(ManhuaUninitialized());
 
@@ -18,9 +19,18 @@ class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
       try {
         yield ManhuaLoading();
 
-        List<Manga> listManga = await Service.getManga(TypeManga.manhua);
+        int currentPage = event.page;
+        int nextPage = currentPage + 1;
+        List<Manga> listManga =
+            await Service.getManga(TypeManga.manhua, pageNumber: currentPage);
 
-        yield ManhuaFetchSuccess(listManhua: listManga);
+        // append new items
+        _listManhua.addAll(listManga);
+
+        yield ManhuaFetchSuccess(
+          listManhua: _listManhua,
+          nextPage: nextPage,
+        );
       } on SocketException {
         _errorBloc.add(ErrorShow.noConnection());
       } catch (e) {

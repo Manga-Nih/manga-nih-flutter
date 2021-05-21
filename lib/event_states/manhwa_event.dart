@@ -5,6 +5,10 @@ abstract class ManhwaEvent extends Equatable {
 }
 
 class ManhwaFetch extends ManhwaEvent {
+  final int page;
+
+  ManhwaFetch({required this.page});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [page];
 }

@@ -8,6 +8,7 @@ import 'package:manga_nih/services/services.dart';
 
 class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
   final ErrorBloc _errorBloc;
+  final List<PopularManga> _listPopular = [];
 
   PopularMangaBloc(this._errorBloc) : super(PopularMangaUninitialized());
 
@@ -17,9 +18,18 @@ class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
       try {
         yield PopularMangaLoading();
 
-        List<PopularManga> listPopular = await Service.getPopularManga();
+        int currentPage = event.page;
+        int nextPage = currentPage + 1;
+        List<PopularManga> listPopular =
+            await Service.getPopularManga(pageNumber: currentPage);
 
-        yield PopularMangaFetchSuccess(listPopular: listPopular);
+        // append new items
+        _listPopular.addAll(listPopular);
+
+        yield PopularMangaFetchSuccess(
+          listPopular: _listPopular,
+          nextPage: nextPage,
+        );
       } on SocketException {
         _errorBloc.add(ErrorShow.noConnection());
       } catch (e) {

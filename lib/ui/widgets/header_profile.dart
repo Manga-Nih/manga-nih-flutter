@@ -28,13 +28,14 @@ class HeaderProfile extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          MaterialButton(
-            child: Icon(Icons.more_horiz),
+          Container(
+            margin: const EdgeInsets.all(5.0),
             padding: const EdgeInsets.all(10.0),
-            shape: CircleBorder(
-              side: BorderSide(width: 1.0, color: Colors.grey.shade400),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(width: 1.0, color: Colors.grey.shade400),
             ),
-            onPressed: onTap,
+            child: Icon(Icons.more_horiz),
           ),
         ],
       ),

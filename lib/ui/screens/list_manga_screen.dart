@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
@@ -23,11 +25,13 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   late MangaBloc _mangaBloc;
   late ManhwaBloc _manhwaBloc;
   late TypeManga _typeManga;
+  late PagingController<int, PopularManga> _pagingPopularController;
+  late PagingController<int, Manga> _pagingManhuaController;
+  late PagingController<int, Manga> _pagingMangaController;
+  late PagingController<int, Manga> _pagingManhwaController;
 
   @override
   void initState() {
-    super.initState();
-
     // init bloc
     _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);
@@ -35,11 +39,27 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     _mangaBloc = BlocProvider.of<MangaBloc>(context);
     _manhwaBloc = BlocProvider.of<ManhwaBloc>(context);
 
+    // init paging
+    _pagingPopularController = PagingController(firstPageKey: 1);
+    _pagingManhuaController = PagingController(firstPageKey: 1);
+    _pagingMangaController = PagingController(firstPageKey: 1);
+    _pagingManhwaController = PagingController(firstPageKey: 1);
+
     // re-init error to reset state
     _errorBloc.add(ErrorReInitialization());
 
     // type manga
     _typeManga = widget.typeManga;
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingPopularController.dispose();
+    _pagingManhuaController.dispose();
+
+    super.dispose();
   }
 
   void _profileAction() {
@@ -49,79 +69,77 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: BlocListener<ErrorBloc, ErrorState>(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(120.0),
+          child: _buildHeader(),
+        ),
+        body: BlocListener<ErrorBloc, ErrorState>(
           listener: (context, state) {
             if (state is ErrorShowing) {
               showSnackbar(context, state.error.message);
             }
           },
-          child: NestedScrollView(
-            floatHeaderSlivers: true,
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverOverlapAbsorber(
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: _buildHeader(),
-                ),
-              ];
-            },
-            body: _buildListMangaCard(),
-          ),
+          child: _buildListMangaCard(),
         ),
       ),
     );
   }
 
   Widget _buildHeader() {
-    return SliverPadding(
-      padding: const EdgeInsets.all(10.0),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          children: [
-            HeaderProfile(onTap: _profileAction),
-            const SizedBox(height: 20.0),
-            Container(
-              height: 30.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                children: [
-                  CapsuleButton(
-                    onPressed: () {
-                      setState(() => _typeManga = TypeManga.popular);
-                    },
-                    label: 'Popular',
-                  ),
-                  const SizedBox(width: 15.0),
-                  CapsuleButton(
-                    onPressed: () {
-                      setState(() => _typeManga = TypeManga.manhua);
-                    },
-                    label: 'Manhua',
-                  ),
-                  const SizedBox(width: 15.0),
-                  CapsuleButton(
-                    onPressed: () {
-                      setState(() => _typeManga = TypeManga.manga);
-                    },
-                    label: 'Manga',
-                  ),
-                  const SizedBox(width: 15.0),
-                  CapsuleButton(
-                    onPressed: () {
-                      setState(() => _typeManga = TypeManga.manhwa);
-                    },
-                    label: 'Manhwa',
-                  ),
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+            child: HeaderProfile(onTap: _profileAction),
+          ),
+          const SizedBox(height: 20.0),
+          Container(
+            height: 30.0,
+            alignment: Alignment.center,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              children: [
+                CapsuleButton(
+                  onPressed: () {
+                    setState(() => _typeManga = TypeManga.popular);
+                  },
+                  label: 'Popular',
+                  isSelected: _typeManga == TypeManga.popular,
+                ),
+                const SizedBox(width: 15.0),
+                CapsuleButton(
+                  onPressed: () {
+                    setState(() => _typeManga = TypeManga.manhua);
+                  },
+                  label: 'Manhua',
+                  isSelected: _typeManga == TypeManga.manhua,
+                ),
+                const SizedBox(width: 15.0),
+                CapsuleButton(
+                  onPressed: () {
+                    setState(() => _typeManga = TypeManga.manga);
+                  },
+                  label: 'Manga',
+                  isSelected: _typeManga == TypeManga.manga,
+                ),
+                const SizedBox(width: 15.0),
+                CapsuleButton(
+                  onPressed: () {
+                    setState(() => _typeManga = TypeManga.manhwa);
+                  },
+                  label: 'Manhwa',
+                  isSelected: _typeManga == TypeManga.manhwa,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -153,109 +171,166 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   }
 
   Widget _buildPopularManga() {
-    // check if manga already fetch or not
-    if (_typeManga == TypeManga.popular &&
+    // if type manga selected, then trigger paging to add some item
+    // addPageRequestListener
+    if (_typeManga == TypeManga.manhua &&
         !(_popularMangaBloc.state is PopularMangaFetchSuccess)) {
-      _popularMangaBloc.add(PopularMangaFetch());
+      _pagingPopularController.notifyListeners();
     }
 
-    return BlocBuilder<PopularMangaBloc, PopularMangaState>(
-      builder: (context, state) {
-        return ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            if (state is PopularMangaFetchSuccess) {
-              PopularManga popularManga = state.listPopular[index];
+    _pagingPopularController.addPageRequestListener((pageKey) {
+      // to avoid fetch data when building widget although then type of manga not selected
+      if (_typeManga == TypeManga.popular) {
+        _popularMangaBloc.add(PopularMangaFetch(page: pageKey));
+      }
+    });
 
-              return MangaCard<PopularManga>(manga: popularManga);
-            }
-
-            return MangaCard(isLoading: true);
-          },
-          itemCount: (state is PopularMangaFetchSuccess)
-              ? state.listPopular.length
-              : 4,
-        );
+    return BlocListener<PopularMangaBloc, PopularMangaState>(
+      listener: (context, state) {
+        if (state is PopularMangaFetchSuccess) {
+          _pagingPopularController.value = PagingState(
+            nextPageKey: state.nextPage,
+            itemList: state.listPopular,
+          );
+        }
       },
+      child: PagedListView<int, PopularManga>(
+        pagingController: _pagingPopularController,
+        physics: BouncingScrollPhysics(),
+        builderDelegate: PagedChildBuilderDelegate<PopularManga>(
+            itemBuilder: (context, item, index) {
+          PopularManga popularManga = item;
+
+          return MangaCard<PopularManga>(manga: popularManga);
+        }, newPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }, firstPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }),
+      ),
     );
   }
 
   Widget _buildManhua() {
-    // check if manga already fetch or not
+    // if type manga selected, then trigger paging to add some item
+    // addPageRequestListener
     if (_typeManga == TypeManga.manhua &&
         !(_manhuaBloc.state is ManhuaFetchSuccess)) {
-      _manhuaBloc.add(ManhuaFetch());
+      _pagingManhuaController.notifyListeners();
     }
 
-    return BlocBuilder<ManhuaBloc, ManhuaState>(
-      builder: (context, state) {
-        return ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            if (state is ManhuaFetchSuccess) {
-              Manga manga = state.listManhua[index];
+    _pagingManhuaController.addPageRequestListener((pageKey) {
+      // to avoid fetch data when building widget although then type of manga not selected
+      if (_typeManga == TypeManga.manhua) {
+        _manhuaBloc.add(ManhuaFetch(page: pageKey));
+      }
+    });
 
-              return MangaCard<Manga>(manga: manga);
-            }
-
-            return MangaCard(isLoading: true);
-          },
-          itemCount:
-              (state is ManhuaFetchSuccess) ? state.listManhua.length : 4,
-        );
+    return BlocListener<ManhuaBloc, ManhuaState>(
+      listener: (context, state) {
+        if (state is ManhuaFetchSuccess) {
+          _pagingManhuaController.value = PagingState(
+            nextPageKey: state.nextPage,
+            itemList: state.listManhua,
+          );
+        }
       },
+      child: PagedListView<int, Manga>(
+        pagingController: _pagingManhuaController,
+        physics: BouncingScrollPhysics(),
+        builderDelegate: PagedChildBuilderDelegate<Manga>(
+            itemBuilder: (context, item, index) {
+          Manga manga = item;
+
+          return MangaCard<Manga>(manga: manga);
+        }, newPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }, firstPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }),
+      ),
     );
   }
 
   Widget _buildManga() {
-    // check if manga already fetch or not
+    // if type manga selected, then trigger paging to add some item
+    // addPageRequestListener
     if (_typeManga == TypeManga.manga &&
-        !(_mangaBloc.state is MangaFetchSuccess)) {
-      _mangaBloc.add(MangaFetch());
+        !(_manhuaBloc.state is MangaFetchSuccess)) {
+      _pagingMangaController.notifyListeners();
     }
 
-    return BlocBuilder<MangaBloc, MangaState>(
-      builder: (context, state) {
-        return ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            if (state is MangaFetchSuccess) {
-              Manga manga = state.listManga[index];
+    _pagingMangaController.addPageRequestListener((pageKey) {
+      // to avoid fetch data when building widget although then type of manga not selected
+      if (_typeManga == TypeManga.manga) {
+        _mangaBloc.add(MangaFetch(page: pageKey));
+      }
+    });
 
-              return MangaCard<Manga>(manga: manga);
-            }
-
-            return MangaCard(isLoading: true);
-          },
-          itemCount: (state is MangaFetchSuccess) ? state.listManga.length : 4,
-        );
+    return BlocListener<MangaBloc, MangaState>(
+      listener: (context, state) {
+        if (state is MangaFetchSuccess) {
+          _pagingMangaController.value = PagingState(
+            nextPageKey: state.nextPage,
+            itemList: state.listManga,
+          );
+        }
       },
+      child: PagedListView<int, Manga>(
+        pagingController: _pagingMangaController,
+        physics: BouncingScrollPhysics(),
+        builderDelegate: PagedChildBuilderDelegate<Manga>(
+            itemBuilder: (context, item, index) {
+          Manga manga = item;
+
+          return MangaCard<Manga>(manga: manga);
+        }, newPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }, firstPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }),
+      ),
     );
   }
 
   Widget _buildManhwa() {
-    // check if manga already fetch or not
+    // if type manga selected, then trigger paging to add some item
+    // addPageRequestListener
     if (_typeManga == TypeManga.manhwa &&
-        !(_manhwaBloc.state is ManhwaFetchSuccess)) {
-      _manhwaBloc.add(ManhwaFetch());
+        !(_manhuaBloc.state is ManhwaFetchSuccess)) {
+      _pagingManhwaController.notifyListeners();
     }
-    return BlocBuilder<ManhwaBloc, ManhwaState>(
-      builder: (context, state) {
-        return ListView.builder(
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            if (state is ManhwaFetchSuccess) {
-              Manga manga = state.listManhwa[index];
 
-              return MangaCard<Manga>(manga: manga);
-            }
+    _pagingManhwaController.addPageRequestListener((pageKey) {
+      // to avoid fetch data when building widget although then type of manga not selected
+      if (_typeManga == TypeManga.manhwa) {
+        _manhwaBloc.add(ManhwaFetch(page: pageKey));
+      }
+    });
 
-            return MangaCard(isLoading: true);
-          },
-          itemCount:
-              (state is ManhwaFetchSuccess) ? state.listManhwa.length : 4,
-        );
+    return BlocListener<ManhwaBloc, ManhwaState>(
+      listener: (context, state) {
+        if (state is ManhwaFetchSuccess) {
+          _pagingManhwaController.value = PagingState(
+            nextPageKey: state.nextPage,
+            itemList: state.listManhwa,
+          );
+        }
       },
+      child: PagedListView<int, Manga>(
+        pagingController: _pagingManhwaController,
+        physics: BouncingScrollPhysics(),
+        builderDelegate: PagedChildBuilderDelegate<Manga>(
+            itemBuilder: (context, item, index) {
+          Manga manga = item;
+
+          return MangaCard<Manga>(manga: manga);
+        }, newPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }, firstPageProgressIndicatorBuilder: (context) {
+          return MangaCard(isLoading: true);
+        }),
+      ),
     );
   }
 }

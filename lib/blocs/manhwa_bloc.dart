@@ -9,6 +9,7 @@ import 'package:manga_nih/services/services.dart';
 
 class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
   final ErrorBloc _errorBloc;
+  final List<Manga> _listManhwa = [];
 
   ManhwaBloc(this._errorBloc) : super(ManhwaUninitialized());
 
@@ -18,9 +19,15 @@ class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
       try {
         yield ManhwaLoading();
 
-        List<Manga> listManhwa = await Service.getManga(TypeManga.manhwa);
+        int currentPage = event.page;
+        int nextPage = currentPage + 1;
+        List<Manga> listManhwa =
+            await Service.getManga(TypeManga.manhwa, pageNumber: currentPage);
 
-        yield ManhwaFetchSuccess(listManhwa: listManhwa);
+        // append new items
+        _listManhwa.addAll(listManhwa);
+
+        yield ManhwaFetchSuccess(listManhwa: _listManhwa, nextPage: nextPage);
       } on SocketException {
         _errorBloc.add(ErrorShow.noConnection());
       } catch (e) {

@@ -17,9 +17,13 @@ class MangaLoading extends MangaState {
 
 class MangaFetchSuccess extends MangaState {
   final List<Manga> listManga;
+  final int nextPage;
 
-  MangaFetchSuccess({required this.listManga});
+  MangaFetchSuccess({
+    required this.listManga,
+    required this.nextPage,
+  });
 
   @override
-  List<Object?> get props => [listManga];
+  List<Object?> get props => [listManga, nextPage];
 }

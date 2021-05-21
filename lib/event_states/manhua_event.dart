@@ -5,6 +5,10 @@ abstract class ManhuaEvent extends Equatable {
 }
 
 class ManhuaFetch extends ManhuaEvent {
+  final int page;
+
+  ManhuaFetch({required this.page});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [page];
 }

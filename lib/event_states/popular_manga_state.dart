@@ -17,9 +17,10 @@ class PopularMangaLoading extends PopularMangaState {
 
 class PopularMangaFetchSuccess extends PopularMangaState {
   final List<PopularManga> listPopular;
+  final int nextPage;
 
-  PopularMangaFetchSuccess({required this.listPopular});
+  PopularMangaFetchSuccess({required this.listPopular, required this.nextPage});
 
   @override
-  List<Object?> get props => [listPopular];
+  List<Object?> get props => [listPopular, nextPage];
 }

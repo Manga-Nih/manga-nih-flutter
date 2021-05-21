@@ -5,6 +5,10 @@ abstract class PopularMangaEvent extends Equatable {
 }
 
 class PopularMangaFetch extends PopularMangaEvent {
+  final int page;
+
+  PopularMangaFetch({this.page = 1});
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [page];
 }

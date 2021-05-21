@@ -17,9 +17,13 @@ class ManhuaLoading extends ManhuaState {
 
 class ManhuaFetchSuccess extends ManhuaState {
   final List<Manga> listManhua;
+  final int nextPage;
 
-  ManhuaFetchSuccess({required this.listManhua});
+  ManhuaFetchSuccess({
+    required this.listManhua,
+    required this.nextPage,
+  });
 
   @override
-  List<Object?> get props => [listManhua];
+  List<Object?> get props => [listManhua, nextPage];
 }
