@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class HeaderProfile extends StatelessWidget {
-  final Function(BuildContext context) onPressed;
+  final VoidCallback onTap;
 
-  const HeaderProfile({Key? key, required this.onPressed}) : super(key: key);
+  const HeaderProfile({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onPressed(context),
+      onTap: onTap,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -34,7 +34,7 @@ class HeaderProfile extends StatelessWidget {
             shape: CircleBorder(
               side: BorderSide(width: 1.0, color: Colors.grey.shade400),
             ),
-            onPressed: () => onPressed(context),
+            onPressed: onTap,
           ),
         ],
       ),

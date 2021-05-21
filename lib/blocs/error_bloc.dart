@@ -6,6 +6,10 @@ class ErrorBloc extends Bloc<ErrorEvent, ErrorState> {
 
   @override
   Stream<ErrorState> mapEventToState(ErrorEvent event) async* {
+    if (event is ErrorReInitialization) {
+      yield ErrorUninitialized();
+    }
+
     if (event is ErrorShow) {
       yield ErrorShowing(event.error);
     }

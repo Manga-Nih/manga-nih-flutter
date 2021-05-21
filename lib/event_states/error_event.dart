@@ -5,6 +5,11 @@ abstract class ErrorEvent extends Equatable {
   ErrorEvent();
 }
 
+class ErrorReInitialization extends ErrorEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class ErrorShow extends ErrorEvent {
   final ErrorModel error;
 

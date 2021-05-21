@@ -17,12 +17,11 @@ class ListMangaScreen extends StatefulWidget {
 }
 
 class _ListMangaScreenState extends State<ListMangaScreen> {
+  late ErrorBloc _errorBloc;
   late PopularMangaBloc _popularMangaBloc;
   late ManhuaBloc _manhuaBloc;
   late MangaBloc _mangaBloc;
   late ManhwaBloc _manhwaBloc;
-  late List<Map<String, TypeManga>> _listTypeManga;
-  late String _selectedManga;
   late TypeManga _typeManga;
 
   @override
@@ -30,41 +29,22 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     super.initState();
 
     // init bloc
+    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);
     _manhuaBloc = BlocProvider.of<ManhuaBloc>(context);
     _mangaBloc = BlocProvider.of<MangaBloc>(context);
     _manhwaBloc = BlocProvider.of<ManhwaBloc>(context);
 
-    // init list item for pop menu item
-    _listTypeManga = [
-      {'Popular': TypeManga.popular},
-      {'Manga': TypeManga.manga},
-      {'Manhua': TypeManga.manhua},
-      {'Manhwa': TypeManga.manhwa}
-    ];
-
-    // init selected manga
-    _setSelectedManga(widget.typeManga);
+    // re-init error to reset state
+    _errorBloc.add(ErrorReInitialization());
 
     // type manga
     _typeManga = widget.typeManga;
   }
 
-  void _profileAction(BuildContext context) {
+  void _profileAction() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-  }
-
-  void _setSelectedManga(TypeManga typeManga) {
-    _listTypeManga.forEach((element) {
-      if (element.values.first == typeManga) {
-        _selectedManga = element.keys.first;
-      }
-    });
-  }
-
-  void _onSelectedItem(TypeManga typeManga) {
-    setState(() => _setSelectedManga(typeManga));
   }
 
   @override
@@ -72,18 +52,25 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverOverlapAbsorber(
-                handle:
-                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                sliver: _buildHeader(),
-              ),
-            ];
+        child: BlocListener<ErrorBloc, ErrorState>(
+          listener: (context, state) {
+            if (state is ErrorShowing) {
+              showSnackbar(context, state.error.message);
+            }
           },
-          body: _buildListMangaCard(),
+          child: NestedScrollView(
+            floatHeaderSlivers: true,
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: _buildHeader(),
+                ),
+              ];
+            },
+            body: _buildListMangaCard(),
+          ),
         ),
       ),
     );
@@ -95,12 +82,13 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            HeaderProfile(onPressed: _profileAction),
+            HeaderProfile(onTap: _profileAction),
             const SizedBox(height: 20.0),
             Container(
               height: 30.0,
               child: ListView(
                 scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
                 children: [
                   CapsuleButton(
                     onPressed: () {
@@ -108,21 +96,21 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
                     },
                     label: 'Popular',
                   ),
-                  const SizedBox(width: 5.0),
+                  const SizedBox(width: 15.0),
                   CapsuleButton(
                     onPressed: () {
                       setState(() => _typeManga = TypeManga.manhua);
                     },
                     label: 'Manhua',
                   ),
-                  const SizedBox(width: 5.0),
+                  const SizedBox(width: 15.0),
                   CapsuleButton(
                     onPressed: () {
                       setState(() => _typeManga = TypeManga.manga);
                     },
                     label: 'Manga',
                   ),
-                  const SizedBox(width: 5.0),
+                  const SizedBox(width: 15.0),
                   CapsuleButton(
                     onPressed: () {
                       setState(() => _typeManga = TypeManga.manhwa);

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class RegionFlag extends StatelessWidget {
   final String pathFlag;
   final String label;
-  final Function(BuildContext) onTap;
+  final VoidCallback onTap;
 
   const RegionFlag({
     Key? key,
@@ -62,7 +62,7 @@ class RegionFlag extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(10.0),
-              onTap: () => onTap(context),
+              onTap: onTap,
             ),
           ),
         ),

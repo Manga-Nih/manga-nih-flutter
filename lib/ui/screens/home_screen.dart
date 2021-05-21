@@ -8,13 +8,43 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
-class HomeScreen extends StatelessWidget {
-  void _profileAction(BuildContext context) {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late ErrorBloc _errorBloc;
+  late PopularMangaBloc _popularMangaBloc;
+  late RecommendedMangaBloc _recommendedMangaBloc;
+  late GenreBloc _genreBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // init bloc
+    _errorBloc = BlocProvider.of<ErrorBloc>(context);
+    _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);
+    _recommendedMangaBloc = BlocProvider.of<RecommendedMangaBloc>(context);
+    _genreBloc = BlocProvider.of<GenreBloc>(context);
+
+    // re-init error to reset state
+    _errorBloc.add(ErrorReInitialization());
+    // fetch popular manga
+    _popularMangaBloc.add(PopularMangaFetch());
+    // fetch recommended manga
+    _recommendedMangaBloc.add(RecommendedMangaFetch());
+    // fetch genre
+    _genreBloc.add(GenreFetch());
+  }
+
+  void _profileAction() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
-  void _popularMangaAction(BuildContext context) {
+  void _popularMangaAction() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -22,7 +52,7 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  void _manhuaAction(BuildContext context) {
+  void _manhuaAction() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -30,7 +60,7 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  void _mangaAction(BuildContext context) {
+  void _mangaAction() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -38,7 +68,7 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  void _manhwaAction(BuildContext context) {
+  void _manhwaAction() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -48,19 +78,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PopularMangaBloc popularMangaBloc =
-        BlocProvider.of<PopularMangaBloc>(context);
-    final RecommendedMangaBloc recommendedMangaBloc =
-        BlocProvider.of<RecommendedMangaBloc>(context);
-    final GenreBloc genreBloc = BlocProvider.of<GenreBloc>(context);
-
-    // fetch popular manga
-    popularMangaBloc.add(PopularMangaFetch());
-    // fetch recommended manga
-    recommendedMangaBloc.add(RecommendedMangaFetch());
-    // fetch genre
-    genreBloc.add(GenreFetch());
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -73,10 +90,10 @@ class HomeScreen extends StatelessWidget {
           child: CustomScrollView(
             physics: BouncingScrollPhysics(),
             slivers: [
-              _buildHeader(context),
+              _buildHeader(),
               _buildRecommendedManga(),
-              _buildPopularManga(context, popularMangaBloc),
-              _buildFooter(context, genreBloc),
+              _buildPopularManga(),
+              _buildFooter(),
             ],
           ),
         ),
@@ -84,13 +101,13 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader() {
     return SliverPadding(
       padding: const EdgeInsets.all(10.0),
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            HeaderProfile(onPressed: _profileAction),
+            HeaderProfile(onTap: _profileAction),
             const SizedBox(height: 20.0),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -149,8 +166,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPopularManga(
-      BuildContext context, PopularMangaBloc popularMangaBloc) {
+  Widget _buildPopularManga() {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       sliver: SliverToBoxAdapter(
@@ -165,7 +181,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 MaterialButton(
                   child: Icon(Icons.more_horiz),
-                  onPressed: () => _popularMangaAction(context),
+                  onPressed: _popularMangaAction,
                   shape: CircleBorder(),
                   padding: const EdgeInsets.all(10.0),
                 ),
@@ -208,7 +224,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter(BuildContext context, GenreBloc genreBloc) {
+  Widget _buildFooter() {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.only(top: 20.0),
@@ -238,7 +254,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 5.0),
-            _buildRegionFlag(context),
+            _buildRegionFlag(),
             const SizedBox(height: 10.0),
             Container(
               padding:
@@ -275,7 +291,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRegionFlag(BuildContext context) {
+  Widget _buildRegionFlag() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Row(
