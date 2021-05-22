@@ -58,6 +58,8 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   void dispose() {
     _pagingPopularController.dispose();
     _pagingManhuaController.dispose();
+    _pagingMangaController.dispose();
+    _pagingManhwaController.dispose();
 
     super.dispose();
   }
@@ -173,7 +175,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   Widget _buildPopularManga() {
     // if type manga selected, then trigger paging to add some item
     // addPageRequestListener
-    if (_typeManga == TypeManga.manhua &&
+    if (_typeManga == TypeManga.popular &&
         !(_popularMangaBloc.state is PopularMangaFetchSuccess)) {
       _pagingPopularController.notifyListeners();
     }
@@ -256,7 +258,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // if type manga selected, then trigger paging to add some item
     // addPageRequestListener
     if (_typeManga == TypeManga.manga &&
-        !(_manhuaBloc.state is MangaFetchSuccess)) {
+        !(_mangaBloc.state is MangaFetchSuccess)) {
       _pagingMangaController.notifyListeners();
     }
 
@@ -297,7 +299,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // if type manga selected, then trigger paging to add some item
     // addPageRequestListener
     if (_typeManga == TypeManga.manhwa &&
-        !(_manhuaBloc.state is ManhwaFetchSuccess)) {
+        !(_manhwaBloc.state is ManhwaFetchSuccess)) {
       _pagingManhwaController.notifyListeners();
     }
 
