@@ -250,8 +250,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFooter() {
-    return SliverToBoxAdapter(
+    final Size screenSize = MediaQuery.of(context).size;
+
+    return SliverFillRemaining(
       child: Container(
+        height: screenSize.height,
         margin: const EdgeInsets.only(top: 20.0),
         padding: const EdgeInsets.only(top: 10.0),
         decoration: BoxDecoration(
@@ -281,36 +284,37 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 5.0),
             _buildRegionFlag(),
             const SizedBox(height: 10.0),
-            Container(
-              padding:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-              child: BlocBuilder<GenreBloc, GenreState>(
-                builder: (context, state) {
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: (3 / 1),
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0,
-                    ),
-                    itemCount: (state is GenreFetchSuccess)
-                        ? state.listGenre.length
-                        : 9,
-                    itemBuilder: (context, index) {
-                      if (state is GenreFetchSuccess) {
-                        Genre genre = state.listGenre[index];
-                        return GenreButton(
-                          genre: genre,
-                          onPressed: _genreAction,
-                        );
-                      }
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 10.0, bottom: 10.0),
+                child: BlocBuilder<GenreBloc, GenreState>(
+                  builder: (context, state) {
+                    return GridView.builder(
+                      physics: BouncingScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: (3 / 1),
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 10.0,
+                      ),
+                      itemCount: (state is GenreFetchSuccess)
+                          ? state.listGenre.length
+                          : 9,
+                      itemBuilder: (context, index) {
+                        if (state is GenreFetchSuccess) {
+                          Genre genre = state.listGenre[index];
+                          return GenreButton(
+                            genre: genre,
+                            onPressed: _genreAction,
+                          );
+                        }
 
-                      return GenreButton.loading();
-                    },
-                  );
-                },
+                        return GenreButton.loading();
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],

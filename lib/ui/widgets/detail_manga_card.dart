@@ -15,6 +15,8 @@ class DetailMangaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Stack(
@@ -28,8 +30,8 @@ class DetailMangaCard extends StatelessWidget {
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.grey.shade100,
                     child: Container(
-                      width: 200.0,
-                      height: 300.0,
+                      width: screenSize.width * 0.4,
+                      height: screenSize.width * 0.55,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(30.0),
@@ -39,8 +41,8 @@ class DetailMangaCard extends StatelessWidget {
                 : Stack(
                     children: [
                       Container(
-                        width: 200.0,
-                        height: 300.0,
+                        width: screenSize.width * 0.4,
+                        height: screenSize.width * 0.55,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           boxShadow: [
