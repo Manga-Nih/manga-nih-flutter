@@ -210,94 +210,98 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return SliverFillRemaining(
-      child: Container(
-        margin: const EdgeInsets.only(top: 10.0),
-        padding: const EdgeInsets.all(20.0),
-        height: screenSize.height,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.only(top: 10.0),
+          padding: const EdgeInsets.all(20.0),
+          height: screenSize.height,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 5.0,
+                offset: Offset(0, -2),
+              )
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5.0,
-              offset: Offset(0, -2),
-            )
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 50.0,
-              height: 6.0,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(50.0),
+          child: Column(
+            children: [
+              Container(
+                width: 50.0,
+                height: 6.0,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
               ),
-            ),
-            const SizedBox(height: 30.0),
-            Container(
-              width: screenSize.width * 0.7,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7.0),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: MaterialButton(
-                      onPressed: _informationAction,
-                      color: (_section == DetailMangaSection.information)
-                          ? Colors.white
-                          : Colors.grey.shade300,
-                      elevation: (_section == DetailMangaSection.information)
-                          ? 3.0
-                          : 0.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0),
+              const SizedBox(height: 30.0),
+              Container(
+                width: screenSize.width * 0.7,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: MaterialButton(
+                        onPressed: _informationAction,
+                        color: (_section == DetailMangaSection.information)
+                            ? Colors.white
+                            : Colors.grey.shade300,
+                        elevation: (_section == DetailMangaSection.information)
+                            ? 3.0
+                            : 0.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        child: Text('Information'),
                       ),
-                      child: Text('Information'),
                     ),
-                  ),
-                  const SizedBox(width: 10.0),
-                  Expanded(
-                    child: MaterialButton(
-                      onPressed: _chapterAction,
-                      color: (_section == DetailMangaSection.chapter)
-                          ? Colors.white
-                          : Colors.grey.shade300,
-                      elevation:
-                          (_section == DetailMangaSection.chapter) ? 3.0 : 0.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0),
+                    const SizedBox(width: 10.0),
+                    Expanded(
+                      child: MaterialButton(
+                        onPressed: _chapterAction,
+                        color: (_section == DetailMangaSection.chapter)
+                            ? Colors.white
+                            : Colors.grey.shade300,
+                        elevation: (_section == DetailMangaSection.chapter)
+                            ? 3.0
+                            : 0.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        child: Text('Chapter'),
                       ),
-                      child: Text('Chapter'),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 30.0),
-            Expanded(
-              child: Stack(
-                children: [
-                  Offstage(
-                    offstage: _section != DetailMangaSection.information,
-                    child: _buildInformationSection(state),
-                  ),
-                  Offstage(
-                    offstage: _section != DetailMangaSection.chapter,
-                    child: _buildChapterSection(state),
-                  ),
-                ],
+              const SizedBox(height: 30.0),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Offstage(
+                      offstage: _section != DetailMangaSection.information,
+                      child: _buildInformationSection(state),
+                    ),
+                    Offstage(
+                      offstage: _section != DetailMangaSection.chapter,
+                      child: _buildChapterSection(state),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

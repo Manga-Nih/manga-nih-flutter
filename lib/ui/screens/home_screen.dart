@@ -252,45 +252,46 @@ class _HomeScreenState extends State<HomeScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return SliverFillRemaining(
-      child: Container(
-        height: screenSize.height,
-        margin: const EdgeInsets.only(top: 20.0),
-        padding: const EdgeInsets.only(top: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 10.0,
-              offset: Offset(0, -2),
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: Container(
+          height: screenSize.height,
+          margin: const EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(top: 10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 50.0,
-              height: 6.0,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(50.0),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 10.0,
+                offset: Offset(0, -2),
               ),
-            ),
-            const SizedBox(height: 5.0),
-            _buildRegionFlag(),
-            const SizedBox(height: 10.0),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, bottom: 10.0),
+            ],
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 50.0,
+                height: 6.0,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+              ),
+              const SizedBox(height: 5.0),
+              _buildRegionFlag(),
+              const SizedBox(height: 10.0),
+              Expanded(
                 child: BlocBuilder<GenreBloc, GenreState>(
                   builder: (context, state) {
                     return GridView.builder(
                       physics: BouncingScrollPhysics(),
+                      padding: const EdgeInsets.only(
+                          left: 10.0, right: 10.0, bottom: 10.0),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         childAspectRatio: (3 / 1),
@@ -301,6 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? state.listGenre.length
                           : 9,
                       itemBuilder: (context, index) {
+                        print(index);
                         if (state is GenreFetchSuccess) {
                           Genre genre = state.listGenre[index];
                           return GenreButton(
@@ -315,8 +317,54 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+          // child: ListView(
+          //   shrinkWrap: true,
+          //   // physics: NeverScrollableScrollPhysics(),
+          //   children: [
+          //     Container(
+          //       width: 50.0,
+          //       height: 6.0,
+          //       decoration: BoxDecoration(
+          //         color: Colors.grey.shade400,
+          //         borderRadius: BorderRadius.circular(50.0),
+          //       ),
+          //     ),
+          //     const SizedBox(height: 5.0),
+          //     _buildRegionFlag(),
+          //     const SizedBox(height: 10.0),
+          //     BlocBuilder<GenreBloc, GenreState>(
+          //       builder: (context, state) {
+          //         return GridView.builder(
+          //           physics: BouncingScrollPhysics(),
+          //           padding: const EdgeInsets.only(
+          //               left: 10.0, right: 10.0, bottom: 10.0),
+          //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //             crossAxisCount: 3,
+          //             childAspectRatio: (3 / 1),
+          //             crossAxisSpacing: 10.0,
+          //             mainAxisSpacing: 10.0,
+          //           ),
+          //           itemCount: (state is GenreFetchSuccess)
+          //               ? state.listGenre.length
+          //               : 9,
+          //           itemBuilder: (context, index) {
+          //             if (state is GenreFetchSuccess) {
+          //               Genre genre = state.listGenre[index];
+          //               return GenreButton(
+          //                 genre: genre,
+          //                 onPressed: _genreAction,
+          //               );
+          //             }
+
+          //             return GenreButton.loading();
+          //           },
+          //         );
+          //       },
+          //     ),
+          //   ],
+          // ),
         ),
       ),
     );
