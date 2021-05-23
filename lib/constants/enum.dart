@@ -4,3 +4,5 @@ enum TypeManga {
   manhua,
   manhwa,
 }
+
+enum DetailMangaSection { information, chapter }

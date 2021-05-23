@@ -5,13 +5,18 @@ import 'package:shimmer/shimmer.dart';
 
 class MangaCard<T> extends StatelessWidget {
   final T? manga;
+  final void Function(T)? onTap;
   final bool isLoading;
 
   const MangaCard({
-    Key? key,
-    this.manga,
-    this.isLoading = false,
-  }) : super(key: key);
+    required this.manga,
+    required this.onTap,
+  }) : this.isLoading = false;
+
+  const MangaCard.loading()
+      : this.manga = null,
+        this.onTap = null,
+        this.isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +209,7 @@ class MangaCard<T> extends StatelessWidget {
                   bottomLeft: Radius.circular(10.0),
                   bottomRight: Radius.circular(10.0),
                 ),
-                onTap: () {},
+                onTap: () => onTap!(manga!),
               ),
             ),
           ),

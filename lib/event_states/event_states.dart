@@ -12,5 +12,7 @@ export 'manhwa_event.dart';
 export 'manhwa_state.dart';
 export 'genre_manga_event.dart';
 export 'genre_manga_state.dart';
+export 'detail_manga_event.dart';
+export 'detail_manga_state.dart';
 export 'error_event.dart';
 export 'error_state.dart';

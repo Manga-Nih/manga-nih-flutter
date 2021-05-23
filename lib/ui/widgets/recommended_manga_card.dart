@@ -5,13 +5,20 @@ import 'package:shimmer/shimmer.dart';
 
 class RecommendedMangaCard extends StatelessWidget {
   final RecommendedManga? recommendedManga;
+  final void Function(RecommendedManga)? onTap;
   final bool isLoading;
 
   const RecommendedMangaCard({
     Key? key,
-    this.recommendedManga,
-    this.isLoading = false,
-  }) : super(key: key);
+    required this.onTap,
+    required this.recommendedManga,
+  })   : this.isLoading = false,
+        super(key: key);
+
+  const RecommendedMangaCard.loading()
+      : this.recommendedManga = null,
+        this.onTap = null,
+        this.isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +97,7 @@ class RecommendedMangaCard extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(10.0),
-                    onTap: () {},
+                    onTap: () => onTap!(recommendedManga!),
                   ),
                 ),
               ),

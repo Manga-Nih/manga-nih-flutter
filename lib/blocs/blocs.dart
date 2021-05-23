@@ -5,4 +5,5 @@ export 'manhua_bloc.dart';
 export 'manga_bloc.dart';
 export 'manhwa_bloc.dart';
 export 'genre_manga_bloc.dart';
+export 'detail_manga_bloc.dart';
 export 'error_bloc.dart';

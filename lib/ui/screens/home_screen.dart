@@ -40,6 +40,24 @@ class _HomeScreenState extends State<HomeScreen> {
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
+  void _recommendedMangaItemAction(RecommendedManga manga) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DetailMangaScreen(mangaEndpoint: manga.endpoint),
+        ));
+  }
+
+  void _popularMangaItemAction(PopularManga popularManga) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DetailMangaScreen(mangaEndpoint: popularManga.endpoint),
+        ));
+  }
+
   void _popularMangaAction() {
     Navigator.push(
         context,
@@ -147,7 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return Swiper(
               itemCount: (state is RecommendedMangaFetchSuccess)
                   ? state.listRecommended.length
-                  : 3,
+                  : 1,
+              physics: (state is RecommendedMangaFetchSuccess)
+                  ? null
+                  : NeverScrollableScrollPhysics(),
               viewportFraction: 0.8,
               scale: 0.9,
               itemBuilder: (context, index) {
@@ -157,11 +178,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return RecommendedMangaCard(
                     recommendedManga: recommendedManga,
-                    isLoading: false,
+                    onTap: _recommendedMangaItemAction,
                   );
                 }
 
-                return RecommendedMangaCard(isLoading: true);
+                return RecommendedMangaCard.loading();
               },
             );
           },
@@ -205,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         return MangaItem(
                           popularManga: popularManga,
-                          isLoading: false,
+                          onTap: _popularMangaItemAction,
                         );
                       },
                     );
@@ -216,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return MangaItem(isLoading: true);
+                      return MangaItem.loading();
                     },
                   );
                 },

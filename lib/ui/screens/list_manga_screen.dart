@@ -69,6 +69,24 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
+  void _popularAction(PopularManga popularManga) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DetailMangaScreen(mangaEndpoint: popularManga.endpoint),
+        ));
+  }
+
+  void _mangaAction(Manga manga) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DetailMangaScreen(mangaEndpoint: manga.endpoint),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -196,11 +214,14 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             itemBuilder: (context, item, index) {
           PopularManga popularManga = item;
 
-          return MangaCard<PopularManga>(manga: popularManga);
+          return MangaCard<PopularManga>(
+            manga: popularManga,
+            onTap: _popularAction,
+          );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }),
       ),
     );
@@ -237,11 +258,14 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             itemBuilder: (context, item, index) {
           Manga manga = item;
 
-          return MangaCard<Manga>(manga: manga);
+          return MangaCard<Manga>(
+            manga: manga,
+            onTap: _mangaAction,
+          );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }),
       ),
     );
@@ -278,11 +302,14 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             itemBuilder: (context, item, index) {
           Manga manga = item;
 
-          return MangaCard<Manga>(manga: manga);
+          return MangaCard<Manga>(
+            manga: manga,
+            onTap: _mangaAction,
+          );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }),
       ),
     );
@@ -319,11 +346,14 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             itemBuilder: (context, item, index) {
           Manga manga = item;
 
-          return MangaCard<Manga>(manga: manga);
+          return MangaCard<Manga>(
+            manga: manga,
+            onTap: _mangaAction,
+          );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard(isLoading: true);
+          return MangaCard.loading();
         }),
       ),
     );

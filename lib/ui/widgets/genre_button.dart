@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_nih/configs/pallette.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -31,7 +32,10 @@ class GenreButton extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5.0),
               gradient: LinearGradient(
-                colors: [Color(0xFFFA866A), Color(0xFFF76978)],
+                colors: [
+                  Pallette.gradientStartColor,
+                  Pallette.gradientEndColor
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 stops: [0.2, 0.8],

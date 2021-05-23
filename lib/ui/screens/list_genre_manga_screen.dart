@@ -95,6 +95,22 @@ class _ListGenreMangaState extends State<ListGenreManga> {
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
+  void _genreAction(Genre genre) {
+    setState(() {
+      _genre = genre;
+      _addPagingController();
+    });
+  }
+
+  void _mangaAction(GenreManga genreManga) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              DetailMangaScreen(mangaEndpoint: genreManga.endpoint),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -138,11 +154,14 @@ class _ListGenreMangaState extends State<ListGenreManga> {
                         itemBuilder: (context, item, index) {
                       GenreManga genreManga = item;
 
-                      return MangaCard(manga: genreManga);
+                      return MangaCard<GenreManga>(
+                        manga: genreManga,
+                        onTap: _mangaAction,
+                      );
                     }, newPageProgressIndicatorBuilder: (context) {
-                      return MangaCard(isLoading: true);
+                      return MangaCard.loading();
                     }, firstPageProgressIndicatorBuilder: (context) {
-                      return MangaCard(isLoading: true);
+                      return MangaCard.loading();
                     }),
                   ),
                 ),
@@ -179,12 +198,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
                       return CapsuleButton(
                         label: genre.name,
                         isSelected: genre == _genre,
-                        onPressed: () {
-                          setState(() {
-                            _genre = genre;
-                            _addPagingController();
-                          });
-                        },
+                        onPressed: () => _genreAction(genre),
                       );
                     },
                   );

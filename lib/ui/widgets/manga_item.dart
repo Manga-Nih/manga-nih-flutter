@@ -5,13 +5,18 @@ import 'package:shimmer/shimmer.dart';
 
 class MangaItem extends StatelessWidget {
   final PopularManga? popularManga;
+  final void Function(PopularManga)? onTap;
   final bool isLoading;
 
   const MangaItem({
-    Key? key,
-    this.popularManga,
-    this.isLoading = false,
-  }) : super(key: key);
+    required this.popularManga,
+    required this.onTap,
+  }) : this.isLoading = false;
+
+  const MangaItem.loading()
+      : this.popularManga = null,
+        this.onTap = null,
+        this.isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +165,7 @@ class MangaItem extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(10.0),
-                onTap: () {},
+                onTap: () => onTap!(popularManga!),
               ),
             ),
           ),

@@ -32,6 +32,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<MangaBloc>(create: (_) => MangaBloc(_errorBloc)),
         BlocProvider<ManhwaBloc>(create: (_) => ManhwaBloc(_errorBloc)),
         BlocProvider<GenreMangaBloc>(create: (_) => GenreMangaBloc(_errorBloc)),
+        BlocProvider<DetailMangaBloc>(
+            create: (_) => DetailMangaBloc(_errorBloc)),
       ],
       child: MaterialApp(
         title: 'Manga nih',

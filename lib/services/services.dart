@@ -54,4 +54,26 @@ class Service {
     var json = jsonDecode(response.body);
     return GenreManga.toList(json['manga_list']);
   }
+
+  static Future<DetailManga> getDetailManga(String endpoint) async {
+    int counter = 0;
+    Uri url = _getUrl('manga/detail/$endpoint');
+    var response = await http.get(url);
+
+    // api server something return empty object, try 3 time
+    while (true) {
+      String title = jsonDecode(response.body)['title'].toString();
+      if (title.isEmpty)
+        response = await http.get(url);
+      else
+        break;
+
+      if (counter < 3) break;
+
+      counter++;
+    }
+
+    var json = jsonDecode(response.body);
+    return DetailManga.toModel(json);
+  }
 }

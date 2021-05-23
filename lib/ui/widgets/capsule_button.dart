@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:manga_nih/configs/pallette.dart';
 
 class CapsuleButton extends StatelessWidget {
   final String label;
@@ -15,7 +16,7 @@ class CapsuleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      color: isSelected ? Color(0xFFFA866A) : Colors.white,
+      color: isSelected ? Pallette.gradientStartColor : Colors.white,
       elevation: isSelected ? 3.0 : 0.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50.0),
