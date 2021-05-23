@@ -78,14 +78,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
           preferredSize: Size.fromHeight(120.0),
           child: _buildHeader(),
         ),
-        body: BlocListener<ErrorBloc, ErrorState>(
-          listener: (context, state) {
-            if (state is ErrorShowing) {
-              showSnackbar(context, state.error.message);
-            }
-          },
-          child: _buildListMangaCard(),
-        ),
+        body: _buildListMangaCard(),
       ),
     );
   }

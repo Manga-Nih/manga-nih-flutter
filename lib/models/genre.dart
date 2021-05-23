@@ -1,4 +1,6 @@
-class Genre {
+import 'package:equatable/equatable.dart';
+
+class Genre extends Equatable {
   final String name;
   final String endpoint;
 
@@ -19,4 +21,7 @@ class Genre {
 
     return listGenre;
   }
+
+  @override
+  List<Object?> get props => [name, endpoint];
 }

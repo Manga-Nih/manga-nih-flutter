@@ -14,29 +14,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late ErrorBloc _errorBloc;
   late PopularMangaBloc _popularMangaBloc;
   late RecommendedMangaBloc _recommendedMangaBloc;
   late GenreBloc _genreBloc;
 
   @override
   void initState() {
-    super.initState();
-
     // init bloc
-    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);
     _recommendedMangaBloc = BlocProvider.of<RecommendedMangaBloc>(context);
     _genreBloc = BlocProvider.of<GenreBloc>(context);
 
-    // re-init error to reset state
-    _errorBloc.add(ErrorReInitialization());
     // fetch popular manga
     _popularMangaBloc.add(PopularMangaFetch());
     // fetch recommended manga
     _recommendedMangaBloc.add(RecommendedMangaFetch());
     // fetch genre
     _genreBloc.add(GenreFetch());
+
+    super.initState();
   }
 
   void _profileAction() {
@@ -73,6 +69,14 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => ListMangaScreen(typeManga: TypeManga.manhwa),
+        ));
+  }
+
+  void _genreAction(Genre genre) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ListGenreManga(genre: genre),
         ));
   }
 
@@ -276,10 +280,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       if (state is GenreFetchSuccess) {
                         Genre genre = state.listGenre[index];
-                        return GenreButton(genre: genre, isLoading: false);
+                        return GenreButton(
+                          genre: genre,
+                          onPressed: _genreAction,
+                        );
                       }
 
-                      return GenreButton(isLoading: true);
+                      return GenreButton.loading();
                     },
                   );
                 },

@@ -4,13 +4,20 @@ import 'package:shimmer/shimmer.dart';
 
 class GenreButton extends StatelessWidget {
   final Genre? genre;
+  final Function(Genre)? onPressed;
   final bool isLoading;
 
   const GenreButton({
     Key? key,
-    this.genre,
-    this.isLoading = false,
-  }) : super(key: key);
+    required this.genre,
+    required this.onPressed,
+  })   : this.isLoading = false,
+        super(key: key);
+
+  const GenreButton.loading()
+      : this.genre = null,
+        this.onPressed = null,
+        this.isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +38,7 @@ class GenreButton extends StatelessWidget {
               ),
             ),
             child: MaterialButton(
-              onPressed: () {},
+              onPressed: () => onPressed!(genre!),
               child: Text(
                 genre!.name,
                 style: Theme.of(context).textTheme.bodyText1!.copyWith(

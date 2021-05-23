@@ -45,4 +45,13 @@ class Service {
     var json = jsonDecode(response.body);
     return Manga.toList(json['manga_list']);
   }
+
+  static Future<List<GenreManga>> getGenreManga(Genre genre,
+      {int pageNumber: 1}) async {
+    Uri url = _getUrl('genres/${genre.endpoint}/$pageNumber');
+    var response = await http.get(url);
+
+    var json = jsonDecode(response.body);
+    return GenreManga.toList(json['manga_list']);
+  }
 }

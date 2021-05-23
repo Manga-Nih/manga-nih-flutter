@@ -16,8 +16,9 @@ class MangaCard<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    String? thumb, type, typeImage, title, uploadOn;
+    String? thumb, type, typeImage, title;
     String? chapter;
+    String? uploadOn;
 
     if (manga is PopularManga) {
       thumb = (manga as PopularManga).thumb;
@@ -34,6 +35,13 @@ class MangaCard<T> extends StatelessWidget {
       title = (manga as Manga).title;
       uploadOn = (manga as Manga).uploadOn;
       chapter = (manga as Manga).chapter;
+    }
+
+    if (manga is GenreManga) {
+      thumb = (manga as GenreManga).thumb;
+      type = (manga as GenreManga).type;
+      typeImage = (manga as GenreManga).typeImage;
+      title = (manga as GenreManga).title;
     }
 
     return Padding(
@@ -168,17 +176,19 @@ class MangaCard<T> extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          // const Spacer(),
-                          Row(
-                            children: [
-                              Icon(Icons.timer_sharp, size: 20.0),
-                              const SizedBox(width: 5.0),
-                              Text(
-                                uploadOn!,
-                                style: Theme.of(context).textTheme.bodyText2,
-                              ),
-                            ],
-                          ),
+                          uploadOn == null
+                              ? SizedBox.shrink()
+                              : Row(
+                                  children: [
+                                    Icon(Icons.timer_sharp, size: 20.0),
+                                    const SizedBox(width: 5.0),
+                                    Text(
+                                      uploadOn,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
                         ],
                       ),
               ],
