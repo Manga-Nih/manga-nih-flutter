@@ -115,7 +115,6 @@ class _ListGenreMangaState extends State<ListGenreManga> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(120.0),
           child: _buildHeader(),

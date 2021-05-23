@@ -102,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: BlocListener<ErrorBloc, ErrorState>(
           listener: (context, state) {
             if (state is ErrorShowing) {

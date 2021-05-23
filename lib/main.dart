@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         title: 'Manga nih',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Colors.grey,
+          scaffoldBackgroundColor: Colors.white,
         ),
         home: HomeScreen(),
       ),

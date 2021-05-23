@@ -91,7 +91,6 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(120.0),
           child: _buildHeader(),

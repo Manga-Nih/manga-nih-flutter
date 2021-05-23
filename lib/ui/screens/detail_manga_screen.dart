@@ -64,7 +64,6 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: BlocBuilder<DetailMangaBloc, DetailMangaState>(
           builder: (context, state) {
             return CustomScrollView(
