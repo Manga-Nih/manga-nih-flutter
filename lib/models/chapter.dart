@@ -1,4 +1,6 @@
-class Chapter {
+import 'package:equatable/equatable.dart';
+
+class Chapter extends Equatable {
   final String title;
   final String endpoint;
 
@@ -16,4 +18,7 @@ class Chapter {
 
     return listChapter;
   }
+
+  @override
+  List<Object?> get props => [title, endpoint];
 }

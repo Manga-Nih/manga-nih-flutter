@@ -6,6 +6,7 @@ import 'package:manga_nih/configs/pallette.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
+import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -52,12 +53,20 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     super.initState();
   }
 
-  void _informationAction() {
+  void _informationSectionAction() {
     setState(() => _section = DetailMangaSection.information);
   }
 
-  void _chapterAction() {
+  void _chapterSectionAction() {
     setState(() => _section = DetailMangaSection.chapter);
+  }
+
+  void _chapterAction(Chapter chapter) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChapterScreen(chapter: chapter),
+        ));
   }
 
   @override
@@ -253,7 +262,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                   children: [
                     Expanded(
                       child: MaterialButton(
-                        onPressed: _informationAction,
+                        onPressed: _informationSectionAction,
                         color: (_section == DetailMangaSection.information)
                             ? Colors.white
                             : Colors.grey.shade300,
@@ -269,7 +278,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                     const SizedBox(width: 10.0),
                     Expanded(
                       child: MaterialButton(
-                        onPressed: _chapterAction,
+                        onPressed: _chapterSectionAction,
                         color: (_section == DetailMangaSection.chapter)
                             ? Colors.white
                             : Colors.grey.shade300,
@@ -416,13 +425,14 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   Widget _buildChapterSection(DetailMangaState state) {
     return (state is DetailMangaFetchSuccess)
         ? ListView.builder(
+            padding: const EdgeInsets.only(bottom: 20.0),
             physics: BouncingScrollPhysics(),
             itemCount: state.detailManga.listChapter.length,
             itemBuilder: (context, index) {
               Chapter chapter = state.detailManga.listChapter[index];
 
               return MaterialButton(
-                onPressed: () {},
+                onPressed: () => _chapterAction(chapter),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50.0),
                 ),

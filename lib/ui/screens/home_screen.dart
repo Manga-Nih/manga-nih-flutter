@@ -302,7 +302,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? state.listGenre.length
                           : 9,
                       itemBuilder: (context, index) {
-                        print(index);
                         if (state is GenreFetchSuccess) {
                           Genre genre = state.listGenre[index];
                           return GenreButton(

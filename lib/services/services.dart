@@ -61,19 +61,59 @@ class Service {
     var response = await http.get(url);
 
     // api server something return empty object, try 3 time
+    String title = jsonDecode(response.body)['title'].toString();
     while (true) {
-      String title = jsonDecode(response.body)['title'].toString();
-      if (title.isEmpty)
+      if (title.isEmpty) {
         response = await http.get(url);
-      else
+        title = jsonDecode(response.body)['title'].toString();
+      } else {
         break;
+      }
 
-      if (counter < 3) break;
+      if (counter > 3) break;
 
       counter++;
     }
+    if (title.isEmpty) throw Error();
 
     var json = jsonDecode(response.body);
     return DetailManga.toModel(json);
+  }
+
+  static Future<ChapterImage> getChapterImage(String endpoint) async {
+    int counter = 0;
+    Uri url = _getUrl('chapter/$endpoint');
+    var response = await http.get(url);
+
+    // api server something return empty object, try 3 time
+    List listImage = jsonDecode(response.body)['chapter_image'];
+    while (true) {
+      if (listImage.isEmpty) {
+        response = await http.get(url);
+        listImage = jsonDecode(response.body)['chapter_image'];
+      } else {
+        break;
+      }
+
+      if (counter > 3) break;
+
+      counter++;
+    }
+    if (listImage.isEmpty) throw Error();
+
+    var json = jsonDecode(response.body);
+    return ChapterImage.toModel(json);
+  }
+}
+
+class UserAgentClient extends http.BaseClient {
+  final String userAgent;
+  final http.Client _inner;
+
+  UserAgentClient(this.userAgent, this._inner);
+
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['user-agent'] = userAgent;
+    return _inner.send(request);
   }
 }

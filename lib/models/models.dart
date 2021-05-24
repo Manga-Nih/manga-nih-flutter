@@ -6,3 +6,4 @@ export 'genre_manga.dart';
 export 'error_model.dart';
 export 'detail_manga.dart';
 export 'chapter.dart';
+export 'chapter_image.dart';
