@@ -16,5 +16,7 @@ export 'detail_manga_event.dart';
 export 'detail_manga_state.dart';
 export 'chapter_image_event.dart';
 export 'chapter_image_state.dart';
+export 'search_manga_event.dart';
+export 'search_manga_state.dart';
 export 'error_event.dart';
 export 'error_state.dart';

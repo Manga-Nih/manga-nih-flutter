@@ -40,6 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
         context, MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
+  void _searchAction() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SearchScreen()));
+  }
+
   void _recommendedMangaItemAction(RecommendedManga manga) {
     Navigator.push(
         context,
@@ -130,22 +135,29 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             HeaderProfile(onTap: _profileAction),
             const SizedBox(height: 20.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+            MaterialButton(
+              onPressed: _searchAction,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              color: Colors.grey.shade200,
+              elevation: 0.0,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50.0),
               ),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Search manga...',
-                  prefixIcon: Icon(Icons.search),
-                  suffixIcon: Icon(Icons.filter_list),
-                  focusColor: Colors.black,
-                  contentPadding: const EdgeInsets.only(top: 15.0),
-                ),
-                style: Theme.of(context).textTheme.bodyText1,
+              child: Row(
+                children: [
+                  Icon(Icons.search, color: Colors.grey.shade700),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    'Search manga...',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.grey.shade700),
+                  ),
+                  const Spacer(),
+                  Icon(Icons.filter_list, color: Colors.grey.shade700),
+                ],
               ),
             ),
           ],

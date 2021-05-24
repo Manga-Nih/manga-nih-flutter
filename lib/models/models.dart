@@ -7,3 +7,4 @@ export 'error_model.dart';
 export 'detail_manga.dart';
 export 'chapter.dart';
 export 'chapter_image.dart';
+export 'search_manga.dart';

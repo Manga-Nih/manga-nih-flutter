@@ -104,16 +104,12 @@ class Service {
     var json = jsonDecode(response.body);
     return ChapterImage.toModel(json);
   }
-}
 
-class UserAgentClient extends http.BaseClient {
-  final String userAgent;
-  final http.Client _inner;
+  static Future<List<SearchManga>> getSearchManga(String keyword) async {
+    Uri url = _getUrl('search/$keyword');
+    var response = await http.get(url);
 
-  UserAgentClient(this.userAgent, this._inner);
-
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers['user-agent'] = userAgent;
-    return _inner.send(request);
+    var json = jsonDecode(response.body);
+    return SearchManga.toList(json['manga_list']);
   }
 }

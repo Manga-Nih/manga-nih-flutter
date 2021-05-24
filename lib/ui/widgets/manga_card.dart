@@ -49,6 +49,14 @@ class MangaCard<T> extends StatelessWidget {
       title = (manga as GenreManga).title;
     }
 
+    if (manga is SearchManga) {
+      thumb = (manga as SearchManga).thumb;
+      type = (manga as SearchManga).type;
+      typeImage = (manga as SearchManga).typeImage;
+      title = (manga as SearchManga).title;
+      uploadOn = (manga as SearchManga).uploadOn;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Stack(
