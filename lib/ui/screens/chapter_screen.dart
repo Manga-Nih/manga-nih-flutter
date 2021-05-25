@@ -16,7 +16,6 @@ class ChapterScreen extends StatefulWidget {
 }
 
 class _ChapterScreenState extends State<ChapterScreen> {
-  late ErrorBloc _errorBloc;
   late DetailMangaBloc _detailMangaBloc;
   late ChapterImageBloc _chapterImageBloc;
   late ScrollController _scrollController;
@@ -29,12 +28,8 @@ class _ChapterScreenState extends State<ChapterScreen> {
   @override
   void initState() {
     // init blocs
-    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
     _chapterImageBloc = BlocProvider.of<ChapterImageBloc>(context);
-
-    // re-init error to reset state
-    _errorBloc.add(ErrorReInitialization());
 
     // check if has previous or next chapter
     DetailMangaState state = _detailMangaBloc.state;

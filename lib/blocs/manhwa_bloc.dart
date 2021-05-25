@@ -8,10 +8,10 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/services/services.dart';
 
 class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
   final List<Manga> _listManhwa = [];
 
-  ManhwaBloc(this._errorBloc) : super(ManhwaUninitialized());
+  ManhwaBloc(this._snackbarBloc) : super(ManhwaUninitialized());
 
   @override
   Stream<ManhwaState> mapEventToState(ManhwaEvent event) async* {
@@ -29,10 +29,10 @@ class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
 
         yield ManhwaFetchSuccess(listManhwa: _listManhwa, nextPage: nextPage);
       } on SocketException {
-        _errorBloc.add(ErrorShow.noConnection());
+        _snackbarBloc.add(SnackbarShow.noConnection());
       } catch (e) {
         print(e);
-        _errorBloc.add(ErrorShow.global());
+        _snackbarBloc.add(SnackbarShow.globalError());
       }
     }
   }

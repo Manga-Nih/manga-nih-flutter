@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "177613895494",
+    "project_id": "manga-nih",
+    "storage_bucket": "manga-nih.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177613895494:android:8b27c55c21a6e5a6281747",
+        "android_client_info": {
+          "package_name": "com.example.manga_nih"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177613895494-8m7hsrltojv0nt7s6j7sj25a7fne35ge.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.manga_nih",
+            "certificate_hash": "0384f2a4f6bf739705ddc574df9162ca947a49ac"
+          }
+        },
+        {
+          "client_id": "177613895494-hbm3ei1qke048gsholgmo5o7k16vjil4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrIsadnF7RPl4HQ52DA6xeVmjgNX6IYgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177613895494-hbm3ei1qke048gsholgmo5o7k16vjil4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

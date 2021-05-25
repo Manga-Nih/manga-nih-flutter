@@ -21,18 +21,13 @@ class DetailMangaScreen extends StatefulWidget {
 }
 
 class _DetailMangaScreenState extends State<DetailMangaScreen> {
-  late ErrorBloc _errorBloc;
   late DetailMangaBloc _detailMangaBloc;
   late DetailMangaSection _section;
 
   @override
   void initState() {
     // init bloc
-    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
-
-    // re-init error to reset state
-    _errorBloc.add(ErrorReInitialization());
 
     // avoid to fetch data again with same manga
     DetailMangaState state = _detailMangaBloc.state;

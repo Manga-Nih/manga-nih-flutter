@@ -8,9 +8,9 @@ import 'package:manga_nih/services/services.dart';
 
 class RecommendedMangaBloc
     extends Bloc<RecommendedMangaEvent, RecommendedMangaState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
 
-  RecommendedMangaBloc(this._errorBloc)
+  RecommendedMangaBloc(this._snackbarBloc)
       : super(RecommendedMangaUninitialized());
 
   @override
@@ -25,10 +25,10 @@ class RecommendedMangaBloc
 
         yield RecommendedMangaFetchSuccess(listRecommended: listRecommended);
       } on SocketException {
-        _errorBloc.add(ErrorShow.noConnection());
+        _snackbarBloc.add(SnackbarShow.noConnection());
       } catch (e) {
         print(e);
-        _errorBloc.add(ErrorShow.global());
+        _snackbarBloc.add(SnackbarShow.globalError());
       }
     }
   }

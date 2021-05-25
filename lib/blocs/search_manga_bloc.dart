@@ -7,9 +7,9 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/services/services.dart';
 
 class SearchMangaBloc extends Bloc<SearchMangaEvent, SearchMangaState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
 
-  SearchMangaBloc(this._errorBloc) : super(SearchMangaUninitialized());
+  SearchMangaBloc(this._snackbarBloc) : super(SearchMangaUninitialized());
 
   @override
   Stream<SearchMangaState> mapEventToState(SearchMangaEvent event) async* {
@@ -23,10 +23,10 @@ class SearchMangaBloc extends Bloc<SearchMangaEvent, SearchMangaState> {
         yield SearchMangaFetchSuccess(listSearchManga: listSearchManga);
       }
     } on SocketException {
-      _errorBloc.add(ErrorShow.noConnection());
+      _snackbarBloc.add(SnackbarShow.noConnection());
     } catch (e) {
       print(e);
-      _errorBloc.add(ErrorShow.global());
+      _snackbarBloc.add(SnackbarShow.globalError());
     }
   }
 }

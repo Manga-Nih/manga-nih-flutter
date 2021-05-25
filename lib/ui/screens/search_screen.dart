@@ -12,17 +12,12 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  late ErrorBloc _errorBloc;
   late SearchMangaBloc _searchMangaBloc;
 
   @override
   void initState() {
     // init bloc
-    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _searchMangaBloc = BlocProvider.of<SearchMangaBloc>(context);
-
-    // re-init error to reset state
-    _errorBloc.add(ErrorReInitialization());
 
     super.initState();
   }

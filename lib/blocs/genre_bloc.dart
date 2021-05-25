@@ -7,9 +7,9 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/services/services.dart';
 
 class GenreBloc extends Bloc<GenreEvent, GenreState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
 
-  GenreBloc(this._errorBloc) : super(GenreUninitialized());
+  GenreBloc(this._snackbarBloc) : super(GenreUninitialized());
 
   @override
   Stream<GenreState> mapEventToState(GenreEvent event) async* {
@@ -21,10 +21,10 @@ class GenreBloc extends Bloc<GenreEvent, GenreState> {
 
         yield GenreFetchSuccess(listGenre: listGenre);
       } on SocketException {
-        _errorBloc.add(ErrorShow.noConnection());
+        _snackbarBloc.add(SnackbarShow.noConnection());
       } catch (e) {
         print(e);
-        _errorBloc.add(ErrorShow.global());
+        _snackbarBloc.add(SnackbarShow.globalError());
       }
     }
   }

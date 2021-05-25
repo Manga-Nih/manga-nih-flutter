@@ -8,4 +8,5 @@ export 'genre_manga_bloc.dart';
 export 'detail_manga_bloc.dart';
 export 'chapter_image_bloc.dart';
 export 'search_manga_bloc.dart';
-export 'error_bloc.dart';
+export 'user_bloc.dart';
+export 'snackbar_bloc.dart';

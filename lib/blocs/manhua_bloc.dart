@@ -8,10 +8,10 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/services/services.dart';
 
 class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
   final List<Manga> _listManhua = [];
 
-  ManhuaBloc(this._errorBloc) : super(ManhuaUninitialized());
+  ManhuaBloc(this._snackbarBloc) : super(ManhuaUninitialized());
 
   @override
   Stream<ManhuaState> mapEventToState(ManhuaEvent event) async* {
@@ -32,10 +32,10 @@ class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
           nextPage: nextPage,
         );
       } on SocketException {
-        _errorBloc.add(ErrorShow.noConnection());
+        _snackbarBloc.add(SnackbarShow.noConnection());
       } catch (e) {
         print(e);
-        _errorBloc.add(ErrorShow.global());
+        _snackbarBloc.add(SnackbarShow.globalError());
       }
     }
   }

@@ -107,10 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: BlocListener<ErrorBloc, ErrorState>(
+        body: BlocListener<SnackbarBloc, SnackbarState>(
           listener: (context, state) {
-            if (state is ErrorShowing) {
-              showSnackbar(context, state.error.message);
+            if (state is SnackbarShowing) {
+              showSnackbar(
+                context,
+                state.snackbar.message,
+                isError: state.snackbar.isError,
+              );
             }
           },
           child: CustomScrollView(

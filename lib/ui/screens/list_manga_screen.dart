@@ -19,7 +19,6 @@ class ListMangaScreen extends StatefulWidget {
 }
 
 class _ListMangaScreenState extends State<ListMangaScreen> {
-  late ErrorBloc _errorBloc;
   late PopularMangaBloc _popularMangaBloc;
   late ManhuaBloc _manhuaBloc;
   late MangaBloc _mangaBloc;
@@ -33,7 +32,6 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   @override
   void initState() {
     // init bloc
-    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);
     _manhuaBloc = BlocProvider.of<ManhuaBloc>(context);
     _mangaBloc = BlocProvider.of<MangaBloc>(context);
@@ -44,9 +42,6 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     _pagingManhuaController = PagingController(firstPageKey: 1);
     _pagingMangaController = PagingController(firstPageKey: 1);
     _pagingManhwaController = PagingController(firstPageKey: 1);
-
-    // re-init error to reset state
-    _errorBloc.add(ErrorReInitialization());
 
     // type manga
     _typeManga = widget.typeManga;

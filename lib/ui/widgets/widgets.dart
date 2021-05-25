@@ -9,3 +9,5 @@ export 'manga_card.dart';
 export 'detail_manga_card.dart';
 export 'capsule_button.dart';
 export 'snackbar.dart';
+export 'login_register_button.dart';
+export 'input_field.dart';

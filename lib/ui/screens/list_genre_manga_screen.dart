@@ -18,7 +18,6 @@ class ListGenreManga extends StatefulWidget {
 }
 
 class _ListGenreMangaState extends State<ListGenreManga> {
-  late ErrorBloc _errorBloc;
   late GenreMangaBloc _genreMangaBloc;
   late GenreBloc _genreBloc;
   late Genre _genre;
@@ -29,15 +28,11 @@ class _ListGenreMangaState extends State<ListGenreManga> {
   @override
   void initState() {
     // init bloc
-    _errorBloc = BlocProvider.of<ErrorBloc>(context);
     _genreMangaBloc = BlocProvider.of<GenreMangaBloc>(context);
     _genreBloc = BlocProvider.of<GenreBloc>(context);
 
     // init scroll controller
     _genreScrollController = ItemScrollController();
-
-    // re-init error to reset state
-    _errorBloc.add(ErrorReInitialization());
 
     // init state genre
     _genre = widget.genre;

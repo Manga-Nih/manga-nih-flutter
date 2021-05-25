@@ -1,7 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/event_states/event_states.dart';
+import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late SnackbarBloc _snackbarBloc;
+  late UserBloc _userBloc;
+
+  @override
+  void initState() {
+    // init bloc
+    _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
+    _userBloc = BlocProvider.of<UserBloc>(context);
+
+    super.initState();
+  }
+
+  void _logOutAction() async {
+    await _userBloc.userLogout();
+    _snackbarBloc.add(SnackbarShow.custom(false, 'Bye bye...'));
+
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SplashScreen()),
+        (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +164,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () {},
+      onPressed: _logOutAction,
     );
   }
 }

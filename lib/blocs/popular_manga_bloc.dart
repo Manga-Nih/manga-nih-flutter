@@ -7,10 +7,10 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/services/services.dart';
 
 class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
   final List<PopularManga> _listPopular = [];
 
-  PopularMangaBloc(this._errorBloc) : super(PopularMangaUninitialized());
+  PopularMangaBloc(this._snackbarBloc) : super(PopularMangaUninitialized());
 
   @override
   Stream<PopularMangaState> mapEventToState(PopularMangaEvent event) async* {
@@ -31,10 +31,10 @@ class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
           nextPage: nextPage,
         );
       } on SocketException {
-        _errorBloc.add(ErrorShow.noConnection());
+        _snackbarBloc.add(SnackbarShow.noConnection());
       } catch (e) {
         print(e);
-        _errorBloc.add(ErrorShow.global());
+        _snackbarBloc.add(SnackbarShow.globalError());
       }
     }
   }

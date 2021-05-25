@@ -5,11 +5,13 @@ import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ErrorBloc _errorBloc = ErrorBloc();
+  final SnackbarBloc _snackbarBloc = SnackbarBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +24,24 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ErrorBloc>(create: (_) => _errorBloc),
+        BlocProvider<SnackbarBloc>(create: (_) => _snackbarBloc),
+        BlocProvider<UserBloc>(create: (_) => UserBloc(_snackbarBloc)),
         BlocProvider<PopularMangaBloc>(
-            create: (_) => PopularMangaBloc(_errorBloc)),
+            create: (_) => PopularMangaBloc(_snackbarBloc)),
         BlocProvider<RecommendedMangaBloc>(
-            create: (_) => RecommendedMangaBloc(_errorBloc)),
-        BlocProvider<GenreBloc>(create: (_) => GenreBloc(_errorBloc)),
-        BlocProvider<ManhuaBloc>(create: (_) => ManhuaBloc(_errorBloc)),
-        BlocProvider<MangaBloc>(create: (_) => MangaBloc(_errorBloc)),
-        BlocProvider<ManhwaBloc>(create: (_) => ManhwaBloc(_errorBloc)),
-        BlocProvider<GenreMangaBloc>(create: (_) => GenreMangaBloc(_errorBloc)),
+            create: (_) => RecommendedMangaBloc(_snackbarBloc)),
+        BlocProvider<GenreBloc>(create: (_) => GenreBloc(_snackbarBloc)),
+        BlocProvider<ManhuaBloc>(create: (_) => ManhuaBloc(_snackbarBloc)),
+        BlocProvider<MangaBloc>(create: (_) => MangaBloc(_snackbarBloc)),
+        BlocProvider<ManhwaBloc>(create: (_) => ManhwaBloc(_snackbarBloc)),
+        BlocProvider<GenreMangaBloc>(
+            create: (_) => GenreMangaBloc(_snackbarBloc)),
         BlocProvider<DetailMangaBloc>(
-            create: (_) => DetailMangaBloc(_errorBloc)),
+            create: (_) => DetailMangaBloc(_snackbarBloc)),
         BlocProvider<ChapterImageBloc>(
-            create: (_) => ChapterImageBloc(_errorBloc)),
+            create: (_) => ChapterImageBloc(_snackbarBloc)),
         BlocProvider<SearchMangaBloc>(
-            create: (_) => SearchMangaBloc(_errorBloc)),
+            create: (_) => SearchMangaBloc(_snackbarBloc)),
       ],
       child: MaterialApp(
         title: 'Manga nih',
@@ -45,7 +49,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
         ),
-        home: HomeScreen(),
+        home: SplashScreen(),
       ),
     );
   }

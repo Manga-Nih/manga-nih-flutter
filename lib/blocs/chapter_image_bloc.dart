@@ -7,9 +7,9 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/services/services.dart';
 
 class ChapterImageBloc extends Bloc<ChapterImageEvent, ChapterImageState> {
-  final ErrorBloc _errorBloc;
+  final SnackbarBloc _snackbarBloc;
 
-  ChapterImageBloc(this._errorBloc) : super(ChapterImageUninitialized());
+  ChapterImageBloc(this._snackbarBloc) : super(ChapterImageUninitialized());
 
   @override
   Stream<ChapterImageState> mapEventToState(ChapterImageEvent event) async* {
@@ -23,10 +23,10 @@ class ChapterImageBloc extends Bloc<ChapterImageEvent, ChapterImageState> {
         yield ChapterImageFetchSuccess(chapterImage: chapterImage);
       }
     } on SocketException {
-      _errorBloc.add(ErrorShow.noConnection());
+      _snackbarBloc.add(SnackbarShow.noConnection());
     } catch (e) {
       print(e);
-      _errorBloc.add(ErrorShow.global());
+      _snackbarBloc.add(SnackbarShow.globalError());
     }
   }
 }
