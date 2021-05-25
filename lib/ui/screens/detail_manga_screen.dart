@@ -431,29 +431,36 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
             itemBuilder: (context, index) {
               Chapter chapter = state.detailManga.listChapter[index];
 
-              return MaterialButton(
-                onPressed: () => _chapterAction(chapter),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                color: Colors.grey.shade300,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        chapter.title,
-                        style: Theme.of(context).textTheme.bodyText1,
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 5.0),
+                height: 50.0,
+                child: MaterialButton(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5.0, horizontal: 15.0),
+                  onPressed: () => _chapterAction(chapter),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  color: Colors.grey.shade300,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          chapter.title,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Last Readed',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(color: Pallette.gradientEndColor),
-                    )
-                  ],
+                      const SizedBox(width: 10.0),
+                      Text(
+                        'Last Readed',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: Pallette.gradientEndColor),
+                      )
+                    ],
+                  ),
                 ),
               );
             },
@@ -467,7 +474,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                 baseColor: Colors.grey.shade300,
                 highlightColor: Colors.grey.shade100,
                 child: Container(
-                  height: 30.0,
+                  height: 50.0,
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(vertical: 5.0),
                   decoration: BoxDecoration(

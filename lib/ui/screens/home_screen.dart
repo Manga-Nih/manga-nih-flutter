@@ -303,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return GridView.builder(
                       physics: BouncingScrollPhysics(),
                       padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, bottom: 10.0),
+                          left: 10.0, right: 10.0, bottom: 50.0),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         childAspectRatio: (3 / 1),

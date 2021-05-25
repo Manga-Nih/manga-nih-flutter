@@ -106,114 +106,139 @@ class _ChapterScreenState extends State<ChapterScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            height: _isVisible ? 60.0 : 0.0,
-            child: Center(
-                child: Text(
-              (_detailMangaBloc.state as DetailMangaFetchSuccess)
-                  .detailManga
-                  .title,
-              style: Theme.of(context).textTheme.headline6,
-            )),
-          ),
-        ),
-        body: BlocBuilder<ChapterImageBloc, ChapterImageState>(
-          builder: (context, state) {
-            return InteractiveViewer(
-              minScale: 0.5,
-              maxScale: 2,
-              child: ListView.builder(
-                controller: _scrollController,
-                physics: BouncingScrollPhysics(),
-                itemCount: (state is ChapterImageFetchSuccess)
-                    ? state.chapterImage.listImage.length
-                    : 1,
-                itemBuilder: (context, index) {
-                  if (state is ChapterImageFetchSuccess) {
-                    List<String> urls = state.chapterImage.listImage;
-                    return CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: urls[index],
-                      placeholder: (context, url) => Wrap(
-                        alignment: WrapAlignment.center,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(5.0),
-                            child: CircularProgressIndicator(),
-                          )
-                        ],
-                      ),
-                    );
-                  }
+        body: Stack(
+          children: [
+            BlocBuilder<ChapterImageBloc, ChapterImageState>(
+              builder: (context, state) {
+                return InteractiveViewer(
+                  minScale: 0.5,
+                  maxScale: 2,
+                  child: GlowingOverscrollIndicator(
+                    axisDirection: AxisDirection.down,
+                    color: Colors.white,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: (state is ChapterImageFetchSuccess)
+                          ? state.chapterImage.listImage.length
+                          : 1,
+                      itemBuilder: (context, index) {
+                        if (state is ChapterImageFetchSuccess) {
+                          List<String> urls = state.chapterImage.listImage;
+                          return CachedNetworkImage(
+                            fit: BoxFit.fill,
+                            imageUrl: urls[index],
+                            placeholder: (context, url) => Wrap(
+                              alignment: WrapAlignment.center,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(5.0),
+                                  child: CircularProgressIndicator(),
+                                )
+                              ],
+                            ),
+                          );
+                        }
 
-                  return Wrap(
-                    alignment: WrapAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: CircularProgressIndicator(),
-                      )
-                    ],
-                  );
-                },
+                        return Wrap(
+                          alignment: WrapAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: CircularProgressIndicator(),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 200),
+                height: _isVisible ? 60.0 : 0.0,
+                child: Container(
+                  color: Colors.white60,
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    (_detailMangaBloc.state as DetailMangaFetchSuccess)
+                        .detailManga
+                        .title,
+                    style: Theme.of(context).textTheme.headline6,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-            );
-          },
-        ),
-        bottomNavigationBar: AnimatedContainer(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          duration: Duration(milliseconds: 200),
-          height: _isVisible ? 60.0 : 0.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _isHasPrev
-                  ? BlocBuilder<ChapterImageBloc, ChapterImageState>(
-                      builder: (context, state) {
-                        return MaterialButton(
-                          onPressed: (state is ChapterImageFetchSuccess)
-                              ? _prevAction
-                              : () {},
-                          child: Row(
-                            children: [
-                              Icon(Icons.chevron_left),
-                              const SizedBox(width: 3.0),
-                              Text(
-                                'Previous',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  : SizedBox.shrink(),
-              _isHasNext
-                  ? BlocBuilder<ChapterImageBloc, ChapterImageState>(
-                      builder: (context, state) {
-                        return MaterialButton(
-                          onPressed: (state is ChapterImageFetchSuccess)
-                              ? _nextAction
-                              : () {},
-                          child: Row(
-                            children: [
-                              Text(
-                                'Next',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              const SizedBox(width: 3.0),
-                              Icon(Icons.chevron_right),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  : SizedBox.shrink(),
-            ],
-          ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 200),
+                height: _isVisible ? 60.0 : 0.0,
+                child: Container(
+                  color: Colors.white60,
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _isHasPrev
+                          ? BlocBuilder<ChapterImageBloc, ChapterImageState>(
+                              builder: (context, state) {
+                                return MaterialButton(
+                                  onPressed: (state is ChapterImageFetchSuccess)
+                                      ? _prevAction
+                                      : () {},
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.chevron_left),
+                                      const SizedBox(width: 3.0),
+                                      Text(
+                                        'Previous',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : SizedBox.shrink(),
+                      _isHasNext
+                          ? BlocBuilder<ChapterImageBloc, ChapterImageState>(
+                              builder: (context, state) {
+                                return MaterialButton(
+                                  onPressed: (state is ChapterImageFetchSuccess)
+                                      ? _nextAction
+                                      : () {},
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Next',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                      const SizedBox(width: 3.0),
+                                      Icon(Icons.chevron_right),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

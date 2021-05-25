@@ -97,7 +97,6 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: const EdgeInsets.all(10.0),
       sliver: BlocBuilder<SearchMangaBloc, SearchMangaState>(
         builder: (context, state) {
-          print(state);
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -108,6 +107,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     manga: searchManga,
                     onTap: _mangaCardAction,
                   );
+                }
+
+                if (state is SearchMangaUninitialized) {
+                  return SizedBox.shrink();
                 }
 
                 return MangaCard.loading();
