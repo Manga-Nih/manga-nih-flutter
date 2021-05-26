@@ -61,7 +61,17 @@ class _SearchScreenState extends State<SearchScreen> {
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            HeaderProfile(onTap: _profileAction),
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserFetchSuccess) {
+                  return HeaderProfile(
+                    name: state.name,
+                    onTap: _profileAction,
+                  );
+                }
+                return HeaderProfile.defaultValue(onTap: _profileAction);
+              },
+            ),
             const SizedBox(height: 20.0),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),

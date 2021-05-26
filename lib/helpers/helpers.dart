@@ -7,3 +7,14 @@ String typeMangaImage(String type) {
 
   return '';
 }
+
+String greetingNow() {
+  int now = DateTime.now().hour;
+  if (now >= 01 && now <= 10) {
+    return 'Good Morning';
+  } else if (now > 10 && now <= 16) {
+    return 'Good Afternoon';
+  } else {
+    return 'Good Evening';
+  }
+}

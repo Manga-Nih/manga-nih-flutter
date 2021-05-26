@@ -21,8 +21,9 @@ class UserError extends UserState {
 
 class UserFetchSuccess extends UserState {
   final String name;
+  final String email;
 
-  UserFetchSuccess({required this.name});
+  UserFetchSuccess({required this.name, required this.email});
 
   @override
   List<Object?> get props => [name];

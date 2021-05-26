@@ -11,3 +11,5 @@ export 'capsule_button.dart';
 export 'snackbar.dart';
 export 'login_register_button.dart';
 export 'input_field.dart';
+export 'profile_button.dart';
+export 'logout_button.dart';

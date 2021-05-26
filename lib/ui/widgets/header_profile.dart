@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:manga_nih/helpers/helpers.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class HeaderProfile extends StatelessWidget {
+  final String name;
   final VoidCallback onTap;
 
-  const HeaderProfile({Key? key, required this.onTap}) : super(key: key);
+  const HeaderProfile({
+    Key? key,
+    required this.name,
+    required this.onTap,
+  }) : super(key: key);
+
+  const HeaderProfile.defaultValue({required this.onTap}) : this.name = '';
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +26,10 @@ class HeaderProfile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Good afternoon',
-                  style: Theme.of(context).textTheme.bodyText2),
+              Text(greetingNow(), style: Theme.of(context).textTheme.bodyText2),
               const SizedBox(height: 5.0),
               Text(
-                'Zukron Alviandy R',
+                name,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ],

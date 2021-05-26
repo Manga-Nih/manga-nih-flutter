@@ -5,19 +5,36 @@ import 'package:manga_nih/event_states/event_states.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final SnackbarBloc _snackbarBloc;
-  final FirebaseAuth _firebaseAuth;
+  late FirebaseAuth _firebaseAuth;
 
-  UserBloc(this._snackbarBloc)
-      : this._firebaseAuth = FirebaseAuth.instance,
-        super(UserUninitialized());
+  UserBloc(this._snackbarBloc) : super(UserUninitialized());
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
     try {
+      if (event is UserInitialized) {
+        _firebaseAuth = event.firebaseAuth;
+      }
+
       if (event is UserFetch) {
         User? user = _firebaseAuth.currentUser;
         if (user != null) {
-          yield UserFetchSuccess(name: user.displayName!);
+          yield UserFetchSuccess(
+            name: user.displayName!,
+            email: user.email!,
+          );
+        }
+      }
+
+      if (event is UserUpdateProfile) {
+        User? user = _firebaseAuth.currentUser;
+        if (user != null) {
+          await user.updateProfile(displayName: event.name);
+
+          yield UserFetchSuccess(
+            name: event.name,
+            email: user.email!,
+          );
         }
       }
 
@@ -33,7 +50,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         User? user = userCredential.user;
 
         if (user != null) {
-          yield UserFetchSuccess(name: user.displayName!);
+          yield UserFetchSuccess(name: user.displayName!, email: user.email!);
         }
       }
 
@@ -53,7 +70,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           await user.updateProfile(displayName: event.name);
         }
 
-        yield UserFetchSuccess(name: event.name);
+        yield UserFetchSuccess(
+          name: event.name,
+          email: event.email,
+        );
       }
     } catch (e) {
       print(e);

@@ -15,12 +15,14 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late FirebaseAuth _firebaseAuth;
   late SnackbarBloc _snackbarBloc;
+  late UserBloc _userBloc;
   late bool _initialized;
 
   @override
   void initState() {
     // init bloc
     _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
+    _userBloc = BlocProvider.of<UserBloc>(context);
 
     // init state for firebase
     _initialized = false;
@@ -37,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // init firebase
       _firebaseAuth = FirebaseAuth.instance;
+      _userBloc.add(UserInitialized(firebaseAuth: _firebaseAuth));
 
       // sleep for 2 seconds
       await Future.delayed(Duration(seconds: 2));
@@ -68,6 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (_firebaseAuth.currentUser != null) {
+      _userBloc.add(UserFetch());
       return HomeScreen();
     } else {
       return LoginScreen();
