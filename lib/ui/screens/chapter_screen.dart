@@ -19,17 +19,25 @@ class _ChapterScreenState extends State<ChapterScreen> {
   late DetailMangaBloc _detailMangaBloc;
   late ChapterImageBloc _chapterImageBloc;
   late ScrollController _scrollController;
+  late TransformationController _transformationController;
   late int _curIndexChapter;
   late List<Chapter> _listChapter;
   late bool _isVisible;
   late bool _isHasPrev;
   late bool _isHasNext;
+  late bool _isZoomed;
 
   @override
   void initState() {
     // init blocs
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
     _chapterImageBloc = BlocProvider.of<ChapterImageBloc>(context);
+
+    // init controller
+    _scrollController = ScrollController();
+    _transformationController = TransformationController();
+
+    _isZoomed = false;
 
     // check if has previous or next chapter
     DetailMangaState state = _detailMangaBloc.state;
@@ -62,7 +70,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
 
     // set controller to handle visibility app bar and bottom bar
     _isVisible = true;
-    _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -81,6 +88,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _transformationController.dispose();
 
     super.dispose();
   }
@@ -105,45 +113,66 @@ class _ChapterScreenState extends State<ChapterScreen> {
           children: [
             BlocBuilder<ChapterImageBloc, ChapterImageState>(
               builder: (context, state) {
-                return InteractiveViewer(
-                  minScale: 0.5,
-                  maxScale: 2,
-                  child: GlowingOverscrollIndicator(
-                    axisDirection: AxisDirection.down,
-                    color: Colors.white,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: (state is ChapterImageFetchSuccess)
-                          ? state.chapterImage.listImage.length
-                          : 1,
-                      itemBuilder: (context, index) {
-                        if (state is ChapterImageFetchSuccess) {
-                          List<String> urls = state.chapterImage.listImage;
-                          return CachedNetworkImage(
-                            fit: BoxFit.fill,
-                            imageUrl: urls[index],
-                            placeholder: (context, url) => Wrap(
-                              alignment: WrapAlignment.center,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.all(5.0),
-                                  child: CircularProgressIndicator(),
-                                )
-                              ],
-                            ),
-                          );
-                        }
+                return GestureDetector(
+                  onDoubleTap: () {},
+                  onDoubleTapDown: (details) {
+                    double x = -1 * details.globalPosition.dx;
+                    double y = -1 * details.globalPosition.dy;
 
-                        return Wrap(
-                          alignment: WrapAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: CircularProgressIndicator(),
-                            )
-                          ],
-                        );
-                      },
+                    if (_isZoomed) {
+                      Matrix4 matrix = Matrix4.identity().scaled(1.0, 1.0, 1.0);
+                      _transformationController.value = matrix;
+                      _isZoomed = false;
+                    } else {
+                      // scale x and y to 2.0 base on maxScale InteractiveViewer
+                      Matrix4 matrix = Matrix4.identity().scaled(2.0, 2.0, 1.0);
+                      // multiply 0.5 to get x and y value before scaled
+                      matrix.translate(x * 0.5, y * 0.5);
+                      _transformationController.value = matrix;
+                      _isZoomed = true;
+                    }
+                  },
+                  child: InteractiveViewer(
+                    transformationController: _transformationController,
+                    minScale: 0.5,
+                    maxScale: 2,
+                    child: GlowingOverscrollIndicator(
+                      axisDirection: AxisDirection.down,
+                      color: Colors.white,
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: (state is ChapterImageFetchSuccess)
+                            ? state.chapterImage.listImage.length
+                            : 1,
+                        itemBuilder: (context, index) {
+                          if (state is ChapterImageFetchSuccess) {
+                            List<String> urls = state.chapterImage.listImage;
+                            return CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              imageUrl: urls[index],
+                              placeholder: (context, url) => Wrap(
+                                alignment: WrapAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(5.0),
+                                    child: CircularProgressIndicator(),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+
+                          return Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: CircularProgressIndicator(),
+                              )
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 );
@@ -159,12 +188,14 @@ class _ChapterScreenState extends State<ChapterScreen> {
                 child: Container(
                   color: Colors.white60,
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
-                    (_detailMangaBloc.state as DetailMangaFetchSuccess)
-                        .detailManga
-                        .title,
-                    style: Theme.of(context).textTheme.headline6,
-                    textAlign: TextAlign.center,
+                  child: Center(
+                    child: Text(
+                      (_detailMangaBloc.state as DetailMangaFetchSuccess)
+                          .detailManga
+                          .title,
+                      style: Theme.of(context).textTheme.headline6,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
