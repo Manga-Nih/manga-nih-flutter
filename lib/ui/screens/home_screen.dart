@@ -207,12 +207,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPopularManga() {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          children: [
-            Row(
+    return SliverToBoxAdapter(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -227,39 +227,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            Container(
-              height: 200.0,
-              child: BlocBuilder<PopularMangaBloc, PopularMangaState>(
-                builder: (context, state) {
-                  if (state is PopularMangaFetchSuccess) {
-                    return ListView.builder(
-                      itemCount: 10,
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        PopularManga popularManga = state.listPopular[index];
-
-                        return MangaItem(
-                          popularManga: popularManga,
-                          onTap: _popularMangaItemAction,
-                        );
-                      },
-                    );
-                  }
-
+          ),
+          Container(
+            height: 200.0,
+            child: BlocBuilder<PopularMangaBloc, PopularMangaState>(
+              builder: (context, state) {
+                if (state is PopularMangaFetchSuccess) {
                   return ListView.builder(
-                    itemCount: 4,
+                    itemCount: 10,
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return MangaItem.loading();
+                      PopularManga popularManga = state.listPopular[index];
+
+                      return MangaItem(
+                        popularManga: popularManga,
+                        onTap: _popularMangaItemAction,
+                      );
                     },
                   );
-                },
-              ),
+                }
+
+                return ListView.builder(
+                  itemCount: 4,
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return MangaItem.loading();
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
