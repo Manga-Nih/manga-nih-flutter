@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
-import 'package:intl/intl.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/helpers/helpers.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
@@ -35,11 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _genreBloc.add(GenreFetch());
 
     super.initState();
-  }
-
-  void _profileAction() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProfileScreen()));
   }
 
   void _searchAction() {
@@ -139,17 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserFetchSuccess) {
-                  return HeaderProfile(
-                    name: state.name,
-                    onTap: _profileAction,
-                  );
-                }
-                return HeaderProfile.defaultValue(onTap: _profileAction);
-              },
-            ),
+            HeaderProfile(),
             const SizedBox(height: 20.0),
             MaterialButton(
               onPressed: _searchAction,

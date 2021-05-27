@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class UserState extends Equatable {
   UserState();
@@ -20,11 +21,10 @@ class UserError extends UserState {
 }
 
 class UserFetchSuccess extends UserState {
-  final String name;
-  final String email;
+  final User user;
 
-  UserFetchSuccess({required this.name, required this.email});
+  UserFetchSuccess({required this.user});
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [user];
 }

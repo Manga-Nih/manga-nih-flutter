@@ -19,10 +19,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (event is UserFetch) {
         User? user = _firebaseAuth.currentUser;
         if (user != null) {
-          yield UserFetchSuccess(
-            name: user.displayName!,
-            email: user.email!,
-          );
+          yield UserFetchSuccess(user: user);
         }
       }
 
@@ -31,10 +28,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         if (user != null) {
           await user.updateProfile(displayName: event.name);
 
-          yield UserFetchSuccess(
-            name: event.name,
-            email: user.email!,
-          );
+          yield UserFetchSuccess(user: user);
         }
       }
 
@@ -50,7 +44,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         User? user = userCredential.user;
 
         if (user != null) {
-          yield UserFetchSuccess(name: user.displayName!, email: user.email!);
+          yield UserFetchSuccess(user: user);
         }
       }
 
@@ -68,12 +62,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         if (user != null) {
           // update name
           await user.updateProfile(displayName: event.name);
-        }
 
-        yield UserFetchSuccess(
-          name: event.name,
-          email: event.email,
-        );
+          yield UserFetchSuccess(user: user);
+        }
       }
     } catch (e) {
       print(e);

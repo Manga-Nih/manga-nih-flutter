@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/event_states/event_states.dart';
 import 'package:manga_nih/helpers/helpers.dart';
+import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class HeaderProfile extends StatelessWidget {
-  final String name;
-  final VoidCallback onTap;
-
-  const HeaderProfile({
-    Key? key,
-    required this.name,
-    required this.onTap,
-  }) : super(key: key);
-
-  const HeaderProfile.defaultValue({required this.onTap}) : this.name = '';
+  void _profileAction(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => _profileAction(context),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -28,9 +26,13 @@ class HeaderProfile extends StatelessWidget {
             children: [
               Text(greetingNow(), style: Theme.of(context).textTheme.bodyText2),
               const SizedBox(height: 5.0),
-              Text(
-                name,
-                style: Theme.of(context).textTheme.bodyText1,
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  return Text(
+                    (state is UserFetchSuccess) ? state.user.displayName! : '',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  );
+                },
               ),
             ],
           ),

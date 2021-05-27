@@ -22,11 +22,6 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
   }
 
-  void _profileAction() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-  }
-
   void _searchAction(String value) {
     _searchMangaBloc.add(SearchMangaFetch(keyword: value));
   }
@@ -61,17 +56,7 @@ class _SearchScreenState extends State<SearchScreen> {
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserFetchSuccess) {
-                  return HeaderProfile(
-                    name: state.name,
-                    onTap: _profileAction,
-                  );
-                }
-                return HeaderProfile.defaultValue(onTap: _profileAction);
-              },
-            ),
+            HeaderProfile(),
             const SizedBox(height: 20.0),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),

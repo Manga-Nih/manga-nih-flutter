@@ -85,11 +85,6 @@ class _ListGenreMangaState extends State<ListGenreManga> {
     _genreMangaBloc.add(GenreMangaFetch(genre: _genre, page: page));
   }
 
-  void _profileAction() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-  }
-
   void _genreAction(Genre genre) {
     setState(() {
       _genre = genre;
@@ -174,17 +169,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-            child: BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserFetchSuccess) {
-                  return HeaderProfile(
-                    name: state.name,
-                    onTap: _profileAction,
-                  );
-                }
-                return HeaderProfile.defaultValue(onTap: _profileAction);
-              },
-            ),
+            child: HeaderProfile(),
           ),
           const SizedBox(height: 20.0),
           Container(

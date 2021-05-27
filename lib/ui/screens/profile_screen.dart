@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // set name
     UserState state = _userBloc.state;
     if (state is UserFetchSuccess) {
-      _editNameController.text = state.name;
+      _editNameController.text = state.user.displayName!;
     }
 
     super.initState();
@@ -212,12 +212,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    (state is UserFetchSuccess) ? state.name : '',
+                    (state is UserFetchSuccess) ? state.user.displayName! : '',
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                   const SizedBox(height: 5.0),
                   Text(
-                    (state is UserFetchSuccess) ? state.email : '',
+                    (state is UserFetchSuccess) ? state.user.email! : '',
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ],
