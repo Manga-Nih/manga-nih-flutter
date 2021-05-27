@@ -190,11 +190,10 @@ class _ChapterScreenState extends State<ChapterScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Center(
                     child: Text(
-                      (_detailMangaBloc.state as DetailMangaFetchSuccess)
-                          .detailManga
-                          .title,
+                      widget.chapter.title,
                       style: Theme.of(context).textTheme.headline6,
                       textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
