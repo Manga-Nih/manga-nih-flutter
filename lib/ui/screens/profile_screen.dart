@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/configs/pallette.dart';
+import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
@@ -109,6 +110,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  void _favoriteAction() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FavoriteHistoryScreen(
+            section: FavoriteHistorySection.favorite,
+          ),
+        ));
+  }
+
+  void _historyAction() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FavoriteHistoryScreen(
+            section: FavoriteHistorySection.history,
+          ),
+        ));
   }
 
   void _logoutAction() async {
@@ -243,13 +264,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ProfileButton(
           label: 'Favorite',
           icon: Icons.favorite_border_outlined,
-          onPressed: () {},
+          onPressed: _favoriteAction,
         ),
         const SizedBox(height: 10.0),
         ProfileButton(
           label: 'History',
           icon: Icons.history_outlined,
-          onPressed: () {},
+          onPressed: _historyAction,
         ),
       ],
     );

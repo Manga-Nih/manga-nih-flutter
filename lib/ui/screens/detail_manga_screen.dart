@@ -5,6 +5,7 @@ import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/configs/pallette.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
+import 'package:manga_nih/helpers/helpers.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
@@ -21,19 +22,23 @@ class DetailMangaScreen extends StatefulWidget {
 }
 
 class _DetailMangaScreenState extends State<DetailMangaScreen> {
+  late SnackbarBloc _snackbarBloc;
   late DetailMangaBloc _detailMangaBloc;
+  late FavoriteMangaBloc _favoriteMangaBloc;
   late DetailMangaSection _section;
 
   @override
   void initState() {
     // init bloc
+    _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
+    _favoriteMangaBloc = BlocProvider.of<FavoriteMangaBloc>(context);
 
     // avoid to fetch data again with same manga
     DetailMangaState state = _detailMangaBloc.state;
     if (state is DetailMangaFetchSuccess) {
-      if (state.detailManga.endpoint.replaceAll('/', '') !=
-          widget.mangaEndpoint.replaceAll('/', '')) {
+      if (removeSlash(state.detailManga.endpoint) !=
+          removeSlash(widget.mangaEndpoint)) {
         // fetch data
         _detailMangaBloc.add(DetailMangaFetch(endpoint: widget.mangaEndpoint));
       }
@@ -42,10 +47,89 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
       _detailMangaBloc.add(DetailMangaFetch(endpoint: widget.mangaEndpoint));
     }
 
+    // fetch favorite manga to check is favorite or not
+    _favoriteMangaBloc.add(FavoriteMangaFetch(endpoint: widget.mangaEndpoint));
+
     // init section
     _section = DetailMangaSection.information;
 
     super.initState();
+  }
+
+  void _favoriteAction() {
+    FavoriteMangaState favoriteMangaState = _favoriteMangaBloc.state;
+    if (favoriteMangaState is FavoriteMangaNotExist) {
+      _snackbarBloc.add(SnackbarShow.custom(false, 'Added it to favorite'));
+
+      _addRemoveFavoriteAction();
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            title: Text(
+              'Favorite Manga',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6!
+                  .copyWith(color: Colors.red),
+            ),
+            content: Text('Are you sure want to remove it ?'),
+            actions: [
+              MaterialButton(
+                onPressed: () => Navigator.pop(context),
+                color: Pallette.buttonColor,
+                minWidth: 100.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text('Nah, i still love this one'),
+              ),
+              MaterialButton(
+                onPressed: () {
+                  _snackbarBloc.add(
+                      SnackbarShow.custom(false, 'Removed it from favorite'));
+
+                  _addRemoveFavoriteAction();
+                  Navigator.pop(context);
+                },
+                minWidth: 70.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                child: Text(
+                  'Yes...',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button!
+                      .copyWith(color: Colors.red),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _addRemoveFavoriteAction() {
+    DetailMangaState detailMangaState = _detailMangaBloc.state;
+
+    if (detailMangaState is DetailMangaFetchSuccess) {
+      FavoriteManga favoriteManga = FavoriteManga(
+        title: detailMangaState.detailManga.title,
+        type: detailMangaState.detailManga.type,
+        endpoint: detailMangaState.detailManga.endpoint,
+        thumb: detailMangaState.detailManga.thumb,
+      );
+
+      _favoriteMangaBloc
+          .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
+    }
   }
 
   void _informationSectionAction() {
@@ -167,25 +251,41 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                   (state is DetailMangaFetchSuccess)
                       ? Align(
                           alignment: Alignment.bottomRight,
-                          child: Container(
-                            margin: const EdgeInsets.all(10.0),
+                          child: Padding(
                             padding: const EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Pallette.gradientStartColor,
-                                  Pallette.gradientEndColor
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                stops: [0.5, 0.8],
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: _favoriteAction,
+                                borderRadius: BorderRadius.circular(50.0),
+                                child: Ink(
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Pallette.gradientStartColor,
+                                        Pallette.gradientEndColor
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      stops: [0.5, 0.8],
+                                    ),
+                                  ),
+                                  child: BlocBuilder<FavoriteMangaBloc,
+                                      FavoriteMangaState>(
+                                    builder: (context, state) {
+                                      return Icon(
+                                        (state is FavoriteMangaExist)
+                                            ? Icons.favorite_outline
+                                            : Icons.favorite,
+                                        color: Colors.white,
+                                        size: 25.0,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Icon(
-                              Icons.favorite,
-                              color: Colors.white,
-                              size: 25.0,
                             ),
                           ),
                         )
@@ -369,8 +469,9 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Chapter',
+                          'Available Chapter',
                           style: Theme.of(context).textTheme.bodyText1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 10.0),
                         Text(

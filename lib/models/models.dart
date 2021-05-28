@@ -9,3 +9,4 @@ export 'chapter.dart';
 export 'chapter_image.dart';
 export 'search_manga.dart';
 export 'favorite_manga.dart';
+export 'history_manga.dart';

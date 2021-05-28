@@ -18,6 +18,7 @@ class ChapterScreen extends StatefulWidget {
 class _ChapterScreenState extends State<ChapterScreen> {
   late DetailMangaBloc _detailMangaBloc;
   late ChapterImageBloc _chapterImageBloc;
+  late HistoryMangaBloc _historyMangaBloc;
   late ScrollController _scrollController;
   late TransformationController _transformationController;
   late int _curIndexChapter;
@@ -32,12 +33,17 @@ class _ChapterScreenState extends State<ChapterScreen> {
     // init blocs
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
     _chapterImageBloc = BlocProvider.of<ChapterImageBloc>(context);
+    _historyMangaBloc = BlocProvider.of<HistoryMangaBloc>(context);
 
     // init controller
     _scrollController = ScrollController();
     _transformationController = TransformationController();
 
+    // set
+    _isVisible = true;
     _isZoomed = false;
+    _isHasNext = false;
+    _isHasPrev = false;
 
     // check if has previous or next chapter
     DetailMangaState state = _detailMangaBloc.state;
@@ -47,11 +53,19 @@ class _ChapterScreenState extends State<ChapterScreen> {
       _curIndexChapter =
           _listChapter.indexWhere((element) => element == widget.chapter);
 
-      _isHasNext = false;
-      _isHasPrev = false;
-
+      // manage is manga has previous/next chapter
       if (_curIndexChapter != 0) _isHasNext = true;
       if (_curIndexChapter != (length - 1)) _isHasPrev = true;
+
+      // store last chapter
+      HistoryManga historyManga = HistoryManga(
+        title: state.detailManga.title,
+        type: state.detailManga.type,
+        thumb: state.detailManga.thumb,
+        endpoint: state.detailManga.endpoint,
+        lastChapter: widget.chapter,
+      );
+      _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
     }
 
     // avoid to fetch data again with same chapter
@@ -69,7 +83,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
     }
 
     // set controller to handle visibility app bar and bottom bar
-    _isVisible = true;
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {

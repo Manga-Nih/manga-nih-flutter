@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
@@ -14,6 +15,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late FirebaseAuth _firebaseAuth;
+  late FirebaseDatabase _firebaseDatabase;
   late SnackbarBloc _snackbarBloc;
   late bool _initialized;
 
@@ -37,6 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // init firebase
       _firebaseAuth = FirebaseAuth.instance;
+      _firebaseDatabase = FirebaseDatabase.instance;
+
+      // set persistance
+      await _firebaseDatabase.setPersistenceEnabled(true);
 
       // sleep for 2 seconds
       await Future.delayed(Duration(seconds: 2));

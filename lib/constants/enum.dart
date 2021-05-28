@@ -6,3 +6,5 @@ enum TypeManga {
 }
 
 enum DetailMangaSection { information, chapter }
+
+enum FavoriteHistorySection { favorite, history }

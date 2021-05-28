@@ -42,6 +42,10 @@ class MyApp extends StatelessWidget {
             create: (_) => ChapterImageBloc(_snackbarBloc)),
         BlocProvider<SearchMangaBloc>(
             create: (_) => SearchMangaBloc(_snackbarBloc)),
+        BlocProvider<FavoriteMangaBloc>(
+            create: (_) => FavoriteMangaBloc(_snackbarBloc)),
+        BlocProvider<HistoryMangaBloc>(
+            create: (_) => HistoryMangaBloc(_snackbarBloc)),
       ],
       child: MaterialApp(
         title: 'Manga nih',

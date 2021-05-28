@@ -1,5 +1,7 @@
 String cleanThumb(String url) => url.split('?')[0];
 
+String removeSlash(String str) => str.replaceAll('/', '');
+
 String typeMangaImage(String type) {
   if (type.toLowerCase() == 'manga') return 'images/japan_flag.png';
   if (type.toLowerCase() == 'manhua') return 'images/china_flag.png';

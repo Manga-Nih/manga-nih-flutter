@@ -57,6 +57,21 @@ class MangaCard<T> extends StatelessWidget {
       uploadOn = (manga as SearchManga).uploadOn;
     }
 
+    if (manga is FavoriteManga) {
+      thumb = (manga as FavoriteManga).thumb;
+      type = (manga as FavoriteManga).type;
+      typeImage = (manga as FavoriteManga).typeImage;
+      title = (manga as FavoriteManga).title;
+    }
+
+    if (manga is HistoryManga) {
+      thumb = (manga as HistoryManga).thumb;
+      type = (manga as HistoryManga).type;
+      typeImage = (manga as HistoryManga).typeImage;
+      title = (manga as HistoryManga).title;
+      chapter = (manga as HistoryManga).lastChapter.title;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Stack(
@@ -148,19 +163,27 @@ class MangaCard<T> extends StatelessWidget {
                               ? SizedBox.shrink()
                               : Positioned(
                                   top: 10.0,
+                                  left: 10.0,
                                   right: 10.0,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 20.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(50.0),
-                                    ),
-                                    child: Text(
-                                      chapter,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
+                                  child: Wrap(
+                                    alignment: WrapAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 20.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(50.0),
+                                        ),
+                                        child: Text(
+                                          chapter,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                         ],
