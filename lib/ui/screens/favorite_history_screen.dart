@@ -21,8 +21,8 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
   late FavoriteMangaBloc _favoriteMangaBloc;
   late HistoryMangaBloc _historyMangaBloc;
   late FavoriteHistorySection _section;
-  late List<FavoriteManga> _listFavoriteManga;
-  late List<HistoryManga> _listHistoryManga;
+  late List<FavoriteManga>? _listFavoriteManga;
+  late List<HistoryManga>? _listHistoryManga;
 
   @override
   void initState() {
@@ -31,11 +31,14 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
     _historyMangaBloc = BlocProvider.of<HistoryMangaBloc>(context);
 
     // init list
-    _listFavoriteManga = [];
-    _listHistoryManga = [];
+    _listFavoriteManga = null;
+    _listHistoryManga = null;
 
     // set section
     _section = widget.section;
+
+    // fetch data
+    _fetchData();
 
     super.initState();
   }
@@ -70,9 +73,6 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // get list data when capsule button selected
-    _fetchData();
-
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
@@ -117,7 +117,10 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
               children: [
                 CapsuleButton(
                   onPressed: () {
-                    setState(() => _section = FavoriteHistorySection.favorite);
+                    setState(() {
+                      _section = FavoriteHistorySection.favorite;
+                      _fetchData();
+                    });
                   },
                   label: 'Favorite',
                   isSelected: _section == FavoriteHistorySection.favorite,
@@ -125,7 +128,10 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
                 const SizedBox(width: 15.0),
                 CapsuleButton(
                   onPressed: () {
-                    setState(() => _section = FavoriteHistorySection.history);
+                    setState(() {
+                      _section = FavoriteHistorySection.history;
+                      _fetchData();
+                    });
                   },
                   label: 'History',
                   isSelected: _section == FavoriteHistorySection.history,
@@ -146,13 +152,19 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
         }
       },
       child: ListView.builder(
+        physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          return MangaCard<FavoriteManga>(
-            manga: _listFavoriteManga[index],
-            onTap: _detailMangaAction,
-          );
+          if (_listFavoriteManga != null) {
+            return MangaCard<FavoriteManga>(
+              manga: _listFavoriteManga![index],
+              onTap: _detailMangaAction,
+            );
+          } else {
+            return MangaCard.loading();
+          }
         },
-        itemCount: _listFavoriteManga.length,
+        itemCount:
+            (_listFavoriteManga != null) ? _listFavoriteManga!.length : 1,
       ),
     );
   }
@@ -165,13 +177,18 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
         }
       },
       child: ListView.builder(
+        physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          return MangaCard<HistoryManga>(
-            manga: _listHistoryManga[index],
-            onTap: _chapterAction,
-          );
+          if (_listHistoryManga != null) {
+            return MangaCard<HistoryManga>(
+              manga: _listHistoryManga![index],
+              onTap: _chapterAction,
+            );
+          } else {
+            return MangaCard.loading();
+          }
         },
-        itemCount: _listHistoryManga.length,
+        itemCount: (_listHistoryManga != null) ? _listHistoryManga!.length : 1,
       ),
     );
   }

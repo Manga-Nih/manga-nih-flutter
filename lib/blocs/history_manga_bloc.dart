@@ -53,8 +53,11 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
 
       if (event is HistoryMangaFetchList) {
         DataSnapshot dataSnapshot = await _historiesReference.once();
-        Map<dynamic, dynamic> map = dataSnapshot.value;
-        List<HistoryManga> list = HistoryManga.toList(map.values.toList());
+        List<HistoryManga> list = [];
+        if (dataSnapshot.value != null) {
+          Map<dynamic, dynamic> map = dataSnapshot.value;
+          list = HistoryManga.toList(map.values.toList());
+        }
 
         yield HistoryMangaFetchListSuccess(listHistoryManga: list);
       }

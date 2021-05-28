@@ -63,8 +63,11 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
 
       if (event is FavoriteMangaFetchList) {
         DataSnapshot dataSnapshot = await _favoritesReference.once();
-        Map<dynamic, dynamic> map = dataSnapshot.value;
-        List<FavoriteManga> list = FavoriteManga.toList(map.values.toList());
+        List<FavoriteManga> list = [];
+        if (dataSnapshot.value != null) {
+          Map<dynamic, dynamic> map = dataSnapshot.value;
+          list = FavoriteManga.toList(map.values.toList());
+        }
 
         yield FavoriteMangaFetchListSuccess(listFavoriteManga: list);
       }
