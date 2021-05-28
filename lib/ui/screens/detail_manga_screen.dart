@@ -109,11 +109,17 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   void _chapterAction(Chapter chapter) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChapterScreen(chapter: chapter),
-        ));
+    DetailMangaState state = _detailMangaBloc.state;
+    if (state is DetailMangaFetchSuccess) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChapterScreen.fromDetailManga(
+              detailManga: state.detailManga,
+              chapter: chapter,
+            ),
+          ));
+    }
   }
 
   @override

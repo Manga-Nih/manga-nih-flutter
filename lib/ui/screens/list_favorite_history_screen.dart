@@ -57,8 +57,10 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              ChapterScreen(chapter: historyManga.lastChapter),
+          builder: (context) => ChapterScreen.fromListFavoriteHistoryManga(
+            chapter: historyManga.lastChapter,
+            mangaEndpoint: historyManga.endpoint,
+          ),
         ));
   }
 

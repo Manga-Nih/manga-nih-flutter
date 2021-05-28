@@ -8,8 +8,16 @@ import 'package:manga_nih/models/models.dart';
 
 class ChapterScreen extends StatefulWidget {
   final Chapter chapter;
+  final DetailManga? detailManga;
+  final String? mangaEndpoint;
 
-  const ChapterScreen({Key? key, required this.chapter}) : super(key: key);
+  const ChapterScreen.fromDetailManga(
+      {required this.chapter, required this.detailManga})
+      : this.mangaEndpoint = null;
+
+  const ChapterScreen.fromListFavoriteHistoryManga(
+      {required this.chapter, required this.mangaEndpoint})
+      : this.detailManga = null;
 
   @override
   _ChapterScreenState createState() => _ChapterScreenState();
@@ -21,8 +29,10 @@ class _ChapterScreenState extends State<ChapterScreen> {
   late HistoryMangaBloc _historyMangaBloc;
   late ScrollController _scrollController;
   late TransformationController _transformationController;
-  late int _curIndexChapter;
   late List<Chapter> _listChapter;
+  late DetailManga? _curManga;
+  late Chapter _curChapter;
+  late int _curIndexChapter;
   late bool _isVisible;
   late bool _isHasPrev;
   late bool _isHasNext;
@@ -44,42 +54,31 @@ class _ChapterScreenState extends State<ChapterScreen> {
     _isZoomed = false;
     _isHasNext = false;
     _isHasPrev = false;
+    _curManga = widget.detailManga;
+    _curChapter = widget.chapter;
 
     // check if has previous or next chapter
-    DetailMangaState state = _detailMangaBloc.state;
-    if (state is DetailMangaFetchSuccess) {
-      int length = state.detailManga.listChapter.length;
-      _listChapter = state.detailManga.listChapter;
-      _curIndexChapter =
-          _listChapter.indexWhere((element) => element == widget.chapter);
-
-      // manage is manga has previous/next chapter
-      if (_curIndexChapter != 0) _isHasNext = true;
-      if (_curIndexChapter != (length - 1)) _isHasPrev = true;
-
-      // store last chapter
-      HistoryManga historyManga = HistoryManga(
-        title: state.detailManga.title,
-        type: state.detailManga.type,
-        thumb: state.detailManga.thumb,
-        endpoint: state.detailManga.endpoint,
-        lastChapter: widget.chapter,
-      );
-      _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
+    // if not null from DetailMangaScreen
+    // if null from ListFavoriteHistoryScreen
+    if (_curManga != null) {
+      _isHavePrevNextChapter();
+      _addHistory();
+    } else {
+      // fetch detail manga to get prev and next chapter
+      _detailMangaBloc.add(DetailMangaFetch(endpoint: widget.mangaEndpoint!));
     }
 
     // avoid to fetch data again with same chapter
     ChapterImageState chapterImageState = _chapterImageBloc.state;
     if (chapterImageState is ChapterImageFetchSuccess) {
-      if (chapterImageState.chapterImage.endpoint != widget.chapter.endpoint) {
+      if (chapterImageState.chapterImage.endpoint != _curChapter.endpoint) {
         // fetch data image
         _chapterImageBloc
-            .add(ChapterImageFetch(endpoint: widget.chapter.endpoint));
+            .add(ChapterImageFetch(endpoint: _curChapter.endpoint));
       }
     } else {
       // fetch data image
-      _chapterImageBloc
-          .add(ChapterImageFetch(endpoint: widget.chapter.endpoint));
+      _chapterImageBloc.add(ChapterImageFetch(endpoint: _curChapter.endpoint));
     }
 
     // set controller to handle visibility app bar and bottom bar
@@ -106,6 +105,54 @@ class _ChapterScreenState extends State<ChapterScreen> {
     super.dispose();
   }
 
+  void _isHavePrevNextChapter() {
+    int length = _curManga!.listChapter.length;
+    _listChapter = _curManga!.listChapter;
+    _curIndexChapter =
+        _listChapter.indexWhere((element) => element == _curChapter);
+
+    // reset
+    _isHasNext = false;
+    _isHasPrev = false;
+
+    // manage is manga has previous/next chapter
+    if (_curIndexChapter != 0) _isHasNext = true;
+    if (_curIndexChapter != (length - 1)) _isHasPrev = true;
+    // to trigger rebuild widget
+    setState(() {});
+  }
+
+  // if from DetailManga save add to history
+  // if from ListFavoriteHistory don't save to history
+  void _addHistory() {
+    // store last chapter
+    HistoryManga historyManga = HistoryManga(
+      title: _curManga!.title,
+      type: _curManga!.type,
+      thumb: _curManga!.thumb,
+      endpoint: _curManga!.endpoint,
+      lastChapter: _curChapter,
+    );
+    _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
+  }
+
+  void _chapterChangeListener(BuildContext context, ChapterImageState state) {
+    // update chapter when prev or next
+    if (state is ChapterImageFetchSuccess) {
+      // check if _curChapter don't equal, to avoid re build prev and next chapter
+      if (_curChapter.endpoint != state.chapterImage.endpoint) {
+        // get title from detail manga list chapter
+        Chapter chapter = _curManga!.listChapter
+            .where((element) => element.endpoint == state.chapterImage.endpoint)
+            .first;
+
+        _curChapter = chapter;
+        _isHavePrevNextChapter();
+        _addHistory();
+      }
+    }
+  }
+
   void _prevAction() {
     int prevIndex = _curIndexChapter + 1;
     Chapter prevChapter = _listChapter[prevIndex];
@@ -122,161 +169,165 @@ class _ChapterScreenState extends State<ChapterScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          children: [
-            BlocBuilder<ChapterImageBloc, ChapterImageState>(
-              builder: (context, state) {
-                return GestureDetector(
-                  onDoubleTap: () {},
-                  onDoubleTapDown: (details) {
-                    double x = -1 * details.globalPosition.dx;
-                    double y = -1 * details.globalPosition.dy;
+        body: BlocListener<DetailMangaBloc, DetailMangaState>(
+          listener: (context, state) {
+            // fetch data if from ListFavoriteHistoryManga
+            if (state is DetailMangaFetchSuccess) {
+              _curManga = state.detailManga;
+              _isHavePrevNextChapter();
+            }
+          },
+          child: BlocConsumer<ChapterImageBloc, ChapterImageState>(
+            listener: _chapterChangeListener,
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  GestureDetector(
+                    onDoubleTap: () {},
+                    onDoubleTapDown: (details) {
+                      double x = -1 * details.globalPosition.dx;
+                      double y = -1 * details.globalPosition.dy;
 
-                    if (_isZoomed) {
-                      Matrix4 matrix = Matrix4.identity().scaled(1.0, 1.0, 1.0);
-                      _transformationController.value = matrix;
-                      _isZoomed = false;
-                    } else {
-                      // scale x and y to 2.0 base on maxScale InteractiveViewer
-                      Matrix4 matrix = Matrix4.identity().scaled(2.0, 2.0, 1.0);
-                      // multiply 0.5 to get x and y value before scaled
-                      matrix.translate(x * 0.5, y * 0.5);
-                      _transformationController.value = matrix;
-                      _isZoomed = true;
-                    }
-                  },
-                  child: InteractiveViewer(
-                    transformationController: _transformationController,
-                    minScale: 0.5,
-                    maxScale: 2,
-                    child: GlowingOverscrollIndicator(
-                      axisDirection: AxisDirection.down,
-                      color: Colors.white,
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: (state is ChapterImageFetchSuccess)
-                            ? state.chapterImage.listImage.length
-                            : 1,
-                        itemBuilder: (context, index) {
-                          if (state is ChapterImageFetchSuccess) {
-                            List<String> urls = state.chapterImage.listImage;
-                            return CachedNetworkImage(
-                              fit: BoxFit.fill,
-                              imageUrl: urls[index],
-                              placeholder: (context, url) => Wrap(
-                                alignment: WrapAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(5.0),
-                                    child: CircularProgressIndicator(),
-                                  )
-                                ],
-                              ),
+                      if (_isZoomed) {
+                        Matrix4 matrix =
+                            Matrix4.identity().scaled(1.0, 1.0, 1.0);
+                        _transformationController.value = matrix;
+                        _isZoomed = false;
+                      } else {
+                        // scale x and y to 2.0 base on maxScale InteractiveViewer
+                        Matrix4 matrix =
+                            Matrix4.identity().scaled(2.0, 2.0, 1.0);
+                        // multiply 0.5 to get x and y value before scaled
+                        matrix.translate(x * 0.5, y * 0.5);
+                        _transformationController.value = matrix;
+                        _isZoomed = true;
+                      }
+                    },
+                    child: InteractiveViewer(
+                      transformationController: _transformationController,
+                      minScale: 0.5,
+                      maxScale: 2,
+                      child: GlowingOverscrollIndicator(
+                        axisDirection: AxisDirection.down,
+                        color: Colors.white,
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: (state is ChapterImageFetchSuccess)
+                              ? state.chapterImage.listImage.length
+                              : 1,
+                          itemBuilder: (context, index) {
+                            if (state is ChapterImageFetchSuccess) {
+                              List<String> urls = state.chapterImage.listImage;
+                              return CachedNetworkImage(
+                                fit: BoxFit.fill,
+                                imageUrl: urls[index],
+                                placeholder: (context, url) => Wrap(
+                                  alignment: WrapAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(5.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+
+                            return Wrap(
+                              alignment: WrapAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: CircularProgressIndicator(),
+                                )
+                              ],
                             );
-                          }
-
-                          return Wrap(
-                            alignment: WrapAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: CircularProgressIndicator(),
-                              )
-                            ],
-                          );
-                        },
+                          },
+                        ),
                       ),
                     ),
                   ),
-                );
-              },
+                  _buildHeader(state),
+                  _buildFooter(state),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ChapterImageState state) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        height: _isVisible ? 60.0 : 0.0,
+        child: Container(
+          color: Colors.white60,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Center(
+            child: Text(
+              (state is ChapterImageFetchSuccess) ? _curChapter.title : '',
+              style: Theme.of(context).textTheme.headline6,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                height: _isVisible ? 60.0 : 0.0,
-                child: Container(
-                  color: Colors.white60,
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Center(
-                    child: Text(
-                      widget.chapter.title,
-                      style: Theme.of(context).textTheme.headline6,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                height: _isVisible ? 60.0 : 0.0,
-                child: Container(
-                  color: Colors.white60,
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _isHasPrev
-                          ? BlocBuilder<ChapterImageBloc, ChapterImageState>(
-                              builder: (context, state) {
-                                return MaterialButton(
-                                  onPressed: (state is ChapterImageFetchSuccess)
-                                      ? _prevAction
-                                      : () {},
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.chevron_left),
-                                      const SizedBox(width: 3.0),
-                                      Text(
-                                        'Previous',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          : SizedBox.shrink(),
-                      _isHasNext
-                          ? BlocBuilder<ChapterImageBloc, ChapterImageState>(
-                              builder: (context, state) {
-                                return MaterialButton(
-                                  onPressed: (state is ChapterImageFetchSuccess)
-                                      ? _nextAction
-                                      : () {},
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Next',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                      const SizedBox(width: 3.0),
-                                      Icon(Icons.chevron_right),
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          : SizedBox.shrink(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooter(ChapterImageState state) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        height: _isVisible ? 60.0 : 0.0,
+        child: Container(
+          color: Colors.white60,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _isHasPrev && (state is ChapterImageFetchSuccess)
+                  ? MaterialButton(
+                      onPressed: _prevAction,
+                      child: Row(
+                        children: [
+                          Icon(Icons.chevron_left),
+                          const SizedBox(width: 3.0),
+                          Text(
+                            'Previous',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              _isHasNext && (state is ChapterImageFetchSuccess)
+                  ? MaterialButton(
+                      onPressed: _nextAction,
+                      child: Row(
+                        children: [
+                          Text(
+                            'Next',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          const SizedBox(width: 3.0),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink(),
+            ],
+          ),
         ),
       ),
     );
