@@ -8,4 +8,4 @@ export 'search_screen.dart';
 export 'login_screen.dart';
 export 'register_screen.dart';
 export 'splash_screen.dart';
-export 'favorite_history_screen.dart';
+export 'list_favorite_history_screen.dart';

@@ -413,6 +413,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
 
   Widget _buildInformationSection(DetailMangaState state) {
     return ListView(
+      padding: const EdgeInsets.only(bottom: 20.0),
       physics: BouncingScrollPhysics(),
       children: [
         Row(

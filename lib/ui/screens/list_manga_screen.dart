@@ -92,7 +92,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(
         children: [
           Padding(

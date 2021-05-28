@@ -7,17 +7,18 @@ import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
-class FavoriteHistoryScreen extends StatefulWidget {
+class ListFavoriteHistoryScreen extends StatefulWidget {
   final FavoriteHistorySection section;
 
-  const FavoriteHistoryScreen({Key? key, required this.section})
+  const ListFavoriteHistoryScreen({Key? key, required this.section})
       : super(key: key);
 
   @override
-  _FavoriteHistoryScreenState createState() => _FavoriteHistoryScreenState();
+  _ListFavoriteHistoryScreenState createState() =>
+      _ListFavoriteHistoryScreenState();
 }
 
-class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
+class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
   late FavoriteMangaBloc _favoriteMangaBloc;
   late HistoryMangaBloc _historyMangaBloc;
   late FavoriteHistorySection _section;
@@ -100,7 +101,7 @@ class _FavoriteHistoryScreenState extends State<FavoriteHistoryScreen> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(
         children: [
           Padding(

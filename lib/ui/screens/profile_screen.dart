@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FavoriteHistoryScreen(
+          builder: (context) => ListFavoriteHistoryScreen(
             section: FavoriteHistorySection.favorite,
           ),
         ));
@@ -126,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => FavoriteHistoryScreen(
+          builder: (context) => ListFavoriteHistoryScreen(
             section: FavoriteHistorySection.history,
           ),
         ));
