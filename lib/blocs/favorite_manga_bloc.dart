@@ -3,7 +3,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/helpers/helpers.dart';
 import 'package:manga_nih/models/models.dart';
 
 class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
@@ -19,20 +18,6 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
   @override
   Stream<FavoriteMangaState> mapEventToState(FavoriteMangaEvent event) async* {
     try {
-      if (event is FavoriteMangaFetch) {
-        // get child by value
-        DataSnapshot data = await _favoritesReference
-            .orderByChild('endpoint')
-            .equalTo(removeSlash(event.endpoint))
-            .once();
-
-        if (data.value == null) {
-          yield FavoriteMangaNotExist();
-        } else {
-          yield FavoriteMangaExist();
-        }
-      }
-
       if (event is FavoriteMangaAddRemove) {
         // get child by value
         DataSnapshot data = await _favoritesReference
@@ -49,16 +34,14 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
             "typeImage": event.favoriteManga.typeImage,
             "thumb": event.favoriteManga.thumb,
           });
-
-          yield FavoriteMangaExist();
         } else {
           // get key from list item
           Map<dynamic, dynamic> map = data.value;
           String key = map.keys.first;
           await _favoritesReference.child(key).remove();
-
-          yield FavoriteMangaNotExist();
         }
+
+        this.add(FavoriteMangaFetchList());
       }
 
       if (event is FavoriteMangaFetchList) {

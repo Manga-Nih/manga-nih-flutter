@@ -49,6 +49,8 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
             "endpoint": event.historyManga.lastChapter.endpoint,
           });
         }
+
+        this.add(HistoryMangaFetchList());
       }
 
       if (event is HistoryMangaFetchList) {

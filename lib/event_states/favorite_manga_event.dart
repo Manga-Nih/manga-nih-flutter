@@ -14,15 +14,6 @@ class FavoriteMangaAddRemove extends FavoriteMangaEvent {
   List<Object?> get props => [favoriteManga];
 }
 
-class FavoriteMangaFetch extends FavoriteMangaEvent {
-  final String endpoint;
-
-  FavoriteMangaFetch({required this.endpoint});
-
-  @override
-  List<Object?> get props => [endpoint];
-}
-
 class FavoriteMangaFetchList extends FavoriteMangaEvent {
   FavoriteMangaFetchList();
 

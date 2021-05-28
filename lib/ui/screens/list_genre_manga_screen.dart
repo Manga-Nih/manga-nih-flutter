@@ -106,7 +106,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(120.0),
+          preferredSize: Size.fromHeight(130.0),
           child: _buildHeader(),
         ),
         body: Padding(

@@ -26,6 +26,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   late DetailMangaBloc _detailMangaBloc;
   late FavoriteMangaBloc _favoriteMangaBloc;
   late DetailMangaSection _section;
+  late bool _isFavorite;
 
   @override
   void initState() {
@@ -33,6 +34,9 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
     _favoriteMangaBloc = BlocProvider.of<FavoriteMangaBloc>(context);
+
+    // set
+    _isFavorite = false;
 
     // avoid to fetch data again with same manga
     DetailMangaState state = _detailMangaBloc.state;
@@ -48,7 +52,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     }
 
     // fetch favorite manga to check is favorite or not
-    _favoriteMangaBloc.add(FavoriteMangaFetch(endpoint: widget.mangaEndpoint));
+    _favoriteMangaBloc.add(FavoriteMangaFetchList());
 
     // init section
     _section = DetailMangaSection.information;
@@ -57,68 +61,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   void _favoriteAction() {
-    FavoriteMangaState favoriteMangaState = _favoriteMangaBloc.state;
-    if (favoriteMangaState is FavoriteMangaNotExist) {
-      _snackbarBloc.add(SnackbarShow.custom(false, 'Added it to favorite'));
-
-      _addRemoveFavoriteAction();
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            title: Text(
-              'Favorite Manga',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline6!
-                  .copyWith(color: Colors.red),
-            ),
-            content: Text('Are you sure want to remove it ?'),
-            actions: [
-              MaterialButton(
-                onPressed: () => Navigator.pop(context),
-                color: Pallette.buttonColor,
-                minWidth: 100.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text('Nah, i still love this one'),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  _snackbarBloc.add(
-                      SnackbarShow.custom(false, 'Removed it from favorite'));
-
-                  _addRemoveFavoriteAction();
-                  Navigator.pop(context);
-                },
-                minWidth: 70.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                child: Text(
-                  'Yes...',
-                  style: Theme.of(context)
-                      .textTheme
-                      .button!
-                      .copyWith(color: Colors.red),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  void _addRemoveFavoriteAction() {
     DetailMangaState detailMangaState = _detailMangaBloc.state;
-
     if (detailMangaState is DetailMangaFetchSuccess) {
       FavoriteManga favoriteManga = FavoriteManga(
         title: detailMangaState.detailManga.title,
@@ -129,6 +72,31 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
 
       _favoriteMangaBloc
           .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
+
+      // just reverse
+      if (_isFavorite) {
+        _snackbarBloc
+            .add(SnackbarShow.custom(false, 'Removed it from favorite'));
+      } else {
+        _snackbarBloc.add(SnackbarShow.custom(false, 'Added it to favorite'));
+      }
+    }
+  }
+
+  void _favoriteListener(BuildContext context, FavoriteMangaState state) {
+    if (state is FavoriteMangaFetchListSuccess) {
+      List<FavoriteManga> list = state.listFavoriteManga
+          .where((element) =>
+              removeSlash(element.endpoint) ==
+              removeSlash(widget.mangaEndpoint))
+          .toList();
+
+      FavoriteManga? favoriteManga = (list.isNotEmpty) ? list.first : null;
+      if (favoriteManga != null) {
+        setState(() => _isFavorite = true);
+      } else {
+        setState(() => _isFavorite = false);
+      }
     }
   }
 
@@ -152,17 +120,20 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: BlocBuilder<DetailMangaBloc, DetailMangaState>(
-          builder: (context, state) {
-            return CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                _buildAppBar(),
-                _buildMangaInfo(state),
-                _buildBodyContainer(state),
-              ],
-            );
-          },
+        body: BlocListener<FavoriteMangaBloc, FavoriteMangaState>(
+          listener: _favoriteListener,
+          child: BlocBuilder<DetailMangaBloc, DetailMangaState>(
+            builder: (context, state) {
+              return CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: [
+                  _buildAppBar(),
+                  _buildMangaInfo(state),
+                  _buildBodyContainer(state),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -272,17 +243,12 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                                       stops: [0.5, 0.8],
                                     ),
                                   ),
-                                  child: BlocBuilder<FavoriteMangaBloc,
-                                      FavoriteMangaState>(
-                                    builder: (context, state) {
-                                      return Icon(
-                                        (state is FavoriteMangaExist)
-                                            ? Icons.favorite_outline
-                                            : Icons.favorite,
-                                        color: Colors.white,
-                                        size: 25.0,
-                                      );
-                                    },
+                                  child: Icon(
+                                    _isFavorite
+                                        ? Icons.favorite_outline
+                                        : Icons.favorite,
+                                    color: Colors.white,
+                                    size: 25.0,
                                   ),
                                 ),
                               ),
@@ -521,44 +487,64 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
 
   Widget _buildChapterSection(DetailMangaState state) {
     return (state is DetailMangaFetchSuccess)
-        ? ListView.builder(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            physics: BouncingScrollPhysics(),
-            itemCount: state.detailManga.listChapter.length,
-            itemBuilder: (context, index) {
-              Chapter chapter = state.detailManga.listChapter[index];
+        ? BlocBuilder<HistoryMangaBloc, HistoryMangaState>(
+            builder: (context, historyState) {
+              HistoryManga? historyManga;
+              if (historyState is HistoryMangaFetchListSuccess) {
+                List<HistoryManga> list =
+                    historyState.listHistoryManga.where((element) {
+                  return removeSlash(element.endpoint) ==
+                      removeSlash(widget.mangaEndpoint);
+                }).toList();
+                historyManga = (list.isNotEmpty) ? list.first : null;
+              }
 
-              return Container(
-                margin: const EdgeInsets.symmetric(vertical: 5.0),
-                height: 50.0,
-                child: MaterialButton(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 5.0, horizontal: 15.0),
-                  onPressed: () => _chapterAction(chapter),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  color: Colors.grey.shade300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          chapter.title,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
+              return ListView.builder(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                physics: BouncingScrollPhysics(),
+                itemCount: state.detailManga.listChapter.length,
+                itemBuilder: (context, index) {
+                  Chapter chapter = state.detailManga.listChapter[index];
+                  bool isLastRead = (historyManga != null)
+                      ? historyManga.lastChapter.endpoint == chapter.endpoint
+                      : false;
+
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 5.0),
+                    height: 50.0,
+                    child: MaterialButton(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0, horizontal: 15.0),
+                      onPressed: () => _chapterAction(chapter),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
                       ),
-                      const SizedBox(width: 10.0),
-                      Text(
-                        'Last Readed',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(color: Pallette.gradientEndColor),
-                      )
-                    ],
-                  ),
-                ),
+                      color: Colors.grey.shade300,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              chapter.title,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                          const SizedBox(width: 10.0),
+                          (isLastRead)
+                              ? Text(
+                                  'Last Read',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(
+                                          color: Pallette.gradientEndColor),
+                                )
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
             },
           )
