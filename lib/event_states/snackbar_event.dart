@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:manga_nih/models/models.dart';
 
 abstract class SnackbarEvent extends Equatable {

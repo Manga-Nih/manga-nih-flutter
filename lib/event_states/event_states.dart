@@ -18,6 +18,8 @@ export 'chapter_image_event.dart';
 export 'chapter_image_state.dart';
 export 'search_manga_event.dart';
 export 'search_manga_state.dart';
+export 'favorite_manga_event.dart';
+export 'favorite_manga_state.dart';
 export 'user_event.dart';
 export 'user_state.dart';
 export 'snackbar_event.dart';

@@ -5,17 +5,20 @@ import 'package:manga_nih/event_states/event_states.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final SnackbarBloc _snackbarBloc;
-  late FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
-  UserBloc(this._snackbarBloc) : super(UserUninitialized());
+  UserBloc(this._snackbarBloc)
+      : this._firebaseAuth = FirebaseAuth.instance,
+        super(UserUninitialized()) {
+    // if login
+    if (_firebaseAuth.currentUser != null) {
+      this.add(UserFetch());
+    }
+  }
 
   @override
   Stream<UserState> mapEventToState(UserEvent event) async* {
     try {
-      if (event is UserInitialized) {
-        _firebaseAuth = event.firebaseAuth;
-      }
-
       if (event is UserFetch) {
         User? user = _firebaseAuth.currentUser;
         if (user != null) {
@@ -66,18 +69,20 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           yield UserFetchSuccess(user: user);
         }
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       print(e);
-
-      if (e is FirebaseAuthException && e.code == 'user-not-found') {
+      if (e.code == 'user-not-found') {
         _snackbarBloc.add(SnackbarShow.custom(true, 'Oops.. User not found'));
       }
-      if (e is FirebaseAuthException && e.code == 'email-already-in-use') {
+      if (e.code == 'email-already-in-use') {
         _snackbarBloc
             .add(SnackbarShow.custom(true, 'Oops.. Email already in use'));
-      } else {
-        _snackbarBloc.add(SnackbarShow.globalError());
       }
+
+      yield UserError();
+    } catch (e) {
+      print(e);
+      _snackbarBloc.add(SnackbarShow.globalError());
 
       yield UserError();
     }

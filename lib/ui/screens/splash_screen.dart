@@ -15,14 +15,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late FirebaseAuth _firebaseAuth;
   late SnackbarBloc _snackbarBloc;
-  late UserBloc _userBloc;
   late bool _initialized;
 
   @override
   void initState() {
     // init bloc
     _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
-    _userBloc = BlocProvider.of<UserBloc>(context);
 
     // init state for firebase
     _initialized = false;
@@ -39,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // init firebase
       _firebaseAuth = FirebaseAuth.instance;
-      _userBloc.add(UserInitialized(firebaseAuth: _firebaseAuth));
 
       // sleep for 2 seconds
       await Future.delayed(Duration(seconds: 2));
@@ -53,28 +50,35 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: BlocListener<SnackbarBloc, SnackbarState>(
+          listener: (context, state) {
+            if (state is SnackbarShowing) {
+              showSnackbar(
+                context,
+                state.snackbar.message,
+                isError: state.snackbar.isError,
+              );
+            }
+          },
+          child: _buildChild(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChild() {
     if (!_initialized) {
       return SafeArea(
         child: Scaffold(
-          body: BlocListener<SnackbarBloc, SnackbarState>(
-            listener: (context, state) {
-              if (state is SnackbarShowing) {
-                showSnackbar(context, state.snackbar.message);
-              }
-            },
-            child: Center(
-              child: Text('Manga nih'),
-            ),
+          body: Center(
+            child: Text('Manga nih'),
           ),
         ),
       );
     }
 
-    if (_firebaseAuth.currentUser != null) {
-      _userBloc.add(UserFetch());
-      return HomeScreen();
-    } else {
-      return LoginScreen();
-    }
+    return (_firebaseAuth.currentUser == null) ? LoginScreen() : HomeScreen();
   }
 }

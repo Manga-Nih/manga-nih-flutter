@@ -96,108 +96,97 @@ class _LoginScreenState extends State<LoginScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return SafeArea(
-      child: BlocListener<SnackbarBloc, SnackbarState>(
-        listener: (context, state) {
-          if (state is SnackbarShowing) {
-            showSnackbar(
-              context,
-              state.snackbar.message,
-              isError: state.snackbar.isError,
-            );
-          }
-        },
-        child: Scaffold(
-          body: Center(
-            child: ListView(
-              physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 10.0),
-                    width: screenSize.width * 0.9,
-                    child: Form(
-                      key: _key,
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Login Account',
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
+      child: Scaffold(
+        body: Center(
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            shrinkWrap: true,
+            children: [
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 10.0),
+                  width: screenSize.width * 0.9,
+                  child: Form(
+                    key: _key,
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Login Account',
+                            style: Theme.of(context).textTheme.headline5,
                           ),
-                          const SizedBox(height: 5.0),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Hello, welcome back to Manga nih',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(color: Colors.grey.shade700),
-                            ),
+                        ),
+                        const SizedBox(height: 5.0),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Hello, welcome back to Manga nih',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(color: Colors.grey.shade700),
                           ),
-                          const SizedBox(height: 25.0),
-                          InputField(
-                            icon: Icons.email,
-                            hintText: 'Email',
-                            controller: _emailController,
-                            errorText: _emailErrorText,
-                          ),
-                          const SizedBox(height: 10.0),
-                          InputField(
-                            icon: Icons.vpn_key,
-                            hintText: 'Password',
-                            isPassword: true,
-                            controller: _passwordController,
-                            errorText: _passwordErrorText,
-                          ),
-                          const SizedBox(height: 25.0),
-                          BlocConsumer<UserBloc, UserState>(
-                            listener: _blocListener,
-                            builder: (context, state) {
-                              if (state is UserLoading) {
-                                return LoginRegisterButton.loading();
-                              }
+                        ),
+                        const SizedBox(height: 25.0),
+                        InputField(
+                          icon: Icons.email,
+                          hintText: 'Email',
+                          controller: _emailController,
+                          errorText: _emailErrorText,
+                        ),
+                        const SizedBox(height: 10.0),
+                        InputField(
+                          icon: Icons.vpn_key,
+                          hintText: 'Password',
+                          isPassword: true,
+                          controller: _passwordController,
+                          errorText: _passwordErrorText,
+                        ),
+                        const SizedBox(height: 25.0),
+                        BlocConsumer<UserBloc, UserState>(
+                          listener: _blocListener,
+                          builder: (context, state) {
+                            if (state is UserLoading) {
+                              return LoginRegisterButton.loading();
+                            }
 
-                              return LoginRegisterButton(
-                                label: 'Login',
-                                onTap: _loginAction,
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 25.0),
-                          Row(
-                            children: [
-                              Text(
-                                'Not registered yet ?',
-                                style: Theme.of(context).textTheme.bodyText2!,
+                            return LoginRegisterButton(
+                              label: 'Login',
+                              onTap: _loginAction,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 25.0),
+                        Row(
+                          children: [
+                            Text(
+                              'Not registered yet ?',
+                              style: Theme.of(context).textTheme.bodyText2!,
+                            ),
+                            const SizedBox(width: 5.0),
+                            MaterialButton(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              onPressed: _registerAction,
+                              child: Text(
+                                'Create an account',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                        color: Pallette.gradientStartColor),
                               ),
-                              const SizedBox(width: 5.0),
-                              MaterialButton(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5.0),
-                                onPressed: _registerAction,
-                                child: Text(
-                                  'Create an account',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(
-                                          color: Pallette.gradientStartColor),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

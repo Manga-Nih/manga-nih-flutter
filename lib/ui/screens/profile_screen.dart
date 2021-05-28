@@ -139,8 +139,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             MaterialButton(
               onPressed: () async {
-                await _userBloc.userLogout();
                 _snackbarBloc.add(SnackbarShow.custom(false, 'Bye bye...'));
+                await _userBloc.userLogout();
 
                 Navigator.pushAndRemoveUntil(
                     context,
