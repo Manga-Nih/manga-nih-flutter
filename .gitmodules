@@ -1,0 +1,3 @@
+[submodule "plugins/komiku_sdk"]
+	path = plugins/komiku_sdk
+	url = https://github.com/zalviandyr/komiku_sdk
