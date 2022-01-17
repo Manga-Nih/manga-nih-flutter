@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
@@ -70,7 +72,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      print(e);
+      log(e.toString(), name: 'UserBloc - FirebaseAuthException');
+
       if (e.code == 'user-not-found') {
         _snackbarBloc.add(SnackbarShow.custom(true, 'Oops.. User not found'));
       }
@@ -78,10 +81,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _snackbarBloc
             .add(SnackbarShow.custom(true, 'Oops.. Email already in use'));
       }
+      if (e.code == 'wrong-password') {
+        _snackbarBloc.add(SnackbarShow.custom(true, 'Oops.. Wrong password'));
+      }
 
       yield UserError();
     } catch (e) {
-      print(e);
+      log(e.toString(), name: 'UserBloc');
+
       _snackbarBloc.add(SnackbarShow.globalError());
 
       yield UserError();
