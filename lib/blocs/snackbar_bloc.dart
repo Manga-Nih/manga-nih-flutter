@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:manga_nih/event_states/event_states.dart';
+import 'package:manga_nih/blocs/event_states/event_states.dart';
 
 class SnackbarBloc extends Bloc<SnackbarEvent, SnackbarState> {
   SnackbarBloc() : super(SnackbarUninitialized());

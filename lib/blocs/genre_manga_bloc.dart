@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/event_states/event_states.dart';
+import 'package:manga_nih/blocs/event_states/event_states.dart';
 
 class GenreMangaBloc extends Bloc<GenreMangaEvent, GenreMangaState> {
   final Komiku _komiku = Komiku();

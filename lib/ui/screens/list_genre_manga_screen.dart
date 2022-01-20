@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/event_states/event_states.dart';
+import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
