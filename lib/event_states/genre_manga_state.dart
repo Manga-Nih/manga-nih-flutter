@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 
 abstract class GenreMangaState extends Equatable {
   GenreMangaState();
@@ -17,7 +17,7 @@ class GenreMangaLoading extends GenreMangaState {
 
 class GenreMangaFetchSuccess extends GenreMangaState {
   final Genre genre;
-  final List<GenreManga> listGenreManga;
+  final List<Manga> listGenreManga;
   final int nextPage;
   final bool isLastPage;
 

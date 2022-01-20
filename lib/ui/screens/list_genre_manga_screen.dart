@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -21,8 +21,8 @@ class _ListGenreMangaState extends State<ListGenreManga> {
   late GenreMangaBloc _genreMangaBloc;
   late GenreBloc _genreBloc;
   late Genre _genre;
-  late List<Map<Genre, PagingController<int, GenreManga>>>
-      _listPagingController = [];
+  late List<Map<Genre, PagingController<int, Manga>>> _listPagingController =
+      [];
   late ItemScrollController _genreScrollController;
 
   @override
@@ -70,7 +70,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
     if (_listPagingController
         .where((element) => element.keys.first.endpoint == _genre.endpoint)
         .isEmpty) {
-      PagingController<int, GenreManga> pagingController =
+      PagingController<int, Manga> pagingController =
           PagingController(firstPageKey: 1)
             ..addPageRequestListener((pageKey) {
               // fetch genre manga
@@ -92,12 +92,12 @@ class _ListGenreMangaState extends State<ListGenreManga> {
     });
   }
 
-  void _mangaAction(GenreManga genreManga) {
+  void _mangaAction(Manga genreManga) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: genreManga.endpoint),
+              DetailMangaScreen(mangaEndpoint: genreManga.detailEndpoint),
         ));
   }
 
@@ -114,8 +114,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
           child: Stack(
             children: _listPagingController.map((e) {
               Genre genre = e.keys.first;
-              PagingController<int, GenreManga> pagingController =
-                  e.values.first;
+              PagingController<int, Manga> pagingController = e.values.first;
 
               return Offstage(
                 offstage: genre.endpoint != _genre.endpoint,
@@ -136,14 +135,14 @@ class _ListGenreMangaState extends State<ListGenreManga> {
                       }
                     }
                   },
-                  child: PagedListView<int, GenreManga>(
+                  child: PagedListView<int, Manga>(
                     pagingController: pagingController,
                     physics: BouncingScrollPhysics(),
-                    builderDelegate: PagedChildBuilderDelegate<GenreManga>(
+                    builderDelegate: PagedChildBuilderDelegate<Manga>(
                         itemBuilder: (context, item, index) {
-                      GenreManga genreManga = item;
+                      Manga genreManga = item;
 
-                      return MangaCard<GenreManga>(
+                      return MangaCard(
                         manga: genreManga,
                         onTap: _mangaAction,
                       );

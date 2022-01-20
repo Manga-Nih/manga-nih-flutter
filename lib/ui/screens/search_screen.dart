@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
@@ -26,12 +26,12 @@ class _SearchScreenState extends State<SearchScreen> {
     _searchMangaBloc.add(SearchMangaFetch(keyword: value));
   }
 
-  void _mangaCardAction(SearchManga searchManga) {
+  void _mangaCardAction(Manga searchManga) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: searchManga.endpoint),
+              DetailMangaScreen(mangaEndpoint: searchManga.detailEndpoint),
         ));
   }
 
@@ -91,9 +91,9 @@ class _SearchScreenState extends State<SearchScreen> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 if (state is SearchMangaFetchSuccess) {
-                  SearchManga searchManga = state.listSearchManga[index];
+                  Manga searchManga = state.listSearchManga[index];
 
-                  return MangaCard<SearchManga>(
+                  return MangaCard(
                     manga: searchManga,
                     onTap: _mangaCardAction,
                   );

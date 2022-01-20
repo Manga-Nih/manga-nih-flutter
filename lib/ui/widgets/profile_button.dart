@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_nih/configs/pallette.dart';
+import 'package:manga_nih/ui/configs/pallette.dart';
 
 class ProfileButton extends StatelessWidget {
   final String label;

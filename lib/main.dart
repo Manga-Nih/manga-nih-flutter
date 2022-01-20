@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<UserBloc>(create: (_) => UserBloc(_snackbarBloc)),
         BlocProvider<PopularMangaBloc>(
             create: (_) => PopularMangaBloc(_snackbarBloc)),
-        BlocProvider<RecommendedMangaBloc>(
-            create: (_) => RecommendedMangaBloc(_snackbarBloc)),
+        BlocProvider<LatestMangaBloc>(
+            create: (_) => LatestMangaBloc(_snackbarBloc)),
         BlocProvider<GenreBloc>(create: (_) => GenreBloc(_snackbarBloc)),
         BlocProvider<ManhuaBloc>(create: (_) => ManhuaBloc(_snackbarBloc)),
         BlocProvider<MangaBloc>(create: (_) => MangaBloc(_snackbarBloc)),

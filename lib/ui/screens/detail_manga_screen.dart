@@ -1,12 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/configs/pallette.dart';
+import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/event_states/event_states.dart';
 import 'package:manga_nih/helpers/helpers.dart';
-import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 import 'package:shimmer/shimmer.dart';
@@ -41,7 +40,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     // avoid to fetch data again with same manga
     DetailMangaState state = _detailMangaBloc.state;
     if (state is DetailMangaFetchSuccess) {
-      if (removeSlash(state.detailManga.endpoint) !=
+      if (removeSlash(state.mangaDetail.endpoint) !=
           removeSlash(widget.mangaEndpoint)) {
         // fetch data
         _detailMangaBloc.add(DetailMangaFetch(endpoint: widget.mangaEndpoint));
@@ -61,43 +60,43 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   void _favoriteAction() {
-    DetailMangaState detailMangaState = _detailMangaBloc.state;
-    if (detailMangaState is DetailMangaFetchSuccess) {
-      FavoriteManga favoriteManga = FavoriteManga(
-        title: detailMangaState.detailManga.title,
-        type: detailMangaState.detailManga.type,
-        endpoint: detailMangaState.detailManga.endpoint,
-        thumb: detailMangaState.detailManga.thumb,
-      );
+    // DetailMangaState detailMangaState = _detailMangaBloc.state;
+    // if (detailMangaState is DetailMangaFetchSuccess) {
+    //   FavoriteManga favoriteManga = FavoriteManga(
+    //     title: detailMangaState.detailManga.title,
+    //     type: detailMangaState.detailManga.type,
+    //     endpoint: detailMangaState.detailManga.endpoint,
+    //     thumb: detailMangaState.detailManga.thumb,
+    //   );
 
-      _favoriteMangaBloc
-          .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
+    //   _favoriteMangaBloc
+    //       .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
 
-      // just reverse
-      if (_isFavorite) {
-        _snackbarBloc
-            .add(SnackbarShow.custom(false, 'Removed it from favorite'));
-      } else {
-        _snackbarBloc.add(SnackbarShow.custom(false, 'Added it to favorite'));
-      }
-    }
+    //   // just reverse
+    //   if (_isFavorite) {
+    //     _snackbarBloc
+    //         .add(SnackbarShow.custom(false, 'Removed it from favorite'));
+    //   } else {
+    //     _snackbarBloc.add(SnackbarShow.custom(false, 'Added it to favorite'));
+    //   }
+    // }
   }
 
   void _favoriteListener(BuildContext context, FavoriteMangaState state) {
-    if (state is FavoriteMangaFetchListSuccess) {
-      List<FavoriteManga> list = state.listFavoriteManga
-          .where((element) =>
-              removeSlash(element.endpoint) ==
-              removeSlash(widget.mangaEndpoint))
-          .toList();
+    // if (state is FavoriteMangaFetchListSuccess) {
+    //   List<FavoriteManga> list = state.listFavoriteManga
+    //       .where((element) =>
+    //           removeSlash(element.endpoint) ==
+    //           removeSlash(widget.mangaEndpoint))
+    //       .toList();
 
-      FavoriteManga? favoriteManga = (list.isNotEmpty) ? list.first : null;
-      if (favoriteManga != null) {
-        setState(() => _isFavorite = true);
-      } else {
-        setState(() => _isFavorite = false);
-      }
-    }
+    //   FavoriteManga? favoriteManga = (list.isNotEmpty) ? list.first : null;
+    //   if (favoriteManga != null) {
+    //     setState(() => _isFavorite = true);
+    //   } else {
+    //     setState(() => _isFavorite = false);
+    //   }
+    // }
   }
 
   void _informationSectionAction() {
@@ -115,7 +114,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => ChapterScreen.fromDetailManga(
-              detailManga: state.detailManga,
+              mangaDetail: state.mangaDetail,
               chapter: chapter,
             ),
           ));
@@ -169,7 +168,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             (state is DetailMangaFetchSuccess)
-                ? DetailMangaCard(detailManga: state.detailManga)
+                ? DetailMangaCard(mangaDetail: state.mangaDetail)
                 : DetailMangaCard.loading(),
             const SizedBox(width: 20.0),
             Expanded(
@@ -179,7 +178,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                   const SizedBox(height: 20.0),
                   (state is DetailMangaFetchSuccess)
                       ? Text(
-                          state.detailManga.title,
+                          state.mangaDetail.title,
                           style: Theme.of(context).textTheme.headline6,
                         )
                       : Shimmer.fromColors(
@@ -201,12 +200,12 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'by ${state.detailManga.author}',
+                                'by ${state.mangaDetail.writer}',
                                 style: Theme.of(context).textTheme.bodyText1,
                               ),
                               const SizedBox(height: 5.0),
                               Text(
-                                state.detailManga.genre,
+                                state.mangaDetail.genre,
                                 style: Theme.of(context).textTheme.bodyText1,
                               ),
                             ],
@@ -410,7 +409,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          state.detailManga.status,
+                          state.mangaDetail.status,
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ],
@@ -448,7 +447,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                         ),
                         const SizedBox(height: 10.0),
                         Text(
-                          state.detailManga.listChapter.length.toString(),
+                          state.mangaDetail.chapters.length.toString(),
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ],
@@ -471,7 +470,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
         const SizedBox(height: 20.0),
         (state is DetailMangaFetchSuccess)
             ? Text(
-                state.detailManga.synopsis,
+                state.mangaDetail.synopsis,
                 style: Theme.of(context).textTheme.bodyText1,
                 textAlign: TextAlign.justify,
               )
@@ -495,25 +494,27 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     return (state is DetailMangaFetchSuccess)
         ? BlocBuilder<HistoryMangaBloc, HistoryMangaState>(
             builder: (context, historyState) {
-              HistoryManga? historyManga;
-              if (historyState is HistoryMangaFetchListSuccess) {
-                List<HistoryManga> list =
-                    historyState.listHistoryManga.where((element) {
-                  return removeSlash(element.endpoint) ==
-                      removeSlash(widget.mangaEndpoint);
-                }).toList();
-                historyManga = (list.isNotEmpty) ? list.first : null;
-              }
+              // HistoryManga? historyManga;
+              // if (historyState is HistoryMangaFetchListSuccess) {
+              //   List<HistoryManga> list =
+              //       historyState.listHistoryManga.where((element) {
+              //     return removeSlash(element.endpoint) ==
+              //         removeSlash(widget.mangaEndpoint);
+              //   }).toList();
+              //   historyManga = (list.isNotEmpty) ? list.first : null;
+              // }
 
               return ListView.builder(
                 padding: const EdgeInsets.only(bottom: 20.0),
                 physics: BouncingScrollPhysics(),
-                itemCount: state.detailManga.listChapter.length,
+                itemCount: state.mangaDetail.chapters.length,
                 itemBuilder: (context, index) {
-                  Chapter chapter = state.detailManga.listChapter[index];
-                  bool isLastRead = (historyManga != null)
-                      ? historyManga.lastChapter.endpoint == chapter.endpoint
-                      : false;
+                  Chapter chapter = state.mangaDetail.chapters[index];
+                  bool isLastRead = false;
+                  // bool isLastRead = (historyManga != null)
+                  //     ? historyManga.lastChapter.endpoint ==
+                  //         chapter.chapterEndpoint
+                  //     : false;
 
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 5.0),

@@ -2,22 +2,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/models/models.dart';
 
 class ChapterScreen extends StatefulWidget {
   final Chapter chapter;
-  final DetailManga? detailManga;
+  final MangaDetail? mangaDetail;
   final String? mangaEndpoint;
 
   const ChapterScreen.fromDetailManga(
-      {required this.chapter, required this.detailManga})
+      {required this.chapter, required this.mangaDetail})
       : this.mangaEndpoint = null;
 
   const ChapterScreen.fromListFavoriteHistoryManga(
       {required this.chapter, required this.mangaEndpoint})
-      : this.detailManga = null;
+      : this.mangaDetail = null;
 
   @override
   _ChapterScreenState createState() => _ChapterScreenState();
@@ -30,7 +30,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   late ScrollController _scrollController;
   late TransformationController _transformationController;
   late List<Chapter> _listChapter;
-  late DetailManga? _curManga;
+  late MangaDetail? _curManga;
   late Chapter _curChapter;
   late int _curIndexChapter;
   late bool _isVisible;
@@ -54,7 +54,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
     _isZoomed = false;
     _isHasNext = false;
     _isHasPrev = false;
-    _curManga = widget.detailManga;
+    _curManga = widget.mangaDetail;
     _curChapter = widget.chapter;
 
     // check if has previous or next chapter
@@ -71,7 +71,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
     // avoid to fetch data again with same chapter
     ChapterImageState chapterImageState = _chapterImageBloc.state;
     if (chapterImageState is ChapterImageFetchSuccess) {
-      if (chapterImageState.chapterImage.endpoint != _curChapter.endpoint) {
+      if (chapterImageState.chapterDetail.endpoint != _curChapter.endpoint) {
         // fetch data image
         _chapterImageBloc
             .add(ChapterImageFetch(endpoint: _curChapter.endpoint));
@@ -106,8 +106,8 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   void _isHavePrevNextChapter() {
-    int length = _curManga!.listChapter.length;
-    _listChapter = _curManga!.listChapter;
+    int length = _curManga!.chapters.length;
+    _listChapter = _curManga!.chapters;
     _curIndexChapter =
         _listChapter.indexWhere((element) => element == _curChapter);
 
@@ -125,25 +125,26 @@ class _ChapterScreenState extends State<ChapterScreen> {
   // if from DetailManga save add to history
   // if from ListFavoriteHistory don't save to history
   void _addHistory() {
-    // store last chapter
-    HistoryManga historyManga = HistoryManga(
-      title: _curManga!.title,
-      type: _curManga!.type,
-      thumb: _curManga!.thumb,
-      endpoint: _curManga!.endpoint,
-      lastChapter: _curChapter,
-    );
-    _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
+    // // store last chapter
+    // HistoryManga historyManga = HistoryManga(
+    //   title: _curManga!.title,
+    //   type: _curManga!.type,
+    //   thumb: _curManga!.thumb,
+    //   endpoint: _curManga!.endpoint,
+    //   lastChapter: _curChapter,
+    // );
+    // _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
   }
 
   void _chapterChangeListener(BuildContext context, ChapterImageState state) {
     // update chapter when prev or next
     if (state is ChapterImageFetchSuccess) {
       // check if _curChapter don't equal, to avoid re build prev and next chapter
-      if (_curChapter.endpoint != state.chapterImage.endpoint) {
+      if (_curChapter.endpoint != state.chapterDetail.endpoint) {
         // get title from detail manga list chapter
-        Chapter chapter = _curManga!.listChapter
-            .where((element) => element.endpoint == state.chapterImage.endpoint)
+        Chapter chapter = _curManga!.chapters
+            .where(
+                (element) => element.endpoint == state.chapterDetail.endpoint)
             .first;
 
         _curChapter = chapter;
@@ -173,7 +174,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
           listener: (context, state) {
             // fetch data if from ListFavoriteHistoryManga
             if (state is DetailMangaFetchSuccess) {
-              _curManga = state.detailManga;
+              _curManga = state.mangaDetail;
               _isHavePrevNextChapter();
             }
           },
@@ -213,14 +214,16 @@ class _ChapterScreenState extends State<ChapterScreen> {
                         child: ListView.builder(
                           controller: _scrollController,
                           itemCount: (state is ChapterImageFetchSuccess)
-                              ? state.chapterImage.listImage.length
+                              ? state.chapterDetail.images.length
                               : 1,
                           itemBuilder: (context, index) {
                             if (state is ChapterImageFetchSuccess) {
-                              List<String> urls = state.chapterImage.listImage;
+                              List<ChapterImage> images =
+                                  state.chapterDetail.images;
+
                               return CachedNetworkImage(
                                 fit: BoxFit.fill,
-                                imageUrl: urls[index],
+                                imageUrl: images[index].image,
                                 placeholder: (context, url) => Wrap(
                                   alignment: WrapAlignment.center,
                                   children: [

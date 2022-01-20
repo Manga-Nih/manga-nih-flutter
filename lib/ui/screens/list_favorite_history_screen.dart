@@ -54,14 +54,14 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
   }
 
   void _chapterAction(HistoryManga historyManga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChapterScreen.fromListFavoriteHistoryManga(
-            chapter: historyManga.lastChapter,
-            mangaEndpoint: historyManga.endpoint,
-          ),
-        ));
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => ChapterScreen.fromListFavoriteHistoryManga(
+    //         chapter: historyManga.lastChapter,
+    //         mangaEndpoint: historyManga.endpoint,
+    //       ),
+    //     ));
   }
 
   void _fetchData() {
@@ -157,14 +157,14 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          if (_listFavoriteManga != null) {
-            return MangaCard<FavoriteManga>(
-              manga: _listFavoriteManga![index],
-              onTap: _detailMangaAction,
-            );
-          } else {
-            return MangaCard.loading();
-          }
+          // if (_listFavoriteManga != null) {
+          //   return MangaCard<FavoriteManga>(
+          //     manga: _listFavoriteManga![index],
+          //     onTap: _detailMangaAction,
+          //   );
+          // } else {
+          return MangaCard.loading();
+          // }
         },
         itemCount:
             (_listFavoriteManga != null) ? _listFavoriteManga!.length : 1,
@@ -182,14 +182,14 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          if (_listHistoryManga != null) {
-            return MangaCard<HistoryManga>(
-              manga: _listHistoryManga![index],
-              onTap: _chapterAction,
-            );
-          } else {
-            return MangaCard.loading();
-          }
+          // if (_listHistoryManga != null) {
+          //   return MangaCard<HistoryManga>(
+          //     manga: _listHistoryManga![index],
+          //     onTap: _chapterAction,
+          //   );
+          // } else {
+          return MangaCard.loading();
+          // }
         },
         itemCount: (_listHistoryManga != null) ? _listHistoryManga!.length : 1,
       ),

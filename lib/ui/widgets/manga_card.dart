@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
+import 'package:manga_nih/helpers/helpers.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MangaCard<T> extends StatelessWidget {
-  final T? manga;
-  final void Function(T)? onTap;
+class MangaCard extends StatelessWidget {
+  final Manga? manga;
+  final void Function(Manga)? onTap;
   final bool isLoading;
 
   const MangaCard({
@@ -25,52 +26,37 @@ class MangaCard<T> extends StatelessWidget {
     String? chapter;
     String? uploadOn;
 
-    if (manga is PopularManga) {
-      thumb = (manga as PopularManga).thumb;
-      type = (manga as PopularManga).type;
-      typeImage = (manga as PopularManga).typeImage;
-      title = (manga as PopularManga).title;
-      uploadOn = (manga as PopularManga).uploadOn;
-    }
-
     if (manga is Manga) {
       thumb = (manga as Manga).thumb;
-      type = (manga as Manga).type;
-      typeImage = (manga as Manga).typeImage;
+      type = (manga as Manga).typeName;
+      typeImage = typeMangaImage(type);
       title = (manga as Manga).title;
-      uploadOn = (manga as Manga).uploadOn;
-      chapter = (manga as Manga).chapter;
+      uploadOn = (manga as Manga).release;
+      chapter = (manga as Manga).lastChapter;
     }
 
-    if (manga is GenreManga) {
-      thumb = (manga as GenreManga).thumb;
-      type = (manga as GenreManga).type;
-      typeImage = (manga as GenreManga).typeImage;
-      title = (manga as GenreManga).title;
-    }
+    // if (manga is SearchManga) {
+    //   thumb = (manga as SearchManga).thumb;
+    //   type = (manga as SearchManga).type;
+    //   typeImage = (manga as SearchManga).typeImage;
+    //   title = (manga as SearchManga).title;
+    //   uploadOn = (manga as SearchManga).uploadOn;
+    // }
 
-    if (manga is SearchManga) {
-      thumb = (manga as SearchManga).thumb;
-      type = (manga as SearchManga).type;
-      typeImage = (manga as SearchManga).typeImage;
-      title = (manga as SearchManga).title;
-      uploadOn = (manga as SearchManga).uploadOn;
-    }
+    // if (manga is FavoriteManga) {
+    //   thumb = (manga as FavoriteManga).thumb;
+    //   type = (manga as FavoriteManga).type;
+    //   typeImage = (manga as FavoriteManga).typeImage;
+    //   title = (manga as FavoriteManga).title;
+    // }
 
-    if (manga is FavoriteManga) {
-      thumb = (manga as FavoriteManga).thumb;
-      type = (manga as FavoriteManga).type;
-      typeImage = (manga as FavoriteManga).typeImage;
-      title = (manga as FavoriteManga).title;
-    }
-
-    if (manga is HistoryManga) {
-      thumb = (manga as HistoryManga).thumb;
-      type = (manga as HistoryManga).type;
-      typeImage = (manga as HistoryManga).typeImage;
-      title = (manga as HistoryManga).title;
-      chapter = (manga as HistoryManga).lastChapter.title;
-    }
+    // if (manga is HistoryManga) {
+    //   thumb = (manga as HistoryManga).thumb;
+    //   type = (manga as HistoryManga).type;
+    //   typeImage = (manga as HistoryManga).typeImage;
+    //   title = (manga as HistoryManga).title;
+    //   chapter = (manga as HistoryManga).lastChapter.title;
+    // }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),

@@ -1,14 +1,16 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/komiku_sdk.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/models/models.dart';
-import 'package:manga_nih/services/services.dart';
 
 class GenreMangaBloc extends Bloc<GenreMangaEvent, GenreMangaState> {
+  final Komiku _komiku = Komiku();
   final SnackbarBloc _snackbarBloc;
-  final List<Map<String, Set<GenreManga>>> _listGenreManga = [];
+  final List<Map<String, Set<Manga>>> _listGenreManga = [];
 
   GenreMangaBloc(this._snackbarBloc) : super(GenreMangaUninitialized());
 
@@ -20,8 +22,8 @@ class GenreMangaBloc extends Bloc<GenreMangaEvent, GenreMangaState> {
         int currentPage = event.page;
         int nextPage = currentPage + 1;
 
-        List<GenreManga> listGenreManga =
-            await Service.getGenreManga(genre, pageNumber: currentPage);
+        List<Manga> listGenreManga = await _komiku.allMangaByGenre(
+            page: currentPage, genreEndpoint: genre.endpoint);
 
         // append to list
         // check if genre already exist or not
@@ -42,7 +44,7 @@ class GenreMangaBloc extends Bloc<GenreMangaEvent, GenreMangaState> {
 
         // get list manga base on genre while fetch
         // key is genre.endpoint
-        List<GenreManga> listSelected = _listGenreManga
+        List<Manga> listSelected = _listGenreManga
             .where((element) => element.keys.first == genre.endpoint)
             .first // get first filtered element
             .values // get values from map
@@ -56,10 +58,13 @@ class GenreMangaBloc extends Bloc<GenreMangaEvent, GenreMangaState> {
           isLastPage: listGenreManga.isEmpty, // if list empty or last page
         );
       }
-    } on SocketException {
+    } on SocketException catch (e) {
+      log(e.toString(), name: 'GenreMangaFetch');
+
       _snackbarBloc.add(SnackbarShow.noConnection());
     } catch (e) {
-      print(e);
+      log(e.toString(), name: 'GenreMangaFetch - SocketException');
+
       _snackbarBloc.add(SnackbarShow.globalError());
     }
   }

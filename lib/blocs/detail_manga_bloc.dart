@@ -1,12 +1,14 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/komiku_sdk.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/models/models.dart';
-import 'package:manga_nih/services/services.dart';
 
 class DetailMangaBloc extends Bloc<DetailMangaEvent, DetailMangaState> {
+  final Komiku _komiku = Komiku();
   final SnackbarBloc _snackbarBloc;
   DetailMangaBloc(this._snackbarBloc) : super(DetailMangaUninitialized());
 
@@ -16,14 +18,18 @@ class DetailMangaBloc extends Bloc<DetailMangaEvent, DetailMangaState> {
       if (event is DetailMangaFetch) {
         yield DetailMangaLoading();
 
-        DetailManga detailManga = await Service.getDetailManga(event.endpoint);
+        MangaDetail detail =
+            await _komiku.detail(detailEndpoint: event.endpoint);
 
-        yield DetailMangaFetchSuccess(detailManga: detailManga);
+        yield DetailMangaFetchSuccess(mangaDetail: detail);
       }
-    } on SocketException {
+    } on SocketException catch (e) {
+      log(e.toString(), name: 'DetailMangaFetch - SocketException');
+
       _snackbarBloc.add(SnackbarShow.noConnection());
     } catch (e) {
-      print(e);
+      log(e.toString(), name: 'DetailMangaFetch');
+
       _snackbarBloc.add(SnackbarShow.globalError());
     }
   }

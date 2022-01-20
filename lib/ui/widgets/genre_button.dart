@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:manga_nih/configs/pallette.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
+import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GenreButton extends StatelessWidget {
@@ -12,7 +12,7 @@ class GenreButton extends StatelessWidget {
     Key? key,
     required this.genre,
     required this.onPressed,
-  })   : this.isLoading = false,
+  })  : this.isLoading = false,
         super(key: key);
 
   const GenreButton.loading()

@@ -1,25 +1,34 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/enum.dart';
+import 'package:komiku_sdk/models.dart';
+import 'package:manga_nih/helpers/helpers.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MangaItem extends StatelessWidget {
-  final PopularManga? popularManga;
-  final void Function(PopularManga)? onTap;
+class MangaItem<T> extends StatelessWidget {
+  final T? popularLatestManga;
+  final void Function(T)? onTap;
   final bool isLoading;
 
   const MangaItem({
-    required this.popularManga,
+    required this.popularLatestManga,
     required this.onTap,
   }) : this.isLoading = false;
 
   const MangaItem.loading()
-      : this.popularManga = null,
+      : this.popularLatestManga = null,
         this.onTap = null,
         this.isLoading = true;
 
   @override
   Widget build(BuildContext context) {
+    dynamic manga;
+    if (popularLatestManga is PopularManga) {
+      manga = popularLatestManga! as PopularManga;
+    } else if (popularLatestManga is LatestManga) {
+      manga = popularLatestManga! as LatestManga;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 7.0),
       child: Stack(
@@ -60,7 +69,7 @@ class MangaItem extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child: CachedNetworkImage(
-                                imageUrl: popularManga!.thumb,
+                                imageUrl: manga.thumb,
                                 placeholder: (context, url) {
                                   return Shimmer.fromColors(
                                     baseColor: Colors.grey.shade300,
@@ -88,13 +97,13 @@ class MangaItem extends StatelessWidget {
                                   SizedBox(
                                     width: 15.0,
                                     child: Image.asset(
-                                      popularManga!.typeImage,
+                                      typeMangaImage(manga.typeName),
                                       fit: BoxFit.fill,
                                     ),
                                   ),
                                   const SizedBox(width: 5.0),
                                   Text(
-                                    popularManga!.type,
+                                    manga.typeName,
                                     style: Theme.of(context).textTheme.caption,
                                   ),
                                 ],
@@ -121,7 +130,7 @@ class MangaItem extends StatelessWidget {
                   : SizedBox(
                       width: 150.0,
                       child: Text(
-                        popularManga!.title,
+                        manga.title,
                         style: Theme.of(context).textTheme.bodyText1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -151,7 +160,7 @@ class MangaItem extends StatelessWidget {
                         SizedBox(
                           width: 100.0,
                           child: Text(
-                            popularManga!.uploadOn,
+                            manga.release,
                             style: Theme.of(context).textTheme.caption,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -165,7 +174,7 @@ class MangaItem extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 borderRadius: BorderRadius.circular(10.0),
-                onTap: () => onTap!(popularManga!),
+                onTap: () => onTap!(manga),
               ),
             ),
           ),

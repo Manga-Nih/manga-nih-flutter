@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manga_nih/configs/pallette.dart';
+import 'package:manga_nih/ui/configs/pallette.dart';
 
 class LoginRegisterButton extends StatelessWidget {
   final String? label;
@@ -10,7 +10,7 @@ class LoginRegisterButton extends StatelessWidget {
     Key? key,
     required this.label,
     required this.onTap,
-  })   : this.isLoading = false,
+  })  : this.isLoading = false,
         super(key: key);
 
   const LoginRegisterButton.loading()

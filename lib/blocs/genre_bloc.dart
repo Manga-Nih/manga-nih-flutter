@@ -1,10 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/event_states/event_states.dart';
-import 'package:manga_nih/models/models.dart';
-import 'package:manga_nih/services/services.dart';
 
 class GenreBloc extends Bloc<GenreEvent, GenreState> {
   final SnackbarBloc _snackbarBloc;
@@ -17,13 +17,16 @@ class GenreBloc extends Bloc<GenreEvent, GenreState> {
       try {
         yield GenreLoading();
 
-        List<Genre> listGenre = await Service.getGenre();
+        List<Genre> listGenre = Genre.all();
 
         yield GenreFetchSuccess(listGenre: listGenre);
-      } on SocketException {
+      } on SocketException catch (e) {
+        log(e.toString(), name: 'GenreFetch - SocketException');
+
         _snackbarBloc.add(SnackbarShow.noConnection());
       } catch (e) {
-        print(e);
+        log(e.toString(), name: 'GenreFetch');
+
         _snackbarBloc.add(SnackbarShow.globalError());
       }
     }

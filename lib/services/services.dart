@@ -32,19 +32,19 @@ class Service {
     return Genre.toList(json['list_genre']);
   }
 
-  static Future<List<Manga>> getManga(TypeManga typeManga,
-      {int pageNumber: 1}) async {
-    String? temp;
-    if (typeManga == TypeManga.manga) temp = 'manga/page/$pageNumber';
-    if (typeManga == TypeManga.manhua) temp = '/manhua/$pageNumber';
-    if (typeManga == TypeManga.manhwa) temp = '/manhwa/$pageNumber';
+  // static Future<List<Manga>> getManga(TypeManga typeManga,
+  //     {int pageNumber: 1}) async {
+  //   String? temp;
+  //   if (typeManga == TypeManga.manga) temp = 'manga/page/$pageNumber';
+  //   if (typeManga == TypeManga.manhua) temp = '/manhua/$pageNumber';
+  //   if (typeManga == TypeManga.manhwa) temp = '/manhwa/$pageNumber';
 
-    Uri url = _getUrl(temp!);
-    var response = await http.get(url);
+  //   Uri url = _getUrl(temp!);
+  //   var response = await http.get(url);
 
-    var json = jsonDecode(response.body);
-    return Manga.toList(json['manga_list']);
-  }
+  //   var json = jsonDecode(response.body);
+  //   return Manga.toList(json['manga_list']);
+  // }
 
   static Future<List<GenreManga>> getGenreManga(Genre genre,
       {int pageNumber: 1}) async {

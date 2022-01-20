@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 
 abstract class DetailMangaState extends Equatable {
   DetailMangaState();
@@ -16,10 +16,10 @@ class DetailMangaLoading extends DetailMangaState {
 }
 
 class DetailMangaFetchSuccess extends DetailMangaState {
-  final DetailManga detailManga;
+  final MangaDetail mangaDetail;
 
-  DetailMangaFetchSuccess({required this.detailManga});
+  DetailMangaFetchSuccess({required this.mangaDetail});
 
   @override
-  List<Object?> get props => [detailManga];
+  List<Object?> get props => [mangaDetail];
 }

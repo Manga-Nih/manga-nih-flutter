@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 
 abstract class PopularMangaState extends Equatable {
   PopularMangaState();
@@ -17,10 +17,9 @@ class PopularMangaLoading extends PopularMangaState {
 
 class PopularMangaFetchSuccess extends PopularMangaState {
   final List<PopularManga> listPopular;
-  final int nextPage;
 
-  PopularMangaFetchSuccess({required this.listPopular, required this.nextPage});
+  PopularMangaFetchSuccess({required this.listPopular});
 
   @override
-  List<Object?> get props => [listPopular, nextPage];
+  List<Object?> get props => [listPopular];
 }

@@ -1,16 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
+import 'package:manga_nih/helpers/helpers.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DetailMangaCard extends StatelessWidget {
-  final DetailManga? detailManga;
+  final MangaDetail? mangaDetail;
   final bool isLoading;
 
-  const DetailMangaCard({required this.detailManga}) : this.isLoading = false;
+  const DetailMangaCard({required this.mangaDetail}) : this.isLoading = false;
 
   const DetailMangaCard.loading()
-      : this.detailManga = null,
+      : this.mangaDetail = null,
         this.isLoading = true;
 
   @override
@@ -52,7 +53,7 @@ class DetailMangaCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: CachedNetworkImage(
-                          imageUrl: detailManga!.thumb,
+                          imageUrl: mangaDetail!.thumb,
                           placeholder: (context, url) {
                             return Shimmer.fromColors(
                               baseColor: Colors.grey.shade300,
@@ -84,13 +85,13 @@ class DetailMangaCard extends StatelessWidget {
                             SizedBox(
                               width: 20.0,
                               child: Image.asset(
-                                detailManga!.typeImage,
+                                typeMangaImage(mangaDetail!.typeName),
                                 fit: BoxFit.fill,
                               ),
                             ),
                             const SizedBox(width: 5.0),
                             Text(
-                              detailManga!.type,
+                              mangaDetail!.typeName,
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ],

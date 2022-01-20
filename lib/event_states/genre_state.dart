@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 
 abstract class GenreState extends Equatable {
   GenreState();

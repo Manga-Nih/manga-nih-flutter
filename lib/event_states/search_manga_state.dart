@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 
 abstract class SearchMangaState extends Equatable {
   SearchMangaState();
@@ -16,7 +16,7 @@ class SearchMangaLoading extends SearchMangaState {
 }
 
 class SearchMangaFetchSuccess extends SearchMangaState {
-  final List<SearchManga> listSearchManga;
+  final List<Manga> listSearchManga;
 
   SearchMangaFetchSuccess({required this.listSearchManga});
 
