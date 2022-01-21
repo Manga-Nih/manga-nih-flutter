@@ -1,12 +1,3 @@
-export 'popular_manga.dart';
-export 'recommended_manga.dart';
-export 'genre.dart';
-export 'manga.dart';
-export 'genre_manga.dart';
 export 'snackbar_model.dart';
-export 'detail_manga.dart';
-export 'chapter.dart';
-export 'chapter_image.dart';
-export 'search_manga.dart';
 export 'favorite_manga.dart';
 export 'history_manga.dart';

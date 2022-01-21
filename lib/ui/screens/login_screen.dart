@@ -192,25 +192,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  Widget _buildTextFormField({
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50.0),
-        border: Border.all(color: Colors.grey.shade500),
-      ),
-      child: TextFormField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          prefixIcon: Icon(
-            icon,
-            color: Colors.grey.shade500,
-          ),
-        ),
-      ),
-    );
-  }
 }

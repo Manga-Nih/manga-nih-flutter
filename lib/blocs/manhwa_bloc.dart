@@ -5,7 +5,6 @@ import 'package:komiku_sdk/komiku_sdk.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
-import 'package:manga_nih/services/services.dart';
 
 class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
   final Komiku _komiku = Komiku();

@@ -18,7 +18,6 @@ class ListMangaScreen extends StatefulWidget {
 }
 
 class _ListMangaScreenState extends State<ListMangaScreen> {
-  late PopularMangaBloc _popularMangaBloc;
   late ManhuaBloc _manhuaBloc;
   late MangaBloc _mangaBloc;
   late ManhwaBloc _manhwaBloc;
@@ -31,7 +30,6 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   @override
   void initState() {
     // init bloc
-    _popularMangaBloc = BlocProvider.of<PopularMangaBloc>(context);
     _manhuaBloc = BlocProvider.of<ManhuaBloc>(context);
     _mangaBloc = BlocProvider.of<MangaBloc>(context);
     _manhwaBloc = BlocProvider.of<ManhwaBloc>(context);
@@ -56,15 +54,6 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     _pagingManhwaController.dispose();
 
     super.dispose();
-  }
-
-  void _popularAction(PopularManga popularManga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: popularManga.detailEndpoint),
-        ));
   }
 
   void _mangaAction(Manga manga) {

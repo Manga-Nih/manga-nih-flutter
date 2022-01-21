@@ -1,18 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RecommendedMangaCard extends StatelessWidget {
-  final RecommendedManga? recommendedManga;
-  final void Function(RecommendedManga)? onTap;
+  // TODO, ubah menjadi recommended manga
+  // final RecommendedManga? recommendedManga;
+  // final void Function(RecommendedManga)? onTap;
+
+  final Manga? recommendedManga;
+  final void Function(Manga)? onTap;
   final bool isLoading;
 
   const RecommendedMangaCard({
     Key? key,
     required this.onTap,
     required this.recommendedManga,
-  })   : this.isLoading = false,
+  })  : this.isLoading = false,
         super(key: key);
 
   const RecommendedMangaCard.loading()
