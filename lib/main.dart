@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<HistoryMangaBloc>(
             create: (_) => HistoryMangaBloc(_snackbarBloc)),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'Manga nih',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

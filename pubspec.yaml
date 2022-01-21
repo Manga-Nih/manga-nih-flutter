@@ -21,8 +21,6 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   cached_network_image: ^3.0.0
   cupertino_icons: ^1.0.2
   email_validator: ^2.0.1
@@ -30,8 +28,11 @@ dependencies:
   firebase_auth: ^1.2.0
   firebase_core: ^1.2.0
   firebase_database: ^7.0.0
+  flutter:
+    sdk: flutter
   flutter_bloc: ^7.0.0
   flutter_card_swipper: ^0.4.0
+  get: ^4.6.1
   http: ^0.13.3
   infinite_scroll_pagination: ^3.0.1
   komiku_sdk:
