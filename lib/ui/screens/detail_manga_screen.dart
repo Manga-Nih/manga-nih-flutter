@@ -61,15 +61,8 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   void _favoriteAction() {
     DetailMangaState detailMangaState = _detailMangaBloc.state;
     if (detailMangaState is DetailMangaFetchSuccess) {
-      // FavoriteManga favoriteManga = FavoriteManga(
-      //   title: detailMangaState.detailManga.title,
-      //   type: detailMangaState.detailManga.type,
-      //   endpoint: detailMangaState.detailManga.endpoint,
-      //   thumb: detailMangaState.detailManga.thumb,
-      // );
-
-      // _favoriteMangaBloc
-      //     .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
+      _favoriteMangaBloc.add(
+          FavoriteMangaAddRemove(favoriteManga: detailMangaState.mangaDetail));
 
       // just reverse
       if (_isFavorite) {
@@ -81,20 +74,20 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   void _favoriteListener(BuildContext context, FavoriteMangaState state) {
-    // if (state is FavoriteMangaFetchListSuccess) {
-    //   List<FavoriteManga> list = state.listFavoriteManga
-    //       .where((element) =>
-    //           removeSlash(element.endpoint) ==
-    //           removeSlash(widget.mangaEndpoint))
-    //       .toList();
+    if (state is FavoriteMangaFetchListSuccess) {
+      List<FavoriteManga> list = state.listFavoriteManga
+          .where((element) =>
+              removeSlash(element.endpoint) ==
+              removeSlash(widget.mangaEndpoint))
+          .toList();
 
-    //   FavoriteManga? favoriteManga = (list.isNotEmpty) ? list.first : null;
-    //   if (favoriteManga != null) {
-    //     setState(() => _isFavorite = true);
-    //   } else {
-    //     setState(() => _isFavorite = false);
-    //   }
-    // }
+      FavoriteManga? favoriteManga = (list.isNotEmpty) ? list.first : null;
+      if (favoriteManga != null) {
+        setState(() => _isFavorite = true);
+      } else {
+        setState(() => _isFavorite = false);
+      }
+    }
   }
 
   void _informationSectionAction() {

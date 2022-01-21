@@ -2,11 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/helpers/helpers.dart';
+import 'package:manga_nih/models/models.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MangaCard extends StatelessWidget {
-  final Manga? manga;
-  final void Function(Manga)? onTap;
+class MangaCard<T> extends StatelessWidget {
+  final T? manga;
+  final void Function(T)? onTap;
   final bool isLoading;
 
   const MangaCard({
@@ -35,20 +36,12 @@ class MangaCard extends StatelessWidget {
       chapter = (manga as Manga).lastChapter;
     }
 
-    // if (manga is SearchManga) {
-    //   thumb = (manga as SearchManga).thumb;
-    //   type = (manga as SearchManga).type;
-    //   typeImage = (manga as SearchManga).typeImage;
-    //   title = (manga as SearchManga).title;
-    //   uploadOn = (manga as SearchManga).uploadOn;
-    // }
-
-    // if (manga is FavoriteManga) {
-    //   thumb = (manga as FavoriteManga).thumb;
-    //   type = (manga as FavoriteManga).type;
-    //   typeImage = (manga as FavoriteManga).typeImage;
-    //   title = (manga as FavoriteManga).title;
-    // }
+    if (manga is FavoriteManga) {
+      thumb = (manga as FavoriteManga).thumb;
+      type = (manga as FavoriteManga).type;
+      typeImage = (manga as FavoriteManga).typeImage;
+      title = (manga as FavoriteManga).title;
+    }
 
     // if (manga is HistoryManga) {
     //   thumb = (manga as HistoryManga).thumb;

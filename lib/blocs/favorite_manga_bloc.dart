@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
@@ -25,15 +26,17 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
             .equalTo(event.favoriteManga.endpoint)
             .once();
 
+        MangaDetail detail = event.favoriteManga;
+        FavoriteManga favoriteManga = FavoriteManga(
+          title: detail.title,
+          type: detail.typeName,
+          thumb: detail.thumb,
+          endpoint: detail.endpoint,
+        );
+
         // if don't exist
         if (data.value == null) {
-          await _favoritesReference.push().set({
-            "title": event.favoriteManga.title,
-            "endpoint": event.favoriteManga.endpoint,
-            "type": event.favoriteManga.type,
-            "typeImage": event.favoriteManga.typeImage,
-            "thumb": event.favoriteManga.thumb,
-          });
+          await _favoritesReference.push().set(favoriteManga.toJson());
         } else {
           // get key from list item
           Map<dynamic, dynamic> map = data.value;
@@ -47,9 +50,12 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
       if (event is FavoriteMangaFetchList) {
         DataSnapshot dataSnapshot = await _favoritesReference.once();
         List<FavoriteManga> list = [];
+
         if (dataSnapshot.value != null) {
           Map<dynamic, dynamic> map = dataSnapshot.value;
-          list = FavoriteManga.toList(map.values.toList());
+          List<Map<String, String>> values =
+              map.values.map((e) => Map<String, String>.from(e)).toList();
+          list = FavoriteManga.fromJson(values);
         }
 
         yield FavoriteMangaFetchListSuccess(listFavoriteManga: list);

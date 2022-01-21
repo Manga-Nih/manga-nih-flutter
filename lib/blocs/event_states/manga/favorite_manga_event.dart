@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:manga_nih/models/models.dart';
+import 'package:komiku_sdk/models.dart';
 
 abstract class FavoriteMangaEvent extends Equatable {
   FavoriteMangaEvent();
 }
 
 class FavoriteMangaAddRemove extends FavoriteMangaEvent {
-  final FavoriteManga favoriteManga;
+  final MangaDetail favoriteManga;
 
   FavoriteMangaAddRemove({required this.favoriteManga});
 

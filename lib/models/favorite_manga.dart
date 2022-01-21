@@ -14,18 +14,27 @@ class FavoriteManga {
     required this.endpoint,
   }) : this.typeImage = typeMangaImage(type);
 
-  static List<FavoriteManga> toList(List<dynamic> values) {
+  static List<FavoriteManga> fromJson(List<Map<String, String>> values) {
     List<FavoriteManga> list = [];
 
-    for (var data in values) {
+    for (Map<String, String> data in values) {
       list.add(FavoriteManga(
-        title: data['title'],
-        type: data['type'],
-        thumb: data['thumb'],
-        endpoint: data['endpoint'],
+        title: data['title']!,
+        type: data['type']!,
+        thumb: data['thumb']!,
+        endpoint: data['endpoint']!,
       ));
     }
 
     return list;
+  }
+
+  Map<String, String> toJson() {
+    return {
+      'title': title,
+      'type': type,
+      'thumb': thumb,
+      'endpoint': endpoint,
+    };
   }
 }

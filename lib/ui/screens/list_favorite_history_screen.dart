@@ -157,14 +157,14 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
-          // if (_listFavoriteManga != null) {
-          //   return MangaCard<FavoriteManga>(
-          //     manga: _listFavoriteManga![index],
-          //     onTap: _detailMangaAction,
-          //   );
-          // } else {
-          return MangaCard.loading();
-          // }
+          if (_listFavoriteManga != null) {
+            return MangaCard<FavoriteManga>(
+              manga: _listFavoriteManga![index],
+              onTap: _detailMangaAction,
+            );
+          } else {
+            return MangaCard.loading();
+          }
         },
         itemCount:
             (_listFavoriteManga != null) ? _listFavoriteManga!.length : 1,
