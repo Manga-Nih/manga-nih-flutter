@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/constants/word.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 
 void main() {
@@ -12,8 +13,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final SnackbarBloc _snackbarBloc = SnackbarBloc();
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -25,31 +24,22 @@ class MyApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<SnackbarBloc>(create: (_) => _snackbarBloc),
-        BlocProvider<UserBloc>(create: (_) => UserBloc(_snackbarBloc)),
-        BlocProvider<PopularMangaBloc>(
-            create: (_) => PopularMangaBloc(_snackbarBloc)),
-        BlocProvider<LatestMangaBloc>(
-            create: (_) => LatestMangaBloc(_snackbarBloc)),
-        BlocProvider<GenreBloc>(create: (_) => GenreBloc(_snackbarBloc)),
-        BlocProvider<ManhuaBloc>(create: (_) => ManhuaBloc(_snackbarBloc)),
-        BlocProvider<MangaBloc>(create: (_) => MangaBloc(_snackbarBloc)),
-        BlocProvider<ManhwaBloc>(create: (_) => ManhwaBloc(_snackbarBloc)),
-        BlocProvider<GenreMangaBloc>(
-            create: (_) => GenreMangaBloc(_snackbarBloc)),
-        BlocProvider<DetailMangaBloc>(
-            create: (_) => DetailMangaBloc(_snackbarBloc)),
-        BlocProvider<ChapterImageBloc>(
-            create: (_) => ChapterImageBloc(_snackbarBloc)),
-        BlocProvider<SearchMangaBloc>(
-            create: (_) => SearchMangaBloc(_snackbarBloc)),
-        BlocProvider<FavoriteMangaBloc>(
-            create: (_) => FavoriteMangaBloc(_snackbarBloc)),
-        BlocProvider<HistoryMangaBloc>(
-            create: (_) => HistoryMangaBloc(_snackbarBloc)),
+        BlocProvider<UserBloc>(create: (_) => UserBloc()),
+        BlocProvider<PopularMangaBloc>(create: (_) => PopularMangaBloc()),
+        BlocProvider<LatestMangaBloc>(create: (_) => LatestMangaBloc()),
+        BlocProvider<GenreBloc>(create: (_) => GenreBloc()),
+        BlocProvider<ManhuaBloc>(create: (_) => ManhuaBloc()),
+        BlocProvider<MangaBloc>(create: (_) => MangaBloc()),
+        BlocProvider<ManhwaBloc>(create: (_) => ManhwaBloc()),
+        BlocProvider<GenreMangaBloc>(create: (_) => GenreMangaBloc()),
+        BlocProvider<DetailMangaBloc>(create: (_) => DetailMangaBloc()),
+        BlocProvider<ChapterImageBloc>(create: (_) => ChapterImageBloc()),
+        BlocProvider<SearchMangaBloc>(create: (_) => SearchMangaBloc()),
+        BlocProvider<FavoriteMangaBloc>(create: (_) => FavoriteMangaBloc()),
+        BlocProvider<HistoryMangaBloc>(create: (_) => HistoryMangaBloc()),
       ],
       child: GetMaterialApp(
-        title: 'Manga nih',
+        title: Word.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
