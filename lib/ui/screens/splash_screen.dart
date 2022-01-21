@@ -1,12 +1,12 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/constants/word.dart';
+import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
-import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,14 +16,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late FirebaseAuth _firebaseAuth;
   late FirebaseDatabase _firebaseDatabase;
-  late SnackbarBloc _snackbarBloc;
   late bool _initialized;
 
   @override
   void initState() {
-    // init bloc
-    _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
-
     // init state for firebase
     _initialized = false;
 
@@ -49,28 +45,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
       setState(() => _initialized = true);
     } catch (e) {
-      print(e);
-      _snackbarBloc.add(SnackbarShow.globalError());
+      log(e.toString(), name: 'FirebaseError');
+
+      SnackbarModel.globalError();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: BlocListener<SnackbarBloc, SnackbarState>(
-          listener: (context, state) {
-            if (state is SnackbarShowing) {
-              showSnackbar(
-                context,
-                state.snackbar.message,
-                isError: state.snackbar.isError,
-              );
-            }
-          },
-          child: _buildChild(),
-        ),
-      ),
+      child: _buildChild(),
     );
   }
 
@@ -79,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
       return SafeArea(
         child: Scaffold(
           body: Center(
-            child: Text('Manga nih'),
+            child: Text(Word.appName),
           ),
         ),
       );

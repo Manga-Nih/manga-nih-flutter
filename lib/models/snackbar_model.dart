@@ -1,23 +1,24 @@
-import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
+import 'package:manga_nih/ui/widgets/snackbar.dart';
 
-class SnackbarModel extends Equatable {
-  final String message;
-  final bool isError;
-
-  SnackbarModel(this.isError, this.message);
-
-  factory SnackbarModel.noConnection() {
-    return SnackbarModel(true, 'Oops... check your internet connection');
+class SnackbarModel {
+  static void noConnection() {
+    showSnackbar(
+      Get.context!,
+      'Oops... check your internet connection',
+      isError: true,
+    );
   }
 
-  factory SnackbarModel.globalError() {
-    return SnackbarModel(true, 'Oops... something wrong');
+  static void globalError() {
+    showSnackbar(
+      Get.context!,
+      'Oops... something wrong',
+      isError: true,
+    );
   }
 
-  factory SnackbarModel.custom(bool isError, String message) {
-    return SnackbarModel(isError, message);
+  static void custom(bool isError, String message) {
+    showSnackbar(Get.context!, message, isError: isError);
   }
-
-  @override
-  List<Object?> get props => [message];
 }

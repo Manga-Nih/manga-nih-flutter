@@ -4,15 +4,14 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
 import 'package:komiku_sdk/models.dart';
-import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/models/models.dart';
 
 class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
-  final SnackbarBloc _snackbarBloc;
-  final List<PopularManga> _listPopular = [];
   final Komiku _komiku = Komiku();
+  final List<PopularManga> _listPopular = [];
 
-  PopularMangaBloc(this._snackbarBloc) : super(PopularMangaUninitialized());
+  PopularMangaBloc() : super(PopularMangaUninitialized());
 
   @override
   Stream<PopularMangaState> mapEventToState(PopularMangaEvent event) async* {
@@ -29,11 +28,11 @@ class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
       } on SocketException catch (e) {
         log(e.toString(), name: 'PopularMangaFetch - SocketException');
 
-        _snackbarBloc.add(SnackbarShow.noConnection());
+        SnackbarModel.noConnection();
       } catch (e) {
         log(e.toString(), name: 'PopularMangaFetch');
 
-        _snackbarBloc.add(SnackbarShow.globalError());
+        SnackbarModel.globalError();
       }
     }
   }

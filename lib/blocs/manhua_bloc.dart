@@ -1,17 +1,17 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
 import 'package:komiku_sdk/models.dart';
-import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/models/models.dart';
 
 class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
   final Komiku _komiku = Komiku();
-  final SnackbarBloc _snackbarBloc;
   final List<Manga> _listManhua = [];
 
-  ManhuaBloc(this._snackbarBloc) : super(ManhuaUninitialized());
+  ManhuaBloc() : super(ManhuaUninitialized());
 
   @override
   Stream<ManhuaState> mapEventToState(ManhuaEvent event) async* {
@@ -30,11 +30,14 @@ class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
           listManhua: _listManhua,
           nextPage: nextPage,
         );
-      } on SocketException {
-        _snackbarBloc.add(SnackbarShow.noConnection());
+      } on SocketException catch (e) {
+        log(e.toString(), name: 'ManhuaFetch - SocketException');
+
+        SnackbarModel.noConnection();
       } catch (e) {
-        print(e);
-        _snackbarBloc.add(SnackbarShow.globalError());
+        log(e.toString(), name: 'ManhuaFetch');
+
+        SnackbarModel.globalError();
       }
     }
   }

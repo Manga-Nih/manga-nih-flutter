@@ -1,17 +1,17 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
 import 'package:komiku_sdk/models.dart';
-import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/models/models.dart';
 
 class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
   final Komiku _komiku = Komiku();
-  final SnackbarBloc _snackbarBloc;
   final List<Manga> _listManhwa = [];
 
-  ManhwaBloc(this._snackbarBloc) : super(ManhwaUninitialized());
+  ManhwaBloc() : super(ManhwaUninitialized());
 
   @override
   Stream<ManhwaState> mapEventToState(ManhwaEvent event) async* {
@@ -30,11 +30,14 @@ class ManhwaBloc extends Bloc<ManhwaEvent, ManhwaState> {
           listManhwa: _listManhwa,
           nextPage: nextPage,
         );
-      } on SocketException {
-        _snackbarBloc.add(SnackbarShow.noConnection());
+      } on SocketException catch (e) {
+        log(e.toString(), name: 'ManhwaFetch - SocketException');
+
+        SnackbarModel.noConnection();
       } catch (e) {
-        print(e);
-        _snackbarBloc.add(SnackbarShow.globalError());
+        log(e.toString(), name: 'ManhwaFetch - SocketException');
+
+        SnackbarModel.globalError();
       }
     }
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
@@ -21,7 +22,6 @@ class DetailMangaScreen extends StatefulWidget {
 }
 
 class _DetailMangaScreenState extends State<DetailMangaScreen> {
-  late SnackbarBloc _snackbarBloc;
   late DetailMangaBloc _detailMangaBloc;
   late FavoriteMangaBloc _favoriteMangaBloc;
   late DetailMangaSection _section;
@@ -30,7 +30,6 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   @override
   void initState() {
     // init bloc
-    _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
     _favoriteMangaBloc = BlocProvider.of<FavoriteMangaBloc>(context);
 
@@ -60,26 +59,25 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   void _favoriteAction() {
-    // DetailMangaState detailMangaState = _detailMangaBloc.state;
-    // if (detailMangaState is DetailMangaFetchSuccess) {
-    //   FavoriteManga favoriteManga = FavoriteManga(
-    //     title: detailMangaState.detailManga.title,
-    //     type: detailMangaState.detailManga.type,
-    //     endpoint: detailMangaState.detailManga.endpoint,
-    //     thumb: detailMangaState.detailManga.thumb,
-    //   );
+    DetailMangaState detailMangaState = _detailMangaBloc.state;
+    if (detailMangaState is DetailMangaFetchSuccess) {
+      // FavoriteManga favoriteManga = FavoriteManga(
+      //   title: detailMangaState.detailManga.title,
+      //   type: detailMangaState.detailManga.type,
+      //   endpoint: detailMangaState.detailManga.endpoint,
+      //   thumb: detailMangaState.detailManga.thumb,
+      // );
 
-    //   _favoriteMangaBloc
-    //       .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
+      // _favoriteMangaBloc
+      //     .add(FavoriteMangaAddRemove(favoriteManga: favoriteManga));
 
-    //   // just reverse
-    //   if (_isFavorite) {
-    //     _snackbarBloc
-    //         .add(SnackbarShow.custom(false, 'Removed it from favorite'));
-    //   } else {
-    //     _snackbarBloc.add(SnackbarShow.custom(false, 'Added it to favorite'));
-    //   }
-    // }
+      // just reverse
+      if (_isFavorite) {
+        SnackbarModel.custom(true, 'Removed it from favorite');
+      } else {
+        SnackbarModel.custom(false, 'Added it to favorite');
+      }
+    }
   }
 
   void _favoriteListener(BuildContext context, FavoriteMangaState state) {

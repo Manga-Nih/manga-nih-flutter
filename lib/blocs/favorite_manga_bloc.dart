@@ -1,16 +1,16 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
 class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
-  final SnackbarBloc _snackbarBloc;
   final FirebaseDatabase _firebaseDatabase;
   final FirebaseAuth _firebaseAuth;
 
-  FavoriteMangaBloc(this._snackbarBloc)
+  FavoriteMangaBloc()
       : this._firebaseAuth = FirebaseAuth.instance,
         this._firebaseDatabase = FirebaseDatabase.instance,
         super(FavoriteMangaUninitialized());
@@ -55,8 +55,9 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
         yield FavoriteMangaFetchListSuccess(listFavoriteManga: list);
       }
     } catch (e) {
-      print(e);
-      _snackbarBloc.add(SnackbarShow.globalError());
+      log(e.toString(), name: 'FavoriteMangaAddRemove');
+
+      SnackbarModel.globalError();
     }
   }
 

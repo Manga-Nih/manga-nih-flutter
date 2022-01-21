@@ -3,13 +3,11 @@ import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/models.dart';
-import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/models/models.dart';
 
 class GenreBloc extends Bloc<GenreEvent, GenreState> {
-  final SnackbarBloc _snackbarBloc;
-
-  GenreBloc(this._snackbarBloc) : super(GenreUninitialized());
+  GenreBloc() : super(GenreUninitialized());
 
   @override
   Stream<GenreState> mapEventToState(GenreEvent event) async* {
@@ -23,11 +21,11 @@ class GenreBloc extends Bloc<GenreEvent, GenreState> {
       } on SocketException catch (e) {
         log(e.toString(), name: 'GenreFetch - SocketException');
 
-        _snackbarBloc.add(SnackbarShow.noConnection());
+        SnackbarModel.noConnection();
       } catch (e) {
         log(e.toString(), name: 'GenreFetch');
 
-        _snackbarBloc.add(SnackbarShow.globalError());
+        SnackbarModel.globalError();
       }
     }
   }

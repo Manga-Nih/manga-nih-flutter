@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
@@ -13,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late SnackbarBloc _snackbarBloc;
   late UserBloc _userBloc;
   late GlobalKey<FormState> _key;
   late TextEditingController _emailController;
@@ -24,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     // init bloc
-    _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
     _userBloc = BlocProvider.of<UserBloc>(context);
 
     // init
@@ -82,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _blocListener(BuildContext context, UserState userState) {
     if (userState is UserFetchSuccess) {
-      _snackbarBloc.add(SnackbarShow.custom(false, 'Welcome to Manga nih'));
+      SnackbarModel.custom(false, 'Welcome to Manga nih');
 
       Navigator.pushAndRemoveUntil(
           context,

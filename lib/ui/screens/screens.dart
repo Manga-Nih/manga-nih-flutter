@@ -5,7 +5,9 @@ export 'list_genre_manga_screen.dart';
 export 'detail_manga_screen.dart';
 export 'chapter_screen.dart';
 export 'search_screen.dart';
-export 'login_screen.dart';
-export 'register_screen.dart';
 export 'splash_screen.dart';
 export 'list_favorite_history_screen.dart';
+
+// Auth
+export 'auth/login_screen.dart';
+export 'auth/register_screen.dart';

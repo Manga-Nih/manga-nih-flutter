@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
@@ -14,14 +15,12 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late GlobalKey<FormState> _key;
-  late SnackbarBloc _snackbarBloc;
   late UserBloc _userBloc;
   late TextEditingController _editNameController;
 
   @override
   void initState() {
     // init bloc
-    _snackbarBloc = BlocProvider.of<SnackbarBloc>(context);
     _userBloc = BlocProvider.of<UserBloc>(context);
 
     // init key
@@ -93,9 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   String name = _editNameController.text.trim();
 
                   _userBloc.add(UserUpdateProfile(name: name));
-                  _snackbarBloc.add(
-                    SnackbarShow.custom(false, 'Success update your name'),
-                  );
+                  SnackbarModel.custom(false, 'Success update your name');
 
                   Navigator.pop(context);
                 }
@@ -160,7 +157,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             MaterialButton(
               onPressed: () async {
-                _snackbarBloc.add(SnackbarShow.custom(false, 'Bye bye...'));
+                SnackbarModel.custom(false, 'Bye bye...');
+
                 await _userBloc.userLogout();
 
                 Navigator.pushAndRemoveUntil(
