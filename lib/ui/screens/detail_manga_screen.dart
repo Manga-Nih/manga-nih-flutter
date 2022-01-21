@@ -485,15 +485,14 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
     return (state is DetailMangaFetchSuccess)
         ? BlocBuilder<HistoryMangaBloc, HistoryMangaState>(
             builder: (context, historyState) {
-              // HistoryManga? historyManga;
-              // if (historyState is HistoryMangaFetchListSuccess) {
-              //   List<HistoryManga> list =
-              //       historyState.listHistoryManga.where((element) {
-              //     return removeSlash(element.endpoint) ==
-              //         removeSlash(widget.mangaEndpoint);
-              //   }).toList();
-              //   historyManga = (list.isNotEmpty) ? list.first : null;
-              // }
+              HistoryManga? historyManga;
+              if (historyState is HistoryMangaFetchListSuccess) {
+                List<HistoryManga> list =
+                    historyState.listHistoryManga.where((element) {
+                  return element.endpoint == widget.mangaEndpoint;
+                }).toList();
+                historyManga = (list.isNotEmpty) ? list.first : null;
+              }
 
               return ListView.builder(
                 padding: const EdgeInsets.only(bottom: 20.0),
@@ -501,11 +500,9 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                 itemCount: state.mangaDetail.chapters.length,
                 itemBuilder: (context, index) {
                   Chapter chapter = state.mangaDetail.chapters[index];
-                  bool isLastRead = false;
-                  // bool isLastRead = (historyManga != null)
-                  //     ? historyManga.lastChapter.endpoint ==
-                  //         chapter.chapterEndpoint
-                  //     : false;
+                  bool isLastRead = (historyManga != null)
+                      ? historyManga.lastChapter.endpoint == chapter.endpoint
+                      : false;
 
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 5.0),

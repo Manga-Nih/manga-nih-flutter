@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/models/models.dart';
 
 class ChapterScreen extends StatefulWidget {
   final Chapter chapter;
@@ -125,15 +126,15 @@ class _ChapterScreenState extends State<ChapterScreen> {
   // if from DetailManga save add to history
   // if from ListFavoriteHistory don't save to history
   void _addHistory() {
-    // // store last chapter
-    // HistoryManga historyManga = HistoryManga(
-    //   title: _curManga!.title,
-    //   type: _curManga!.type,
-    //   thumb: _curManga!.thumb,
-    //   endpoint: _curManga!.endpoint,
-    //   lastChapter: _curChapter,
-    // );
-    // _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
+    // store last chapter
+    HistoryManga historyManga = HistoryManga(
+      title: _curManga!.title,
+      type: _curManga!.typeName,
+      thumb: _curManga!.thumb,
+      endpoint: _curManga!.endpoint,
+      lastChapter: _curChapter,
+    );
+    _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
   }
 
   void _chapterChangeListener(BuildContext context, ChapterImageState state) {

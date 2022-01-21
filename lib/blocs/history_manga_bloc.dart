@@ -24,30 +24,21 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
             .orderByChild('endpoint')
             .equalTo(event.historyManga.endpoint)
             .once();
+        HistoryManga history = event.historyManga;
 
         // if don't exist
         if (data.value == null) {
-          await _historiesReference.push().set({
-            "title": event.historyManga.title,
-            "type": event.historyManga.type,
-            "typeImage": event.historyManga.typeImage,
-            "thumb": event.historyManga.thumb,
-            "endpoint": event.historyManga.endpoint,
-            "lastChapter": {
-              "title": event.historyManga.lastChapter.title,
-              "endpoint": event.historyManga.lastChapter.endpoint,
-            }
-          });
+          await _historiesReference.push().set(history.toJson());
         } else {
           // get key from list item
           Map<dynamic, dynamic> map = data.value;
           String key = map.keys.first;
 
           // update last chapter
-          await _historiesReference.child(key).child('lastChapter').update({
-            "title": event.historyManga.lastChapter.title,
-            "endpoint": event.historyManga.lastChapter.endpoint,
-          });
+          await _historiesReference
+              .child(key)
+              .child('lastChapter')
+              .update(history.lastChapter.toJson());
         }
 
         this.add(HistoryMangaFetchList());
@@ -58,7 +49,10 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
         List<HistoryManga> list = [];
         if (dataSnapshot.value != null) {
           Map<dynamic, dynamic> map = dataSnapshot.value;
-          // list = HistoryManga.toList(map.values.toList());
+          List<Map<String, dynamic>> values =
+              map.values.map((e) => Map<String, dynamic>.from(e)).toList();
+
+          list = HistoryManga.fromJson(values);
         }
 
         yield HistoryMangaFetchListSuccess(listHistoryManga: list);
