@@ -14,96 +14,32 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late GlobalKey<FormState> _key;
+  late String _displayName;
   late UserBloc _userBloc;
-  late TextEditingController _editNameController;
 
   @override
   void initState() {
     // init bloc
     _userBloc = BlocProvider.of<UserBloc>(context);
 
-    // init key
-    _key = GlobalKey();
-
-    // init controller
-    _editNameController = TextEditingController();
-
     // set name
     UserState state = _userBloc.state;
     if (state is UserFetchSuccess) {
-      _editNameController.text = state.user.displayName!;
+      _displayName = state.user.displayName!;
     }
 
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _editNameController.dispose();
-
-    super.dispose();
-  }
-
   void _editNameAction() {
-    final Size screenSize = MediaQuery.of(context).size;
-
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          title: Text('Edit your name'),
-          content: Container(
-            width: screenSize.width * 0.7,
-            child: Wrap(
-              children: [
-                Form(
-                  key: _key,
-                  child: Column(
-                    children: [
-                      InputField(
-                        hintText: 'Name',
-                        icon: Icons.edit,
-                        controller: _editNameController,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            MaterialButton(
-              onPressed: () => Navigator.pop(context),
-              minWidth: 100.0,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              color: Pallette.buttonColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: Text('Nah, i like my current name'),
-            ),
-            MaterialButton(
-              onPressed: () {
-                if (_key.currentState!.validate()) {
-                  String name = _editNameController.text.trim();
-
-                  _userBloc.add(UserUpdateProfile(name: name));
-                  SnackbarModel.custom(false, 'Success update your name');
-
-                  Navigator.pop(context);
-                }
-              },
-              minWidth: 70.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: Text('Save...'),
-            ),
-          ],
+        return EditNameDialog(
+          displayName: _displayName,
+          onSuccess: (name) {
+            _userBloc.add(UserUpdateProfile(name: name));
+          },
         );
       },
     );
@@ -133,52 +69,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          title: Text(
-            'Log out',
-            style: Theme.of(context)
-                .textTheme
-                .headline6!
-                .copyWith(color: Colors.red),
-          ),
-          content: Text('Are you sure want to log out ?'),
-          actions: [
-            MaterialButton(
-              onPressed: () => Navigator.pop(context),
-              color: Pallette.buttonColor,
-              minWidth: 100.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: Text('I will stay'),
-            ),
-            MaterialButton(
-              onPressed: () async {
-                SnackbarModel.custom(false, 'Bye bye...');
-
-                await _userBloc.userLogout();
-
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => SplashScreen()),
-                    (route) => false);
-              },
-              minWidth: 70.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: Text(
-                'Yes...',
-                style: Theme.of(context)
-                    .textTheme
-                    .button!
-                    .copyWith(color: Colors.red),
-              ),
-            ),
-          ],
+        return LogoutDialog(
+          onLogout: () async {
+            await _userBloc.userLogout();
+          },
         );
       },
     );
