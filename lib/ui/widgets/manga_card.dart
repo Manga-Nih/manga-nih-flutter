@@ -43,13 +43,13 @@ class MangaCard<T> extends StatelessWidget {
       title = (manga as FavoriteManga).title;
     }
 
-    // if (manga is HistoryManga) {
-    //   thumb = (manga as HistoryManga).thumb;
-    //   type = (manga as HistoryManga).type;
-    //   typeImage = (manga as HistoryManga).typeImage;
-    //   title = (manga as HistoryManga).title;
-    //   chapter = (manga as HistoryManga).lastChapter.title;
-    // }
+    if (manga is HistoryManga) {
+      thumb = (manga as HistoryManga).thumb;
+      type = (manga as HistoryManga).type;
+      typeImage = (manga as HistoryManga).typeImage;
+      title = (manga as HistoryManga).title;
+      chapter = (manga as HistoryManga).lastChapter.title;
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
