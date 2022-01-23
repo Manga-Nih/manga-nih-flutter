@@ -26,14 +26,21 @@ class LoginRegisterButton extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: onTap!,
-              borderRadius: BorderRadius.circular(50.0),
+              borderRadius: BorderRadius.circular(10.0),
               child: Ink(
                 width: 150.0,
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 15.0),
+                  horizontal: 20.0,
+                  vertical: 15.0,
+                ),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50.0),
-                  color: Pallette.buttonColor90,
+                  borderRadius: BorderRadius.circular(10.0),
+                  gradient: LinearGradient(
+                    colors: [
+                      Pallette.gradientStartColor,
+                      Pallette.gradientEndColor,
+                    ],
+                  ),
                 ),
                 child: Text(
                   label!,

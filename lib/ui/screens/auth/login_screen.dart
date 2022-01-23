@@ -14,28 +14,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _key = GlobalKey();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   late UserBloc _userBloc;
-  late GlobalKey<FormState> _key;
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
-  late String? _passwordErrorText;
-  late String? _emailErrorText;
+  String? _passwordErrorText;
+  String? _emailErrorText;
 
   @override
   void initState() {
     // init bloc
     _userBloc = BlocProvider.of<UserBloc>(context);
-
-    // init
-    _passwordErrorText = null;
-    _emailErrorText = null;
-
-    // init key
-    _key = GlobalKey();
-
-    // init controller
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
 
     super.initState();
   }
@@ -114,7 +103,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'Login Account',
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5!
+                                .copyWith(color: Pallette.gradientEndColor),
                           ),
                         ),
                         const SizedBox(height: 5.0),
@@ -164,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               'Not registered yet ?',
                               style: Theme.of(context).textTheme.bodyText2!,
                             ),
-                            const SizedBox(width: 5.0),
+                            const SizedBox(width: 2.0),
                             MaterialButton(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5.0),

@@ -51,7 +51,7 @@ class _InputFieldState extends State<InputField> {
         contentPadding: const EdgeInsets.only(top: 15.0),
         errorText: widget.errorText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50.0),
+          borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.grey.shade500),
         ),
         prefixIcon: Icon(
@@ -65,7 +65,7 @@ class _InputFieldState extends State<InputField> {
                 minWidth: 0.0,
                 shape: CircleBorder(),
                 child: Icon(
-                  Icons.remove_red_eye,
+                  _obscureText ? Icons.visibility : Icons.visibility_off,
                   color: Colors.grey.shade500,
                 ),
               )
