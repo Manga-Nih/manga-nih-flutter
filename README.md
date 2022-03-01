@@ -8,11 +8,16 @@
     <img style="width: 200px" src="screenshots/3.jpg" />
 </p>
 
-
 ## Build
-1. Edit file `local.properties` inside `Android` folder and add some line.
-   ```
-    flutter.minSdkVersion=16
-    flutter.compileSdkVersion=31
-    flutter.targetSdkVersion=31
-   ```
+
+Edit file `local.properties` inside `Android` folder and add some line.
+
+```
+ flutter.minSdkVersion=16
+ flutter.compileSdkVersion=31
+ flutter.targetSdkVersion=31
+```
+
+## Komiku SDK
+
+[komiku_sdk](https://github.com/zalviandyr/komiku_sdk)
