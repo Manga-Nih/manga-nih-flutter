@@ -21,10 +21,11 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
     try {
       if (event is FavoriteMangaAddRemove) {
         // get child by value
-        DataSnapshot data = await _favoritesReference
+        DatabaseEvent databaseEvent = await _favoritesReference
             .orderByChild('endpoint')
             .equalTo(event.favoriteManga.endpoint)
             .once();
+        DataSnapshot data = databaseEvent.snapshot;
 
         MangaDetail detail = event.favoriteManga;
         FavoriteManga favoriteManga = FavoriteManga(
@@ -39,7 +40,7 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
           await _favoritesReference.push().set(favoriteManga.toJson());
         } else {
           // get key from list item
-          Map<dynamic, dynamic> map = data.value;
+          Map<dynamic, dynamic> map = data.value as Map<dynamic, dynamic>;
           String key = map.keys.first;
           await _favoritesReference.child(key).remove();
         }
@@ -48,11 +49,13 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
       }
 
       if (event is FavoriteMangaFetchList) {
-        DataSnapshot dataSnapshot = await _favoritesReference.once();
+        DatabaseEvent databaseEvent = await _favoritesReference.once();
+        DataSnapshot dataSnapshot = databaseEvent.snapshot;
         List<FavoriteManga> list = [];
 
         if (dataSnapshot.value != null) {
-          Map<dynamic, dynamic> map = dataSnapshot.value;
+          Map<dynamic, dynamic> map =
+              dataSnapshot.value as Map<dynamic, dynamic>;
           List<Map<String, String>> values =
               map.values.map((e) => Map<String, String>.from(e)).toList();
           list = FavoriteManga.fromJson(values);

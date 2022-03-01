@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:manga_nih/constants/word.dart';
@@ -31,14 +30,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _initializeFirebase() async {
     try {
-      await Firebase.initializeApp();
-
       // init firebase
       _firebaseAuth = FirebaseAuth.instance;
       _firebaseDatabase = FirebaseDatabase.instance;
 
       // set persistance
-      await _firebaseDatabase.setPersistenceEnabled(true);
+      _firebaseDatabase.setPersistenceEnabled(true);
 
       // sleep for 2 seconds
       await Future.delayed(Duration(seconds: 2));

@@ -20,10 +20,11 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
     try {
       if (event is HistoryMangaAdd) {
         // get child by value
-        DataSnapshot data = await _historiesReference
+        DatabaseEvent databaseEvent = await _historiesReference
             .orderByChild('endpoint')
             .equalTo(event.historyManga.endpoint)
             .once();
+        DataSnapshot data = databaseEvent.snapshot;
         HistoryManga history = event.historyManga;
 
         // if don't exist
@@ -31,7 +32,7 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
           await _historiesReference.push().set(history.toJson());
         } else {
           // get key from list item
-          Map<dynamic, dynamic> map = data.value;
+          Map<dynamic, dynamic> map = data.value as Map<dynamic, dynamic>;
           String key = map.keys.first;
 
           // update last chapter
@@ -45,10 +46,12 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
       }
 
       if (event is HistoryMangaFetchList) {
-        DataSnapshot dataSnapshot = await _historiesReference.once();
+        DatabaseEvent databaseEvent = await _historiesReference.once();
+        DataSnapshot dataSnapshot = databaseEvent.snapshot;
         List<HistoryManga> list = [];
+
         if (dataSnapshot.value != null) {
-          Map<dynamic, dynamic> map = dataSnapshot.value;
+          Map<dynamic, dynamic> map = dataSnapshot.value as Map<dynamic, dynamic>;
           List<Map<String, dynamic>> values =
               map.values.map((e) => Map<String, dynamic>.from(e)).toList();
 
