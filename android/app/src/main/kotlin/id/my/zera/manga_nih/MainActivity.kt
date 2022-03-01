@@ -1,4 +1,4 @@
-package com.example.manga_nih
+package id.my.zera.manga_nih
 
 import io.flutter.embedding.android.FlutterActivity
 
