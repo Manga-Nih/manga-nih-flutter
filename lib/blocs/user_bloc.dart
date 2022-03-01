@@ -30,9 +30,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (event is UserUpdateProfile) {
         User? user = _firebaseAuth.currentUser;
         if (user != null) {
-          await user.updateProfile(displayName: event.name);
+          await user.updateDisplayName(event.name);
+          await user.reload();
 
-          yield UserFetchSuccess(user: user);
+          User updatedUser = _firebaseAuth.currentUser!;
+
+          yield UserFetchSuccess(user: updatedUser);
         }
       }
 
@@ -65,9 +68,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
         if (user != null) {
           // update name
-          await user.updateProfile(displayName: event.name);
+          await user.updateDisplayName(event.name);
+          await user.reload();
 
-          yield UserFetchSuccess(user: user);
+          User updatedUser = _firebaseAuth.currentUser!;
+
+          yield UserFetchSuccess(user: updatedUser);
         }
       }
     } on FirebaseAuthException catch (e) {
