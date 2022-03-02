@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:komiku_sdk/models.dart';
-import 'package:manga_nih/helpers/helpers.dart';
+import 'package:manga_nih/core/core.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DetailMangaCard extends StatelessWidget {

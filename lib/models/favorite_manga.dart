@@ -1,4 +1,4 @@
-import 'package:manga_nih/helpers/helpers.dart';
+import 'package:manga_nih/core/core.dart';
 
 class FavoriteManga {
   final String title;

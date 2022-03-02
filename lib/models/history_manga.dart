@@ -1,5 +1,5 @@
 import 'package:komiku_sdk/models.dart';
-import 'package:manga_nih/helpers/helpers.dart';
+import 'package:manga_nih/core/core.dart';
 
 class HistoryManga {
   final String title;

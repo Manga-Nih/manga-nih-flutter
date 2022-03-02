@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/constants/word.dart';
+import 'package:manga_nih/core/core.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'firebase_options.dart';
 
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<HistoryMangaBloc>(create: (_) => HistoryMangaBloc()),
       ],
       child: GetMaterialApp(
-        title: Word.appName,
+        title: Constants.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
