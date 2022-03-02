@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/models/models.dart';
-import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/constants/enum.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/core/constants.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -78,6 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Future<void> _freepikAction() async {
+    await launch(Constants.freepik);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -94,6 +98,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               LogoutButton(onPressed: _logoutAction),
             ],
           ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Wrap(
+          children: [
+            GestureDetector(
+              onTap: _freepikAction,
+              child: Container(
+                width: double.infinity,
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      spreadRadius: 1.0,
+                      blurRadius: 2.0,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: const [
+                    Text('App Icon by'),
+                    SizedBox(height: 5.0),
+                    Text('freepik/rochakshukla'),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
