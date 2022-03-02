@@ -13,7 +13,7 @@
 Edit file `local.properties` inside `Android` folder and add some line.
 
 ```
- flutter.minSdkVersion=19
+ flutter.minSdkVersion=21
  flutter.compileSdkVersion=31
  flutter.targetSdkVersion=31
 ```
