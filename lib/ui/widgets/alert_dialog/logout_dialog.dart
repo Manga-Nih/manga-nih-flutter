@@ -44,7 +44,7 @@ class LogoutDialog extends StatelessWidget {
 
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => SplashScreen()),
+                MaterialPageRoute(builder: (context) => LoginScreen()),
                 (route) => false);
           },
           minWidth: 70.0,

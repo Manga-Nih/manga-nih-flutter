@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +21,27 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late FirebaseAuth _firebaseAuth;
+  late FirebaseDatabase _firebaseDatabase;
+
+  @override
+  void initState() {
+    // init firebase
+    _firebaseAuth = FirebaseAuth.instance;
+    _firebaseDatabase = FirebaseDatabase.instance;
+
+    // set persistance
+    _firebaseDatabase.setPersistenceEnabled(true);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -52,7 +74,13 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           textTheme: GoogleFonts.balsamiqSansTextTheme(),
         ),
-        home: SplashScreen(),
+        home: Builder(
+          builder: (context) {
+            return (_firebaseAuth.currentUser == null)
+                ? LoginScreen()
+                : HomeScreen();
+          },
+        ),
       ),
     );
   }
