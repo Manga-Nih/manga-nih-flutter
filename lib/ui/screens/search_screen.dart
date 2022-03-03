@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
@@ -27,12 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _mangaCardAction(Manga searchManga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: searchManga.detailEndpoint),
-        ));
+    Get.to(() => DetailMangaScreen(mangaEndpoint: searchManga.detailEndpoint));
   }
 
   @override

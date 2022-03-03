@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:komiku_sdk/enum.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
@@ -35,49 +36,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _searchAction() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SearchScreen()));
+    Get.to(() => SearchScreen());
   }
 
   void _popularLatestMangaItemAction(dynamic manga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: manga.detailEndpoint),
-        ));
+    Get.to(() => DetailMangaScreen(mangaEndpoint: manga.detailEndpoint));
   }
 
   void _manhuaAction() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListMangaScreen(mangaType: MangaType.manhua),
-        ));
+    Get.to(() => ListMangaScreen(mangaType: MangaType.manhua));
   }
 
   void _mangaAction() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListMangaScreen(mangaType: MangaType.manga),
-        ));
+    Get.to(() => ListMangaScreen(mangaType: MangaType.manga));
   }
 
   void _manhwaAction() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListMangaScreen(mangaType: MangaType.manhwa),
-        ));
+    Get.to(() => ListMangaScreen(mangaType: MangaType.manhwa));
   }
 
   void _genreAction(Genre genre) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListGenreManga(genre: genre),
-        ));
+    Get.to(() => ListGenreManga(genre: genre));
   }
 
   @override

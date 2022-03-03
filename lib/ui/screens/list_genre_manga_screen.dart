@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komiku_sdk/models.dart';
 import 'package:manga_nih/blocs/blocs.dart';
@@ -93,12 +94,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
   }
 
   void _mangaAction(Manga genreManga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: genreManga.detailEndpoint),
-        ));
+    Get.to(() => DetailMangaScreen(mangaEndpoint: genreManga.detailEndpoint));
   }
 
   @override

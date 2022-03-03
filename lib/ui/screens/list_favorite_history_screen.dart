@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/core/core.dart';
@@ -45,23 +46,16 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
   }
 
   void _detailMangaAction(FavoriteManga favoriteManga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: favoriteManga.endpoint),
-        ));
+    Get.to(() => DetailMangaScreen(mangaEndpoint: favoriteManga.endpoint));
   }
 
   void _chapterAction(HistoryManga historyManga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ChapterScreen.fromListFavoriteHistoryManga(
-            chapter: historyManga.lastChapter,
-            mangaEndpoint: historyManga.endpoint,
-          ),
-        ));
+    Get.to(
+      () => ChapterScreen.fromListFavoriteHistoryManga(
+        chapter: historyManga.lastChapter,
+        mangaEndpoint: historyManga.endpoint,
+      ),
+    );
   }
 
   void _fetchData() {
@@ -82,7 +76,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
           onAccept: () {
             _historyMangaBloc.add(HistoryMangaClear());
 
-            Navigator.pop(context);
+            Get.back();
           },
         );
       },

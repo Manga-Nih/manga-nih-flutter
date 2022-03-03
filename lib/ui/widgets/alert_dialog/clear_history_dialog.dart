@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 
 class ClearHistoryDialog extends StatelessWidget {
@@ -16,7 +17,7 @@ class ClearHistoryDialog extends StatelessWidget {
       content: Text('Are you sure ?'),
       actions: [
         MaterialButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
           color: Pallette.buttonColor,
           minWidth: 100.0,
           shape: RoundedRectangleBorder(

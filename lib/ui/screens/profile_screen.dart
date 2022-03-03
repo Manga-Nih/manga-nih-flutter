@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/core/core.dart';
@@ -45,23 +46,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _favoriteAction() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListFavoriteHistoryScreen(
-            section: FavoriteHistorySection.favorite,
-          ),
-        ));
+    Get.to(
+      () => ListFavoriteHistoryScreen(section: FavoriteHistorySection.favorite),
+    );
   }
 
   void _historyAction() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ListFavoriteHistoryScreen(
-            section: FavoriteHistorySection.history,
-          ),
-        ));
+    Get.to(
+      () => ListFavoriteHistoryScreen(section: FavoriteHistorySection.history),
+    );
   }
 
   void _logoutAction() async {

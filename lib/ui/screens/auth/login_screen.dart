@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
@@ -61,21 +62,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _registerAction() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RegisterScreen(),
-        ));
+    Get.to(() => RegisterScreen());
   }
 
   void _blocListener(BuildContext context, UserState userState) {
     if (userState is UserFetchSuccess) {
       SnackbarModel.custom(false, 'Welcome to Manga nih');
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-          (route) => false);
+      Get.offAll(() => HomeScreen());
     }
   }
 

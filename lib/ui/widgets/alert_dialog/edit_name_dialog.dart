@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
@@ -65,7 +66,7 @@ class _EditNameDialogState extends State<EditNameDialog> {
       ),
       actions: [
         MaterialButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
           minWidth: 100.0,
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           color: Pallette.buttonColor,
@@ -85,7 +86,7 @@ class _EditNameDialogState extends State<EditNameDialog> {
               widget.onSuccess(name);
               SnackbarModel.custom(false, 'Success update your name');
 
-              Navigator.pop(context);
+              Get.back();
             }
           },
           minWidth: 70.0,

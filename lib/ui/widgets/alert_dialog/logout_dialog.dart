@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
@@ -25,7 +26,7 @@ class LogoutDialog extends StatelessWidget {
       content: Text('Are you sure want to log out ?'),
       actions: [
         MaterialButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
           color: Pallette.buttonColor,
           minWidth: 100.0,
           shape: RoundedRectangleBorder(
@@ -42,10 +43,7 @@ class LogoutDialog extends StatelessWidget {
 
             await onLogout();
 
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-                (route) => false);
+            Get.offAll(() => LoginScreen());
           },
           minWidth: 70.0,
           shape: RoundedRectangleBorder(

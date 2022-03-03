@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komiku_sdk/enum.dart';
 import 'package:komiku_sdk/models.dart';
@@ -57,12 +58,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
   }
 
   void _mangaAction(Manga manga) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              DetailMangaScreen(mangaEndpoint: manga.detailEndpoint),
-        ));
+    Get.to(() => DetailMangaScreen(mangaEndpoint: manga.detailEndpoint));
   }
 
   @override
