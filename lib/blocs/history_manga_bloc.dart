@@ -1,45 +1,46 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
 class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
-  final FirebaseDatabase _firebaseDatabase;
   final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore;
 
   HistoryMangaBloc()
       : this._firebaseAuth = FirebaseAuth.instance,
-        this._firebaseDatabase = FirebaseDatabase.instance,
+        this._firestore = FirebaseFirestore.instance,
         super(HistoryMangaUninitialized());
 
   @override
   Stream<HistoryMangaState> mapEventToState(HistoryMangaEvent event) async* {
     try {
       if (event is HistoryMangaAdd) {
-        // get child by value
-        DatabaseEvent databaseEvent = await _historiesReference
-            .orderByChild('endpoint')
-            .equalTo(event.historyManga.endpoint)
-            .once();
-        DataSnapshot data = databaseEvent.snapshot;
+        DocumentReference doc = _historiesDoc;
+        DocumentSnapshot snapshot = await doc.get();
+        List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
+
         HistoryManga history = event.historyManga;
+        bool isExist = data.firstWhere(
+              (element) => element['endpoint'] == event.historyManga.endpoint,
+              orElse: () => null,
+            ) !=
+            null;
 
-        // if don't exist
-        if (data.value == null) {
-          await _historiesReference.push().set(history.toJson());
-        } else {
-          // get key from list item
-          Map<dynamic, dynamic> map = data.value as Map<dynamic, dynamic>;
-          String key = map.keys.first;
-
+        if (isExist) {
           // update last chapter
-          await _historiesReference
-              .child(key)
-              .child('lastChapter')
-              .update(history.lastChapter.toJson());
+          Map<String, dynamic> curData = data.firstWhere(
+              (element) => element['endpoint'] == event.historyManga.endpoint);
+
+          curData['lastChapter'] = history.lastChapter.toJson();
+
+          doc.update({'data': data});
+        } else {
+          data.add(history.toJson());
+          doc.set({'data': data});
         }
 
         this.add(HistoryMangaFetchList());
@@ -47,8 +48,8 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
 
       if (event is HistoryMangaClear) {
         try {
-          DatabaseReference ref = _historiesReference;
-          await ref.remove();
+          DocumentReference doc = _historiesDoc;
+          await doc.delete();
 
           this.add(HistoryMangaFetchList());
         } catch (e) {
@@ -59,20 +60,17 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
       }
 
       if (event is HistoryMangaFetchList) {
-        DatabaseEvent databaseEvent = await _historiesReference.once();
-        DataSnapshot dataSnapshot = databaseEvent.snapshot;
-        List<HistoryManga> list = [];
+        DocumentReference doc = _historiesDoc;
+        DocumentSnapshot snapshot = await doc.get();
+        List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
 
-        if (dataSnapshot.value != null) {
-          Map<dynamic, dynamic> map =
-              dataSnapshot.value as Map<dynamic, dynamic>;
-          List<Map<String, dynamic>> values =
-              map.values.map((e) => Map<String, dynamic>.from(e)).toList();
+        List<HistoryManga> histories = data
+            .map((e) => HistoryManga.fromJson(Map<String, dynamic>.from(e)))
+            .toList();
 
-          list = HistoryManga.fromJson(values);
-        }
+        List<HistoryManga> reverse = histories.reversed.toList();
 
-        yield HistoryMangaFetchListSuccess(listHistoryManga: list);
+        yield HistoryMangaFetchListSuccess(listHistoryManga: reverse);
       }
     } catch (e) {
       log(e.toString(), name: 'HistoryMangaAdd');
@@ -81,9 +79,9 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
     }
   }
 
-  DatabaseReference get _historiesReference {
-    DatabaseReference databaseReference = _firebaseDatabase.ref();
+  DocumentReference get _historiesDoc {
     User user = _firebaseAuth.currentUser!;
-    return databaseReference.child(user.uid).child('histories');
+    CollectionReference ref = _firestore.collection(user.uid);
+    return ref.doc('histories');
   }
 }

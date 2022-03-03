@@ -14,19 +14,13 @@ class FavoriteManga {
     required this.endpoint,
   }) : this.typeImage = typeMangaImage(type);
 
-  static List<FavoriteManga> fromJson(List<Map<String, String>> values) {
-    List<FavoriteManga> list = [];
-
-    for (Map<String, String> data in values) {
-      list.add(FavoriteManga(
-        title: data['title']!,
-        type: data['type']!,
-        thumb: data['thumb']!,
-        endpoint: data['endpoint']!,
-      ));
-    }
-
-    return list;
+  factory FavoriteManga.fromJson(Map<String, String> map) {
+    return FavoriteManga(
+      title: map['title']!,
+      type: map['type']!,
+      thumb: map['thumb']!,
+      endpoint: map['endpoint']!,
+    );
   }
 
   Map<String, String> toJson() {

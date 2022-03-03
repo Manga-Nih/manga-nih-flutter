@@ -17,21 +17,15 @@ class HistoryManga {
     required this.lastChapter,
   }) : this.typeImage = typeMangaImage(type);
 
-  static List<HistoryManga> fromJson(List<Map<String, dynamic>> values) {
-    List<HistoryManga> list = [];
-
-    for (var data in values) {
-      list.add(HistoryManga(
-        title: data['title'],
-        type: data['type'],
-        thumb: data['thumb'],
-        endpoint: data['endpoint'],
-        lastChapter: Chapter.fromJsonFirst(
-            Map<String, String>.from(data['lastChapter'])),
-      ));
-    }
-
-    return list;
+  factory HistoryManga.fromJson(Map<String, dynamic> map) {
+    return HistoryManga(
+      title: map['title'],
+      type: map['type'],
+      thumb: map['thumb'],
+      endpoint: map['endpoint'],
+      lastChapter:
+          Chapter.fromJsonFirst(Map<String, String>.from(map['lastChapter'])),
+    );
   }
 
   Map<String, dynamic> toJson() {

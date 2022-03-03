@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,16 +28,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late FirebaseAuth _firebaseAuth;
-  late FirebaseDatabase _firebaseDatabase;
+  late FirebaseFirestore _firestore;
 
   @override
   void initState() {
     // init firebase
     _firebaseAuth = FirebaseAuth.instance;
-    _firebaseDatabase = FirebaseDatabase.instance;
+    _firestore = FirebaseFirestore.instance;
 
     // set persistance
-    _firebaseDatabase.setPersistenceEnabled(true);
+    _firestore.settings = Settings(persistenceEnabled: true);
 
     super.initState();
   }
