@@ -74,6 +74,21 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
     }
   }
 
+  void _clearHistoryAction() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ClearHistoryDialog(
+          onAccept: () {
+            _historyMangaBloc.add(HistoryMangaClear());
+
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,6 +110,16 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
                 child: _buildHistorySection(),
               ),
             ],
+          ),
+        ),
+        floatingActionButton: AnimatedScale(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.elasticInOut,
+          scale: _section == FavoriteHistorySection.history ? 1 : 0,
+          child: FloatingActionButton(
+            onPressed: _clearHistoryAction,
+            backgroundColor: Colors.red,
+            child: Icon(Icons.delete),
           ),
         ),
       ),

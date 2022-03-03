@@ -14,6 +14,11 @@ class HistoryMangaAdd extends HistoryMangaEvent {
   List<Object?> get props => [historyManga];
 }
 
+class HistoryMangaClear extends HistoryMangaEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class HistoryMangaFetchList extends HistoryMangaEvent {
   HistoryMangaFetchList();
 

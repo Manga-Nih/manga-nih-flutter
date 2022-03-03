@@ -45,13 +45,27 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
         this.add(HistoryMangaFetchList());
       }
 
+      if (event is HistoryMangaClear) {
+        try {
+          DatabaseReference ref = _historiesReference;
+          await ref.remove();
+
+          this.add(HistoryMangaFetchList());
+        } catch (e) {
+          log(e.toString(), name: 'HistoryMangaClear');
+
+          SnackbarModel.globalError();
+        }
+      }
+
       if (event is HistoryMangaFetchList) {
         DatabaseEvent databaseEvent = await _historiesReference.once();
         DataSnapshot dataSnapshot = databaseEvent.snapshot;
         List<HistoryManga> list = [];
 
         if (dataSnapshot.value != null) {
-          Map<dynamic, dynamic> map = dataSnapshot.value as Map<dynamic, dynamic>;
+          Map<dynamic, dynamic> map =
+              dataSnapshot.value as Map<dynamic, dynamic>;
           List<Map<String, dynamic>> values =
               map.values.map((e) => Map<String, dynamic>.from(e)).toList();
 
@@ -68,11 +82,8 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
   }
 
   DatabaseReference get _historiesReference {
-    DatabaseReference databaseReference = _firebaseDatabase.reference();
+    DatabaseReference databaseReference = _firebaseDatabase.ref();
     User user = _firebaseAuth.currentUser!;
-    DatabaseReference favorites =
-        databaseReference.child(user.uid).child('histories');
-
-    return favorites;
+    return databaseReference.child(user.uid).child('histories');
   }
 }

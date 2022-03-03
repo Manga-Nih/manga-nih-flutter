@@ -19,3 +19,4 @@ export 'buttons/capsule_button.dart';
 // Alert dialog
 export 'alert_dialog/edit_name_dialog.dart';
 export 'alert_dialog/logout_dialog.dart';
+export 'alert_dialog/clear_history_dialog.dart';
