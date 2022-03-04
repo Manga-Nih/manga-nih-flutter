@@ -1,5 +1,7 @@
 export 'genre_event.dart';
 export 'genre_state.dart';
+export 'feedback_event.dart';
+export 'feedback_state.dart';
 export 'chapter_image_event.dart';
 export 'chapter_image_state.dart';
 export 'user_event.dart';

@@ -7,7 +7,7 @@ export 'custom_app_bar.dart';
 export 'manga_card.dart';
 export 'detail_manga_card.dart';
 export 'snackbar.dart';
-export 'buttons/login_register_button.dart';
+export 'buttons/primary_button.dart';
 export 'input_field.dart';
 export 'buttons/profile_button.dart';
 export 'buttons/logout_button.dart';

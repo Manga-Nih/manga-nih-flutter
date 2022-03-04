@@ -134,10 +134,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           listener: _blocListener,
                           builder: (context, state) {
                             if (state is UserLoading) {
-                              return LoginRegisterButton.loading();
+                              return PrimaryButton.loading();
                             }
 
-                            return LoginRegisterButton(
+                            return PrimaryButton(
                               label: 'Login',
                               onTap: _loginAction,
                             );

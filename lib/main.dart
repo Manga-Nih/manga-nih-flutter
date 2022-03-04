@@ -73,6 +73,16 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           textTheme: GoogleFonts.balsamiqSansTextTheme(),
+          appBarTheme: AppBarTheme(
+            iconTheme: IconThemeData(color: Colors.grey.shade600),
+            titleTextStyle: GoogleFonts.balsamiqSans(
+              color: Colors.grey.shade600,
+              fontSize: 17.0,
+            ),
+            elevation: 0.0,
+            backgroundColor: Colors.white,
+            centerTitle: true,
+          ),
         ),
         home: Builder(
           builder: (context) {

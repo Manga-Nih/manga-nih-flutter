@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:manga_nih/ui/configs/pallette.dart';
 
-class LoginRegisterButton extends StatelessWidget {
+class PrimaryButton extends StatelessWidget {
   final String? label;
   final VoidCallback? onTap;
   final bool isLoading;
 
-  const LoginRegisterButton({
+  const PrimaryButton({
     Key? key,
     required this.label,
     required this.onTap,
   })  : this.isLoading = false,
         super(key: key);
 
-  const LoginRegisterButton.loading()
+  const PrimaryButton.loading()
       : this.label = null,
         this.onTap = null,
         this.isLoading = true;

@@ -11,3 +11,4 @@ export 'search_manga_bloc.dart';
 export 'favorite_manga_bloc.dart';
 export 'history_manga_bloc.dart';
 export 'user_bloc.dart';
+export 'feedback_bloc.dart';

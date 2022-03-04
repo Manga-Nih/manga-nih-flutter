@@ -159,10 +159,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           listener: _blocListener,
                           builder: (context, state) {
                             if (state is UserLoading) {
-                              return LoginRegisterButton.loading();
+                              return PrimaryButton.loading();
                             }
 
-                            return LoginRegisterButton(
+                            return PrimaryButton(
                               label: 'Register',
                               onTap: _registerAction,
                             );

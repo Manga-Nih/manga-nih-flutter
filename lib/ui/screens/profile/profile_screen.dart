@@ -57,6 +57,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _feedbackAction() {
+    Get.to(() => BlocProvider(
+          create: (context) => FeedbackBloc(),
+          child: FeedbackScreen(),
+        ));
+  }
+
   void _logoutAction() async {
     showDialog(
       context: context,
@@ -192,6 +199,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           label: 'History',
           icon: Icons.history_outlined,
           onPressed: _historyAction,
+        ),
+        const SizedBox(height: 10.0),
+        ProfileButton(
+          label: 'Feedback',
+          icon: Icons.report_problem,
+          onPressed: _feedbackAction,
         ),
       ],
     );

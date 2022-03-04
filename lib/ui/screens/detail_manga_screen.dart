@@ -132,19 +132,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   Widget _buildAppBar() {
-    return SliverAppBar(
-      backgroundColor: Colors.white,
-      elevation: 0.0,
-      centerTitle: true,
-      iconTheme: IconThemeData(color: Colors.grey.shade600),
-      title: Text(
-        'Detail Manga',
-        style: Theme.of(context)
-            .textTheme
-            .headline6!
-            .copyWith(color: Colors.grey.shade600),
-      ),
-    );
+    return SliverAppBar(title: Text('Detail Manga'));
   }
 
   Widget _buildMangaInfo(DetailMangaState state) {
