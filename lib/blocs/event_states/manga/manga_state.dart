@@ -15,6 +15,11 @@ class MangaLoading extends MangaState {
   List<Object?> get props => [];
 }
 
+class MangaError extends MangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class MangaFetchSuccess extends MangaState {
   final List<Manga> listManga;
   final int nextPage;

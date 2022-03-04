@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
@@ -11,31 +10,28 @@ class MangaBloc extends Bloc<MangaEvent, MangaState> {
   final Komiku _komiku = Komiku();
   final List<Manga> _listManga = [];
 
-  MangaBloc() : super(MangaUninitialized());
+  MangaBloc() : super(MangaUninitialized()) {
+    on(_onMangaFetch);
+  }
 
-  @override
-  Stream<MangaState> mapEventToState(MangaEvent event) async* {
-    if (event is MangaFetch) {
-      try {
-        yield MangaLoading();
+  Future<void> _onMangaFetch(MangaFetch event, Emitter<MangaState> emit) async {
+    try {
+      emit(MangaLoading());
 
-        int currentPage = event.page;
-        int nextPage = currentPage + 1;
-        List<Manga> listManga = await _komiku.allManga(page: currentPage);
+      int currentPage = event.page;
+      int nextPage = currentPage + 1;
+      List<Manga> listManga = await _komiku.allManga(page: currentPage);
 
-        // append new items
-        _listManga.addAll(listManga);
+      // append new items
+      _listManga.addAll(listManga);
 
-        yield MangaFetchSuccess(listManga: _listManga, nextPage: nextPage);
-      } on SocketException catch (e) {
-        log(e.toString(), name: 'MangaFetch - SocketException');
+      emit(MangaFetchSuccess(listManga: _listManga, nextPage: nextPage));
+    } catch (e) {
+      emit(MangaError());
 
-        SnackbarModel.noConnection();
-      } catch (e) {
-        log(e.toString(), name: 'MangaFetch');
+      log(e.toString(), name: 'MangaFetch');
 
-        SnackbarModel.globalError();
-      }
+      SnackbarModel.globalError();
     }
   }
 }

@@ -15,6 +15,11 @@ class GenreMangaLoading extends GenreMangaState {
   List<Object?> get props => [];
 }
 
+class GenreMangaError extends GenreMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class GenreMangaFetchSuccess extends GenreMangaState {
   final Genre genre;
   final List<Manga> listGenreManga;

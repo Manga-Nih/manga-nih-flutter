@@ -14,59 +14,71 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
   FavoriteMangaBloc()
       : this._firebaseAuth = FirebaseAuth.instance,
         this._firestore = FirebaseFirestore.instance,
-        super(FavoriteMangaUninitialized());
+        super(FavoriteMangaUninitialized()) {
+    on(_onFavoriteMangaAddRemove);
+    on(_onFavoriteMangaFetchList);
+  }
 
-  @override
-  Stream<FavoriteMangaState> mapEventToState(FavoriteMangaEvent event) async* {
+  Future<void> _onFavoriteMangaAddRemove(
+      FavoriteMangaAddRemove event, Emitter<FavoriteMangaState> emit) async {
     try {
-      if (event is FavoriteMangaAddRemove) {
-        DocumentReference doc = _favoritesDoc;
-        DocumentSnapshot snapshot = await doc.get();
-        List data = (snapshot.data() as Map<String, dynamic>)['data'] ?? [];
+      DocumentReference doc = _favoritesDoc;
+      DocumentSnapshot snapshot = await doc.get();
+      List data = (snapshot.data() as Map<String, dynamic>)['data'] ?? [];
 
-        MangaDetail detail = event.favoriteManga;
-        FavoriteManga favoriteManga = FavoriteManga(
-          title: detail.title,
-          type: detail.typeName,
-          thumb: detail.thumb,
-          endpoint: detail.endpoint,
-        );
+      MangaDetail detail = event.favoriteManga;
+      FavoriteManga favoriteManga = FavoriteManga(
+        title: detail.title,
+        type: detail.typeName,
+        thumb: detail.thumb,
+        endpoint: detail.endpoint,
+      );
 
-        bool isExist = data.firstWhere(
-              (element) => element['endpoint'] == event.favoriteManga.endpoint,
-              orElse: () => null,
-            ) !=
-            null;
+      bool isExist = data.firstWhere(
+            (element) => element['endpoint'] == event.favoriteManga.endpoint,
+            orElse: () => null,
+          ) !=
+          null;
 
-        if (isExist) {
-          // delete
-          data.removeWhere(
-              (element) => element['endpoint'] == event.favoriteManga.endpoint);
+      if (isExist) {
+        // delete
+        data.removeWhere(
+            (element) => element['endpoint'] == event.favoriteManga.endpoint);
 
-          doc.update({'data': data});
-        } else {
-          data.add(favoriteManga.toJson());
-          doc.set({'data': data});
-        }
-
-        this.add(FavoriteMangaFetchList());
+        doc.update({'data': data});
+      } else {
+        data.add(favoriteManga.toJson());
+        doc.set({'data': data});
       }
 
-      if (event is FavoriteMangaFetchList) {
-        DocumentReference doc = _favoritesDoc;
-        DocumentSnapshot snapshot = await doc.get();
-        List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
-
-        List<FavoriteManga> favorites = data
-            .map((e) => FavoriteManga.fromJson(Map<String, String>.from(e)))
-            .toList();
-
-        List<FavoriteManga> reverse = favorites.reversed.toList();
-
-        yield FavoriteMangaFetchListSuccess(listFavoriteManga: reverse);
-      }
+      this.add(FavoriteMangaFetchList());
     } catch (e) {
+      emit(FavoriteMangaError());
+
       log(e.toString(), name: 'FavoriteMangaAddRemove');
+
+      SnackbarModel.globalError();
+    }
+  }
+
+  Future<void> _onFavoriteMangaFetchList(
+      FavoriteMangaFetchList event, Emitter<FavoriteMangaState> emit) async {
+    try {
+      DocumentReference doc = _favoritesDoc;
+      DocumentSnapshot snapshot = await doc.get();
+      List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
+
+      List<FavoriteManga> favorites = data
+          .map((e) => FavoriteManga.fromJson(Map<String, String>.from(e)))
+          .toList();
+
+      List<FavoriteManga> reverse = favorites.reversed.toList();
+
+      emit(FavoriteMangaFetchListSuccess(listFavoriteManga: reverse));
+    } catch (e) {
+      emit(FavoriteMangaError());
+
+      log(e.toString(), name: 'FavoriteMangaFetchList');
 
       SnackbarModel.globalError();
     }

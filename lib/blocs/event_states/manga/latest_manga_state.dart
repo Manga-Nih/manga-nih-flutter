@@ -15,6 +15,11 @@ class LatestMangaLoading extends LatestMangaState {
   List<Object?> get props => [];
 }
 
+class LatestMangaError extends LatestMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class LatestMangaFetchSuccess extends LatestMangaState {
   final List<LatestManga> listLatest;
 

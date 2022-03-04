@@ -10,6 +10,11 @@ class HistoryMangaUninitialized extends HistoryMangaState {
   List<Object?> get props => [];
 }
 
+class HistoryMangaError extends HistoryMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class HistoryMangaFetchListSuccess extends HistoryMangaState {
   final List<HistoryManga> listHistoryManga;
 

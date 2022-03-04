@@ -15,6 +15,11 @@ class DetailMangaLoading extends DetailMangaState {
   List<Object?> get props => [];
 }
 
+class DetailMangaError extends DetailMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class DetailMangaFetchSuccess extends DetailMangaState {
   final MangaDetail mangaDetail;
 

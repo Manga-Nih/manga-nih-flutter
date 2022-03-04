@@ -15,6 +15,11 @@ class PopularMangaLoading extends PopularMangaState {
   List<Object?> get props => [];
 }
 
+class PopularMangaError extends PopularMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class PopularMangaFetchSuccess extends PopularMangaState {
   final List<PopularManga> listPopular;
 

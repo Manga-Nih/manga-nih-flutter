@@ -15,6 +15,11 @@ class ManhwaLoading extends ManhwaState {
   List<Object?> get props => [];
 }
 
+class ManhwaError extends ManhwaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ManhwaFetchSuccess extends ManhwaState {
   final List<Manga> listManhwa;
   final int nextPage;

@@ -15,6 +15,11 @@ class ChapterImageLoading extends ChapterImageState {
   List<Object?> get props => [];
 }
 
+class ChapterImageError extends ChapterImageState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ChapterImageFetchSuccess extends ChapterImageState {
   final ChapterDetail chapterDetail;
 

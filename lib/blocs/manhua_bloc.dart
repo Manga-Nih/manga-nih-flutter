@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
@@ -11,34 +10,29 @@ class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
   final Komiku _komiku = Komiku();
   final List<Manga> _listManhua = [];
 
-  ManhuaBloc() : super(ManhuaUninitialized());
+  ManhuaBloc() : super(ManhuaUninitialized()) {
+    on(_onManhuaFetch);
+  }
 
-  @override
-  Stream<ManhuaState> mapEventToState(ManhuaEvent event) async* {
-    if (event is ManhuaFetch) {
-      try {
-        yield ManhuaLoading();
+  Future<void> _onManhuaFetch(
+      ManhuaFetch event, Emitter<ManhuaState> emit) async {
+    try {
+      emit(ManhuaLoading());
 
-        int currentPage = event.page;
-        int nextPage = currentPage + 1;
-        List<Manga> listManga = await _komiku.allManhua(page: currentPage);
+      int currentPage = event.page;
+      int nextPage = currentPage + 1;
+      List<Manga> listManga = await _komiku.allManhua(page: currentPage);
 
-        // append new items
-        _listManhua.addAll(listManga);
+      // append new items
+      _listManhua.addAll(listManga);
 
-        yield ManhuaFetchSuccess(
-          listManhua: _listManhua,
-          nextPage: nextPage,
-        );
-      } on SocketException catch (e) {
-        log(e.toString(), name: 'ManhuaFetch - SocketException');
+      emit(ManhuaFetchSuccess(listManhua: _listManhua, nextPage: nextPage));
+    } catch (e) {
+      emit(ManhuaError());
 
-        SnackbarModel.noConnection();
-      } catch (e) {
-        log(e.toString(), name: 'ManhuaFetch');
+      log(e.toString(), name: 'ManhuaFetch');
 
-        SnackbarModel.globalError();
-      }
+      SnackbarModel.globalError();
     }
   }
 }

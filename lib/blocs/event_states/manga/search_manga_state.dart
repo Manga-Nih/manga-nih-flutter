@@ -15,6 +15,11 @@ class SearchMangaLoading extends SearchMangaState {
   List<Object?> get props => [];
 }
 
+class SearchMangaError extends SearchMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class SearchMangaFetchSuccess extends SearchMangaState {
   final List<Manga> listSearchManga;
 

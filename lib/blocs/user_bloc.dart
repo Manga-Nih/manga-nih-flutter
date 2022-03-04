@@ -11,91 +11,125 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc()
       : this._firebaseAuth = FirebaseAuth.instance,
         super(UserUninitialized()) {
+    on(_onUserFetch);
+    on(_onUserUpdateProfile);
+    on(_onUserLogin);
+    on(_onUserRegister);
+
     // if login
     if (_firebaseAuth.currentUser != null) {
       this.add(UserFetch());
     }
   }
 
-  @override
-  Stream<UserState> mapEventToState(UserEvent event) async* {
+  Future<void> _onUserFetch(UserFetch event, Emitter<UserState> emit) async {
     try {
-      if (event is UserFetch) {
-        User? user = _firebaseAuth.currentUser;
-        if (user != null) {
-          yield UserFetchSuccess(user: user);
-        }
+      User? user = _firebaseAuth.currentUser;
+      if (user != null) {
+        emit(UserFetchSuccess(user: user));
       }
+    } catch (e) {
+      emit(UserError());
 
-      if (event is UserUpdateProfile) {
-        User? user = _firebaseAuth.currentUser;
-        if (user != null) {
-          await user.updateDisplayName(event.name);
-          await user.reload();
+      log(e.toString(), name: 'UserFetch');
 
-          User updatedUser = _firebaseAuth.currentUser!;
+      SnackbarModel.globalError();
+    }
+  }
 
-          yield UserFetchSuccess(user: updatedUser);
-        }
+  Future<void> _onUserUpdateProfile(
+      UserUpdateProfile event, Emitter<UserState> emit) async {
+    try {
+      User? user = _firebaseAuth.currentUser;
+      if (user != null) {
+        await user.updateDisplayName(event.name);
+        await user.reload();
+
+        User updatedUser = _firebaseAuth.currentUser!;
+
+        emit(UserFetchSuccess(user: updatedUser));
       }
+    } catch (e) {
+      emit(UserError());
 
-      if (event is UserLogin) {
-        yield UserLoading();
+      log(e.toString(), name: 'UserUpdateProfile');
 
-        UserCredential userCredential =
-            await _firebaseAuth.signInWithEmailAndPassword(
-          email: event.email,
-          password: event.password,
-        );
+      SnackbarModel.globalError();
+    }
+  }
 
-        User? user = userCredential.user;
+  Future<void> _onUserLogin(UserLogin event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
 
-        if (user != null) {
-          yield UserFetchSuccess(user: user);
-        }
-      }
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
+        email: event.email,
+        password: event.password,
+      );
 
-      if (event is UserRegister) {
-        yield UserLoading();
+      User? user = userCredential.user;
 
-        UserCredential userCredential =
-            await _firebaseAuth.createUserWithEmailAndPassword(
-          email: event.email,
-          password: event.password,
-        );
-
-        User? user = userCredential.user;
-
-        if (user != null) {
-          // update name
-          await user.updateDisplayName(event.name);
-          await user.reload();
-
-          User updatedUser = _firebaseAuth.currentUser!;
-
-          yield UserFetchSuccess(user: updatedUser);
-        }
+      if (user != null) {
+        emit(UserFetchSuccess(user: user));
       }
     } on FirebaseAuthException catch (e) {
-      log(e.toString(), name: 'UserBloc - FirebaseAuthException');
+      emit(UserError());
+
+      log(e.toString(), name: 'UserLogin - FirebaseAuthException');
 
       if (e.code == 'user-not-found') {
         SnackbarModel.custom(true, 'Oops.. User not found');
       }
-      if (e.code == 'email-already-in-use') {
-        SnackbarModel.custom(true, 'Oops.. Email already in use');
-      }
+
       if (e.code == 'wrong-password') {
         SnackbarModel.custom(true, 'Oops.. Wrong password');
       }
-
-      yield UserError();
     } catch (e) {
-      log(e.toString(), name: 'UserBloc');
+      emit(UserError());
+
+      log(e.toString(), name: 'UserLogin');
 
       SnackbarModel.globalError();
+    }
+  }
 
-      yield UserError();
+  Future<void> _onUserRegister(
+      UserRegister event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+
+      UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
+        email: event.email,
+        password: event.password,
+      );
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // update name
+        await user.updateDisplayName(event.name);
+        await user.reload();
+
+        User updatedUser = _firebaseAuth.currentUser!;
+
+        emit(UserFetchSuccess(user: updatedUser));
+      }
+    } on FirebaseAuthException catch (e) {
+      emit(UserError());
+
+      log(e.toString(), name: 'UserRegister - FirebaseAuthException');
+
+      if (e.code == 'email-already-in-use') {
+        SnackbarModel.custom(true, 'Oops.. Email already in use');
+      }
+    } catch (e) {
+      emit(UserError());
+
+      log(e.toString(), name: 'UserRegister');
+
+      SnackbarModel.globalError();
     }
   }
 

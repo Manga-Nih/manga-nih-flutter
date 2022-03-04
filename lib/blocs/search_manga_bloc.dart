@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
@@ -10,25 +9,23 @@ import 'package:manga_nih/models/models.dart';
 class SearchMangaBloc extends Bloc<SearchMangaEvent, SearchMangaState> {
   final Komiku _komiku = Komiku();
 
-  SearchMangaBloc() : super(SearchMangaUninitialized());
+  SearchMangaBloc() : super(SearchMangaUninitialized()) {
+    on(_onSearchMangaFetch);
+  }
 
-  @override
-  Stream<SearchMangaState> mapEventToState(SearchMangaEvent event) async* {
+  Future<void> _onSearchMangaFetch(
+      SearchMangaFetch event, Emitter<SearchMangaState> emit) async {
     try {
-      if (event is SearchMangaFetch) {
-        yield SearchMangaLoading();
+      emit(SearchMangaLoading());
 
-        List<Manga> listSearchManga =
-            await _komiku.search(keyword: event.keyword);
+      List<Manga> listSearchManga =
+          await _komiku.search(keyword: event.keyword);
 
-        yield SearchMangaFetchSuccess(listSearchManga: listSearchManga);
-      }
-    } on SocketException catch (e) {
-      log(e.toString(), name: 'SearchMangaState - SocketException');
-
-      SnackbarModel.noConnection();
+      emit(SearchMangaFetchSuccess(listSearchManga: listSearchManga));
     } catch (e) {
-      log(e.toString(), name: 'SearchMangaState');
+      emit(SearchMangaError());
+
+      log(e.toString(), name: 'SearchMangaFetch');
 
       SnackbarModel.globalError();
     }

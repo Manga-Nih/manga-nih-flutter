@@ -15,6 +15,11 @@ class ManhuaLoading extends ManhuaState {
   List<Object?> get props => [];
 }
 
+class ManhuaError extends ManhuaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class ManhuaFetchSuccess extends ManhuaState {
   final List<Manga> listManhua;
   final int nextPage;

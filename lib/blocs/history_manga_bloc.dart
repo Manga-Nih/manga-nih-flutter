@@ -13,67 +13,83 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
   HistoryMangaBloc()
       : this._firebaseAuth = FirebaseAuth.instance,
         this._firestore = FirebaseFirestore.instance,
-        super(HistoryMangaUninitialized());
+        super(HistoryMangaUninitialized()) {
+    on(_onHistoryMangaAdd);
+    on(_onHistoryMangaClear);
+    on(_onHistoryMangaFetchList);
+  }
 
-  @override
-  Stream<HistoryMangaState> mapEventToState(HistoryMangaEvent event) async* {
+  Future<void> _onHistoryMangaAdd(
+      HistoryMangaAdd event, Emitter<HistoryMangaState> emit) async {
     try {
-      if (event is HistoryMangaAdd) {
-        DocumentReference doc = _historiesDoc;
-        DocumentSnapshot snapshot = await doc.get();
-        List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
+      DocumentReference doc = _historiesDoc;
+      DocumentSnapshot snapshot = await doc.get();
+      List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
 
-        HistoryManga history = event.historyManga;
-        bool isExist = data.firstWhere(
-              (element) => element['endpoint'] == event.historyManga.endpoint,
-              orElse: () => null,
-            ) !=
-            null;
+      HistoryManga history = event.historyManga;
+      bool isExist = data.firstWhere(
+            (element) => element['endpoint'] == event.historyManga.endpoint,
+            orElse: () => null,
+          ) !=
+          null;
 
-        if (isExist) {
-          // update last chapter
-          Map<String, dynamic> curData = data.firstWhere(
-              (element) => element['endpoint'] == event.historyManga.endpoint);
+      if (isExist) {
+        // update last chapter
+        Map<String, dynamic> curData = data.firstWhere(
+            (element) => element['endpoint'] == event.historyManga.endpoint);
 
-          curData['lastChapter'] = history.lastChapter.toJson();
+        curData['lastChapter'] = history.lastChapter.toJson();
 
-          doc.update({'data': data});
-        } else {
-          data.add(history.toJson());
-          doc.set({'data': data});
-        }
-
-        this.add(HistoryMangaFetchList());
+        doc.update({'data': data});
+      } else {
+        data.add(history.toJson());
+        doc.set({'data': data});
       }
 
-      if (event is HistoryMangaClear) {
-        try {
-          DocumentReference doc = _historiesDoc;
-          await doc.delete();
-
-          this.add(HistoryMangaFetchList());
-        } catch (e) {
-          log(e.toString(), name: 'HistoryMangaClear');
-
-          SnackbarModel.globalError();
-        }
-      }
-
-      if (event is HistoryMangaFetchList) {
-        DocumentReference doc = _historiesDoc;
-        DocumentSnapshot snapshot = await doc.get();
-        List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
-
-        List<HistoryManga> histories = data
-            .map((e) => HistoryManga.fromJson(Map<String, dynamic>.from(e)))
-            .toList();
-
-        List<HistoryManga> reverse = histories.reversed.toList();
-
-        yield HistoryMangaFetchListSuccess(listHistoryManga: reverse);
-      }
+      this.add(HistoryMangaFetchList());
     } catch (e) {
+      emit(HistoryMangaError());
+
       log(e.toString(), name: 'HistoryMangaAdd');
+
+      SnackbarModel.globalError();
+    }
+  }
+
+  Future<void> _onHistoryMangaClear(
+      HistoryMangaClear event, Emitter<HistoryMangaState> emit) async {
+    try {
+      DocumentReference doc = _historiesDoc;
+      await doc.delete();
+
+      this.add(HistoryMangaFetchList());
+    } catch (e) {
+      emit(HistoryMangaError());
+
+      log(e.toString(), name: 'HistoryMangaClear');
+
+      SnackbarModel.globalError();
+    }
+  }
+
+  Future<void> _onHistoryMangaFetchList(
+      HistoryMangaFetchList event, Emitter<HistoryMangaState> emit) async {
+    try {
+      DocumentReference doc = _historiesDoc;
+      DocumentSnapshot snapshot = await doc.get();
+      List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
+
+      List<HistoryManga> histories = data
+          .map((e) => HistoryManga.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+
+      List<HistoryManga> reverse = histories.reversed.toList();
+
+      emit(HistoryMangaFetchListSuccess(listHistoryManga: reverse));
+    } catch (e) {
+      emit(HistoryMangaError());
+
+      log(e.toString(), name: 'HistoryMangaFetchList');
 
       SnackbarModel.globalError();
     }

@@ -10,6 +10,11 @@ class FavoriteMangaUninitialized extends FavoriteMangaState {
   List<Object?> get props => [];
 }
 
+class FavoriteMangaError extends FavoriteMangaState {
+  @override
+  List<Object?> get props => [];
+}
+
 class FavoriteMangaFetchListSuccess extends FavoriteMangaState {
   final List<FavoriteManga> listFavoriteManga;
 

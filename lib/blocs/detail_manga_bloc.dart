@@ -10,24 +10,21 @@ import 'package:manga_nih/models/models.dart';
 class DetailMangaBloc extends Bloc<DetailMangaEvent, DetailMangaState> {
   final Komiku _komiku = Komiku();
 
-  DetailMangaBloc() : super(DetailMangaUninitialized());
+  DetailMangaBloc() : super(DetailMangaUninitialized()) {
+    on(_onDetailMangaFetch);
+  }
 
-  @override
-  Stream<DetailMangaState> mapEventToState(DetailMangaEvent event) async* {
+  Future<void> _onDetailMangaFetch(
+      DetailMangaFetch event, Emitter<DetailMangaState> emit) async {
     try {
-      if (event is DetailMangaFetch) {
-        yield DetailMangaLoading();
+      emit(DetailMangaLoading());
 
-        MangaDetail detail =
-            await _komiku.detail(detailEndpoint: event.endpoint);
+      MangaDetail detail = await _komiku.detail(detailEndpoint: event.endpoint);
 
-        yield DetailMangaFetchSuccess(mangaDetail: detail);
-      }
-    } on SocketException catch (e) {
-      log(e.toString(), name: 'DetailMangaFetch - SocketException');
-
-      SnackbarModel.noConnection();
+      emit(DetailMangaFetchSuccess(mangaDetail: detail));
     } catch (e) {
+      emit(DetailMangaError());
+
       log(e.toString(), name: 'DetailMangaFetch');
 
       SnackbarModel.globalError();

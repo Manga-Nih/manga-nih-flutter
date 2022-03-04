@@ -10,26 +10,24 @@ import 'package:manga_nih/models/models.dart';
 class LatestMangaBloc extends Bloc<LatestMangaEvent, LatestMangaState> {
   final Komiku _komiku = Komiku();
 
-  LatestMangaBloc() : super(LatestMangaUninitialized());
+  LatestMangaBloc() : super(LatestMangaUninitialized()) {
+    on(_onLatestMangaEvent);
+  }
 
-  @override
-  Stream<LatestMangaState> mapEventToState(LatestMangaEvent event) async* {
-    if (event is LatestMangaFetch) {
-      try {
-        yield LatestMangaLoading();
+  Future<void> _onLatestMangaEvent(
+      LatestMangaEvent event, Emitter<LatestMangaState> emit) async {
+    try {
+      emit(LatestMangaLoading());
 
-        List<LatestManga> listLatest = await _komiku.latest();
+      List<LatestManga> listLatest = await _komiku.latest();
 
-        yield LatestMangaFetchSuccess(listLatest: listLatest);
-      } on SocketException catch (e) {
-        log(e.toString(), name: 'LatestMangaFetch - SocketException');
+      emit(LatestMangaFetchSuccess(listLatest: listLatest));
+    } catch (e) {
+      emit(LatestMangaError());
 
-        SnackbarModel.noConnection();
-      } catch (e) {
-        log(e.toString(), name: 'LatestMangaFetch');
+      log(e.toString(), name: 'LatestMangaFetch');
 
-        SnackbarModel.globalError();
-      }
+      SnackbarModel.globalError();
     }
   }
 }

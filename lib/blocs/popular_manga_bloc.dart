@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komiku_sdk/komiku_sdk.dart';
@@ -11,29 +10,27 @@ class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
   final Komiku _komiku = Komiku();
   final List<PopularManga> _listPopular = [];
 
-  PopularMangaBloc() : super(PopularMangaUninitialized());
+  PopularMangaBloc() : super(PopularMangaUninitialized()) {
+    on(_onPopularMangaFetch);
+  }
 
-  @override
-  Stream<PopularMangaState> mapEventToState(PopularMangaEvent event) async* {
-    if (event is PopularMangaFetch) {
-      try {
-        yield PopularMangaLoading();
+  Future<void> _onPopularMangaFetch(
+      PopularMangaFetch event, Emitter<PopularMangaState> emit) async {
+    try {
+      emit(PopularMangaLoading());
 
-        List<PopularManga> listPopular = await _komiku.popular();
+      List<PopularManga> listPopular = await _komiku.popular();
 
-        // append new items
-        _listPopular.addAll(listPopular);
+      // append new items
+      _listPopular.addAll(listPopular);
 
-        yield PopularMangaFetchSuccess(listPopular: _listPopular);
-      } on SocketException catch (e) {
-        log(e.toString(), name: 'PopularMangaFetch - SocketException');
+      emit(PopularMangaFetchSuccess(listPopular: _listPopular));
+    } catch (e) {
+      emit(PopularMangaError());
 
-        SnackbarModel.noConnection();
-      } catch (e) {
-        log(e.toString(), name: 'PopularMangaFetch');
+      log(e.toString(), name: 'PopularMangaFetch');
 
-        SnackbarModel.globalError();
-      }
+      SnackbarModel.globalError();
     }
   }
 }
