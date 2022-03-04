@@ -1,15 +1,19 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
+import 'package:path/path.dart' as path;
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final FirebaseAuth _firebaseAuth;
+  final FirebaseStorage _firebaseStorage;
 
   UserBloc()
       : this._firebaseAuth = FirebaseAuth.instance,
+        this._firebaseStorage = FirebaseStorage.instance,
         super(UserUninitialized()) {
     on(_onUserFetch);
     on(_onUserUpdateProfile);
@@ -40,9 +44,21 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Future<void> _onUserUpdateProfile(
       UserUpdateProfile event, Emitter<UserState> emit) async {
     try {
+      emit(UserLoading());
+
       User? user = _firebaseAuth.currentUser;
       if (user != null) {
         await user.updateDisplayName(event.name);
+        if (event.image != null) {
+          String ext = path.extension(event.image!.path);
+          String filename = user.uid + ext;
+          TaskSnapshot task =
+              await _firebaseStorage.ref(filename).putFile(event.image!);
+
+          String url = await task.ref.getDownloadURL();
+          await user.updatePhotoURL(url);
+        }
+
         await user.reload();
 
         User updatedUser = _firebaseAuth.currentUser!;

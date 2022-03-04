@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -21,11 +23,12 @@ class UserFetch extends UserEvent {
 
 class UserUpdateProfile extends UserEvent {
   final String name;
+  final File? image;
 
-  UserUpdateProfile({required this.name});
+  UserUpdateProfile({required this.name, required this.image});
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [name, image];
 }
 
 class UserLogin extends UserEvent {

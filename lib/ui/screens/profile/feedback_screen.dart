@@ -48,7 +48,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   void _feedbackListener(BuildContext context, FeedbackState state) {
     if (state is FeedbackSubmitSuccess) {
-      showSnackbar(Get.context!, 'Thank you for the feedback', isError: false);
+      SnackbarModel.custom(false, 'Thank you for the feedback');
 
       _titleController.clear();
       _bodyController.clear();

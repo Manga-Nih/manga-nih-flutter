@@ -14,7 +14,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String _displayName;
   late UserBloc _userBloc;
 
   @override
@@ -22,27 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // init bloc
     _userBloc = BlocProvider.of<UserBloc>(context);
 
-    // set name
-    UserState state = _userBloc.state;
-    if (state is UserFetchSuccess) {
-      _displayName = state.user.displayName!;
-    }
-
     super.initState();
   }
 
-  void _editNameAction() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return EditNameDialog(
-          displayName: _displayName,
-          onSuccess: (name) {
-            _userBloc.add(UserUpdateProfile(name: name));
-          },
-        );
-      },
-    );
+  void _editProfileAction() {
+    Get.to(() => EditProfileScreen());
   }
 
   void _favoriteAction() {
@@ -151,13 +134,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Avatar(),
-          const SizedBox(width: 20.0),
-          BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              return Column(
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          return Row(
+            children: [
+              (state is UserFetchSuccess)
+                  ? Avatar.network(image: state.user.photoURL)
+                  : Avatar(),
+              const SizedBox(width: 20.0),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -170,12 +155,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ],
-              );
-            },
-          ),
-          const Spacer(),
-          Icon(Icons.expand_more),
-        ],
+              ),
+              const Spacer(),
+              Icon(Icons.expand_more),
+            ],
+          );
+        },
       ),
     );
   }
@@ -184,9 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       children: [
         ProfileButton(
-          label: 'Edit Name',
+          label: 'Edit Profile',
           icon: Icons.edit,
-          onPressed: _editNameAction,
+          onPressed: _editProfileAction,
         ),
         const SizedBox(height: 10.0),
         ProfileButton(
