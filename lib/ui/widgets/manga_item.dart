@@ -81,34 +81,36 @@ class MangaItem<T> extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Positioned(
-                            bottom: 5.0,
-                            left: 5.0,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 3.0, horizontal: 5.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 15.0,
-                                    child: Image.asset(
-                                      typeMangaImage(manga.typeName),
-                                      fit: BoxFit.fill,
+                          if (manga.typeName != '')
+                            Positioned(
+                              bottom: 5.0,
+                              left: 5.0,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 3.0, horizontal: 5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 15.0,
+                                      child: Image.asset(
+                                        typeMangaImage(manga.typeName),
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 5.0),
-                                  Text(
-                                    manga.typeName,
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                                ],
+                                    const SizedBox(width: 5.0),
+                                    Text(
+                                      manga.typeName,
+                                      style:
+                                          Theme.of(context).textTheme.caption,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
               ),
