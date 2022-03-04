@@ -41,6 +41,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
       FeedbackModel feedback = FeedbackModel(title: title, body: body);
       _feedbackBloc.add(FeedbackSubmit(feedback: feedback));
+
+      FocusScope.of(context).unfocus();
     }
   }
 
