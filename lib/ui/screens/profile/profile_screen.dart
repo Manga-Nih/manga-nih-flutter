@@ -9,6 +9,8 @@ import 'package:manga_nih/ui/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -25,25 +27,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _editProfileAction() {
-    Get.to(() => EditProfileScreen());
+    Get.to(() => const EditProfileScreen());
   }
 
   void _favoriteAction() {
-    Get.to(
-      () => ListFavoriteHistoryScreen(section: FavoriteHistorySection.favorite),
-    );
+    Get.to(() => const ListFavoriteHistoryScreen(
+        section: FavoriteHistorySection.favorite));
   }
 
   void _historyAction() {
-    Get.to(
-      () => ListFavoriteHistoryScreen(section: FavoriteHistorySection.history),
-    );
+    Get.to(() => const ListFavoriteHistoryScreen(
+        section: FavoriteHistorySection.history));
   }
 
   void _feedbackAction() {
     Get.to(() => BlocProvider(
           create: (context) => FeedbackBloc(),
-          child: FeedbackScreen(),
+          child: const FeedbackScreen(),
         ));
   }
 
@@ -71,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             children: [
               _buildHeader(),
               const SizedBox(height: 40.0),
@@ -94,12 +94,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   color: Colors.white,
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
                       spreadRadius: 1.0,
                       blurRadius: 2.0,
-                      offset: const Offset(0, 1),
+                      offset: Offset(0, 1),
                     ),
                   ],
                 ),
@@ -126,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.0),
         border: Border.all(color: Colors.grey),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.grey,
             blurRadius: 2.0,
@@ -157,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
               const Spacer(),
-              Icon(Icons.expand_more),
+              const Icon(Icons.expand_more),
             ],
           );
         },

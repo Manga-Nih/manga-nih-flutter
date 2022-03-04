@@ -12,7 +12,7 @@ class FavoriteManga {
     required this.type,
     required this.thumb,
     required this.endpoint,
-  }) : this.typeImage = typeMangaImage(type);
+  }) : typeImage = typeMangaImage(type);
 
   factory FavoriteManga.fromJson(Map<String, String> map) {
     return FavoriteManga(

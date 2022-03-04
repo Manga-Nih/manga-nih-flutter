@@ -80,13 +80,13 @@ class _InputFieldState extends State<InputField> {
                     onPressed: _obscureAction,
                     padding: const EdgeInsets.all(10.0),
                     minWidth: 0.0,
-                    shape: CircleBorder(),
+                    shape: const CircleBorder(),
                     child: Icon(
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                       color: Colors.grey.shade500,
                     ),
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ),
         ),
       ],

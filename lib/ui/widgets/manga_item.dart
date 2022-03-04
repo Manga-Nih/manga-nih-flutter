@@ -10,14 +10,17 @@ class MangaItem<T> extends StatelessWidget {
   final bool isLoading;
 
   const MangaItem({
+    Key? key,
     required this.popularLatestManga,
     required this.onTap,
-  }) : this.isLoading = false;
+  })  : isLoading = false,
+        super(key: key);
 
-  const MangaItem.loading()
-      : this.popularLatestManga = null,
-        this.onTap = null,
-        this.isLoading = true;
+  const MangaItem.loading({Key? key})
+      : popularLatestManga = null,
+        onTap = null,
+        isLoading = true,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +59,7 @@ class MangaItem<T> extends StatelessWidget {
                             height: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.grey,
                                   blurRadius: 5.0,

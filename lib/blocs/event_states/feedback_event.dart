@@ -11,7 +11,7 @@ abstract class FeedbackEvent extends Equatable {
 class FeedbackSubmit extends FeedbackEvent {
   final FeedbackModel feedback;
 
-  FeedbackSubmit({required this.feedback});
+  const FeedbackSubmit({required this.feedback});
 
   @override
   List<Object> get props => [feedback];

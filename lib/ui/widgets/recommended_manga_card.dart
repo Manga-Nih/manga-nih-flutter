@@ -4,10 +4,6 @@ import 'package:komiku_sdk/models.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RecommendedMangaCard extends StatelessWidget {
-  // TODO, ubah menjadi recommended manga
-  // final RecommendedManga? recommendedManga;
-  // final void Function(RecommendedManga)? onTap;
-
   final Manga? recommendedManga;
   final void Function(Manga)? onTap;
   final bool isLoading;
@@ -16,13 +12,14 @@ class RecommendedMangaCard extends StatelessWidget {
     Key? key,
     required this.onTap,
     required this.recommendedManga,
-  })  : this.isLoading = false,
+  })  : isLoading = false,
         super(key: key);
 
-  const RecommendedMangaCard.loading()
-      : this.recommendedManga = null,
-        this.onTap = null,
-        this.isLoading = true;
+  const RecommendedMangaCard.loading({Key? key})
+      : recommendedManga = null,
+        onTap = null,
+        isLoading = true,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +42,7 @@ class RecommendedMangaCard extends StatelessWidget {
                 height: 200.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
                       blurRadius: 10.0,

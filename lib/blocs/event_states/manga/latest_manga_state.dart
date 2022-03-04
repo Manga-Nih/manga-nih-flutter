@@ -2,28 +2,22 @@ import 'package:equatable/equatable.dart';
 import 'package:komiku_sdk/models.dart';
 
 abstract class LatestMangaState extends Equatable {
-  LatestMangaState();
-}
+  const LatestMangaState();
 
-class LatestMangaUninitialized extends LatestMangaState {
   @override
   List<Object?> get props => [];
 }
 
-class LatestMangaLoading extends LatestMangaState {
-  @override
-  List<Object?> get props => [];
-}
+class LatestMangaUninitialized extends LatestMangaState {}
 
-class LatestMangaError extends LatestMangaState {
-  @override
-  List<Object?> get props => [];
-}
+class LatestMangaLoading extends LatestMangaState {}
+
+class LatestMangaError extends LatestMangaState {}
 
 class LatestMangaFetchSuccess extends LatestMangaState {
   final List<LatestManga> listLatest;
 
-  LatestMangaFetchSuccess({required this.listLatest});
+  const LatestMangaFetchSuccess({required this.listLatest});
 
   @override
   List<Object?> get props => [listLatest];

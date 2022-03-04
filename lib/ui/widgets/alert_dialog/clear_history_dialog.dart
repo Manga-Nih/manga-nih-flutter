@@ -13,8 +13,8 @@ class ClearHistoryDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Clear History'),
-      content: Text('Are you sure ?'),
+      title: const Text('Clear History'),
+      content: const Text('Are you sure ?'),
       actions: [
         MaterialButton(
           onPressed: () => Get.back(),
@@ -23,7 +23,7 @@ class ClearHistoryDialog extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50.0),
           ),
-          child: Text(
+          child: const Text(
             'No',
             style: TextStyle(color: Colors.white),
           ),
@@ -34,7 +34,7 @@ class ClearHistoryDialog extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50.0),
           ),
-          child: Text('Yes'),
+          child: const Text('Yes'),
         ),
       ],
     );

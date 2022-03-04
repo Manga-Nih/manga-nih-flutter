@@ -12,13 +12,14 @@ class GenreButton extends StatelessWidget {
     Key? key,
     required this.genre,
     required this.onPressed,
-  })  : this.isLoading = false,
+  })  : isLoading = false,
         super(key: key);
 
-  const GenreButton.loading()
-      : this.genre = null,
-        this.onPressed = null,
-        this.isLoading = true;
+  const GenreButton.loading({Key? key})
+      : genre = null,
+        onPressed = null,
+        isLoading = true,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class GenreButton extends StatelessWidget {
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                stops: [0.2, 0.8],
+                stops: const [0.2, 0.8],
               ),
             ),
             child: MaterialButton(

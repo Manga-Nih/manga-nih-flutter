@@ -8,11 +8,14 @@ class DetailMangaCard extends StatelessWidget {
   final MangaDetail? mangaDetail;
   final bool isLoading;
 
-  const DetailMangaCard({required this.mangaDetail}) : this.isLoading = false;
+  const DetailMangaCard({Key? key, required this.mangaDetail})
+      : isLoading = false,
+        super(key: key);
 
-  const DetailMangaCard.loading()
-      : this.mangaDetail = null,
-        this.isLoading = true;
+  const DetailMangaCard.loading({Key? key})
+      : mangaDetail = null,
+        isLoading = true,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class DetailMangaCard extends StatelessWidget {
                       height: screenSize.width * 0.55,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.grey,
                             blurRadius: 5.0,

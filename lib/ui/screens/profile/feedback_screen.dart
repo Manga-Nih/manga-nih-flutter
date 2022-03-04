@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
@@ -60,7 +59,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     return BlocListener<FeedbackBloc, FeedbackState>(
       listener: _feedbackListener,
       child: Scaffold(
-        appBar: AppBar(title: Text('Feedback')),
+        appBar: AppBar(title: const Text('Feedback')),
         body: Form(
           key: _key,
           child: ListView(
@@ -85,7 +84,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               BlocBuilder<FeedbackBloc, FeedbackState>(
                 builder: (context, state) {
                   if (state is FeedbackLoading) {
-                    return PrimaryButton.loading();
+                    return const PrimaryButton.loading();
                   }
 
                   return PrimaryButton(

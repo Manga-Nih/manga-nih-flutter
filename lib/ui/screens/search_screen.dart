@@ -8,6 +8,8 @@ import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -36,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return SafeArea(
       child: Scaffold(
         body: CustomScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           slivers: [
             _buildHeader(),
             _buildListManga(),
@@ -52,7 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            HeaderProfile(),
+            const HeaderProfile(),
             const SizedBox(height: 20.0),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -62,12 +64,12 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               child: TextFormField(
                 onFieldSubmitted: _searchAction,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: Icon(Icons.filter_list),
                   hintText: 'Search manga...',
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.only(top: 15.0),
+                  contentPadding: EdgeInsets.only(top: 15.0),
                 ),
                 style: Theme.of(context).textTheme.bodyText1,
               ),
@@ -96,10 +98,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
 
                 if (state is SearchMangaUninitialized) {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
 
-                return MangaCard.loading();
+                return const MangaCard.loading();
               },
               childCount: (state is SearchMangaFetchSuccess)
                   ? state.listSearchManga.length

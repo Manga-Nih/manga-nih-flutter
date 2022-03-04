@@ -11,14 +11,17 @@ class MangaCard<T> extends StatelessWidget {
   final bool isLoading;
 
   const MangaCard({
+    Key? key,
     required this.manga,
     required this.onTap,
-  }) : this.isLoading = false;
+  })  : isLoading = false,
+        super(key: key);
 
-  const MangaCard.loading()
-      : this.manga = null,
-        this.onTap = null,
-        this.isLoading = true;
+  const MangaCard.loading({Key? key})
+      : manga = null,
+        onTap = null,
+        isLoading = true,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +83,7 @@ class MangaCard<T> extends StatelessWidget {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30.0),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.grey,
                                   blurRadius: 5.0,
@@ -139,7 +142,7 @@ class MangaCard<T> extends StatelessWidget {
                             ),
                           ),
                           chapter == null
-                              ? SizedBox.shrink()
+                              ? const SizedBox.shrink()
                               : Positioned(
                                   top: 10.0,
                                   left: 10.0,
@@ -192,10 +195,10 @@ class MangaCard<T> extends StatelessWidget {
                             ),
                           ),
                           uploadOn == null
-                              ? SizedBox.shrink()
+                              ? const SizedBox.shrink()
                               : Row(
                                   children: [
-                                    Icon(Icons.timer_sharp, size: 20.0),
+                                    const Icon(Icons.timer_sharp, size: 20.0),
                                     const SizedBox(width: 5.0),
                                     Text(
                                       uploadOn,
@@ -213,7 +216,7 @@ class MangaCard<T> extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(30.0),
                   topRight: Radius.circular(30.0),
                   bottomLeft: Radius.circular(10.0),

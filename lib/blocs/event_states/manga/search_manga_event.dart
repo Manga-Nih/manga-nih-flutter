@@ -1,13 +1,16 @@
 import 'package:equatable/equatable.dart';
 
 abstract class SearchMangaEvent extends Equatable {
-  SearchMangaEvent();
+  const SearchMangaEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class SearchMangaFetch extends SearchMangaEvent {
   final String keyword;
 
-  SearchMangaFetch({required this.keyword});
+  const SearchMangaFetch({required this.keyword});
 
   @override
   List<Object?> get props => [keyword];

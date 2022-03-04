@@ -1,13 +1,16 @@
 import 'package:equatable/equatable.dart';
 
 abstract class ManhwaEvent extends Equatable {
-  ManhwaEvent();
+  const ManhwaEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class ManhwaFetch extends ManhwaEvent {
   final int page;
 
-  ManhwaFetch({required this.page});
+  const ManhwaFetch({required this.page});
 
   @override
   List<Object?> get props => [page];

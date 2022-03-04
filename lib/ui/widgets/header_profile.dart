@@ -8,8 +8,10 @@ import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class HeaderProfile extends StatelessWidget {
+  const HeaderProfile({Key? key}) : super(key: key);
+
   void _profileAction(BuildContext context) {
-    Get.to(() => ProfileScreen());
+    Get.to(() => const ProfileScreen());
   }
 
   @override
@@ -45,7 +47,7 @@ class HeaderProfile extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(width: 1.0, color: Colors.grey.shade400),
                 ),
-                child: Icon(Icons.more_horiz),
+                child: const Icon(Icons.more_horiz),
               ),
             ],
           );

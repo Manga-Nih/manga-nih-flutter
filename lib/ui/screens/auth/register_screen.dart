@@ -10,6 +10,8 @@ import 'package:manga_nih/ui/screens/home_screen.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -80,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (userState is UserFetchSuccess) {
       SnackbarModel.custom(false, 'Welcome to Manga nih');
 
-      Get.offAll(() => HomeScreen());
+      Get.offAll(() => const HomeScreen());
     }
   }
 
@@ -92,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Scaffold(
         body: Center(
           child: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             children: [
               Center(
@@ -159,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           listener: _blocListener,
                           builder: (context, state) {
                             if (state is UserLoading) {
-                              return PrimaryButton.loading();
+                              return const PrimaryButton.loading();
                             }
 
                             return PrimaryButton(

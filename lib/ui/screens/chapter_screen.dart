@@ -12,13 +12,19 @@ class ChapterScreen extends StatefulWidget {
   final MangaDetail? mangaDetail;
   final String? mangaEndpoint;
 
-  const ChapterScreen.fromDetailManga(
-      {required this.chapter, required this.mangaDetail})
-      : this.mangaEndpoint = null;
+  const ChapterScreen.fromDetailManga({
+    Key? key,
+    required this.chapter,
+    required this.mangaDetail,
+  })  : mangaEndpoint = null,
+        super(key: key);
 
-  const ChapterScreen.fromListFavoriteHistoryManga(
-      {required this.chapter, required this.mangaEndpoint})
-      : this.mangaDetail = null;
+  const ChapterScreen.fromListFavoriteHistoryManga({
+    Key? key,
+    required this.chapter,
+    required this.mangaEndpoint,
+  })  : mangaDetail = null,
+        super(key: key);
 
   @override
   _ChapterScreenState createState() => _ChapterScreenState();
@@ -230,7 +236,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.all(5.0),
-                                      child: CircularProgressIndicator(),
+                                      child: const CircularProgressIndicator(),
                                     )
                                   ],
                                 ),
@@ -239,9 +245,9 @@ class _ChapterScreenState extends State<ChapterScreen> {
 
                             return Wrap(
                               alignment: WrapAlignment.center,
-                              children: [
+                              children: const [
                                 Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                                  padding: EdgeInsets.all(10.0),
                                   child: CircularProgressIndicator(),
                                 )
                               ],
@@ -268,7 +274,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
       left: 0,
       right: 0,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         height: _isVisible ? 60.0 : 0.0,
         child: Container(
           color: Colors.white60,
@@ -292,7 +298,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
       left: 0,
       right: 0,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         height: _isVisible ? 60.0 : 0.0,
         child: Container(
           color: Colors.white60,
@@ -305,7 +311,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                       onPressed: _prevAction,
                       child: Row(
                         children: [
-                          Icon(Icons.chevron_left),
+                          const Icon(Icons.chevron_left),
                           const SizedBox(width: 3.0),
                           Text(
                             'Previous',
@@ -314,7 +320,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                         ],
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
               _isHasNext && (state is ChapterImageFetchSuccess)
                   ? MaterialButton(
                       onPressed: _nextAction,
@@ -325,11 +331,11 @@ class _ChapterScreenState extends State<ChapterScreen> {
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                           const SizedBox(width: 3.0),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ],
           ),
         ),

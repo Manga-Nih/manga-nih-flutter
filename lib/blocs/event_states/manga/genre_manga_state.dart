@@ -2,23 +2,17 @@ import 'package:equatable/equatable.dart';
 import 'package:komiku_sdk/models.dart';
 
 abstract class GenreMangaState extends Equatable {
-  GenreMangaState();
-}
+  const GenreMangaState();
 
-class GenreMangaUninitialized extends GenreMangaState {
   @override
   List<Object?> get props => [];
 }
 
-class GenreMangaLoading extends GenreMangaState {
-  @override
-  List<Object?> get props => [];
-}
+class GenreMangaUninitialized extends GenreMangaState {}
 
-class GenreMangaError extends GenreMangaState {
-  @override
-  List<Object?> get props => [];
-}
+class GenreMangaLoading extends GenreMangaState {}
+
+class GenreMangaError extends GenreMangaState {}
 
 class GenreMangaFetchSuccess extends GenreMangaState {
   final Genre genre;
@@ -26,7 +20,7 @@ class GenreMangaFetchSuccess extends GenreMangaState {
   final int nextPage;
   final bool isLastPage;
 
-  GenreMangaFetchSuccess({
+  const GenreMangaFetchSuccess({
     required this.genre,
     required this.listGenreManga,
     required this.nextPage,

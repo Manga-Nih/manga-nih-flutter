@@ -10,6 +10,8 @@ import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -62,14 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _registerAction() {
-    Get.to(() => RegisterScreen());
+    Get.to(() => const RegisterScreen());
   }
 
   void _blocListener(BuildContext context, UserState userState) {
     if (userState is UserFetchSuccess) {
       SnackbarModel.custom(false, 'Welcome to Manga nih');
 
-      Get.offAll(() => HomeScreen());
+      Get.offAll(() => const HomeScreen());
     }
   }
 
@@ -81,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         body: Center(
           child: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             children: [
               Center(
@@ -134,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           listener: _blocListener,
                           builder: (context, state) {
                             if (state is UserLoading) {
-                              return PrimaryButton.loading();
+                              return const PrimaryButton.loading();
                             }
 
                             return PrimaryButton(

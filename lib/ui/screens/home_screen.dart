@@ -9,6 +9,8 @@ import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -26,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _genreBloc = BlocProvider.of<GenreBloc>(context);
 
     // fetch popular manga
-    _popularMangaBloc.add(PopularMangaFetch());
+    _popularMangaBloc.add(const PopularMangaFetch());
     // fetch latest manga
     _latestMangaBloc.add(LatestMangaFetch());
     // fetch genre
@@ -36,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _searchAction() {
-    Get.to(() => SearchScreen());
+    Get.to(() => const SearchScreen());
   }
 
   void _popularLatestMangaItemAction(dynamic manga) {
@@ -44,15 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _manhuaAction() {
-    Get.to(() => ListMangaScreen(mangaType: MangaType.manhua));
+    Get.to(() => const ListMangaScreen(mangaType: MangaType.manhua));
   }
 
   void _mangaAction() {
-    Get.to(() => ListMangaScreen(mangaType: MangaType.manga));
+    Get.to(() => const ListMangaScreen(mangaType: MangaType.manga));
   }
 
   void _manhwaAction() {
-    Get.to(() => ListMangaScreen(mangaType: MangaType.manhwa));
+    Get.to(() => const ListMangaScreen(mangaType: MangaType.manhwa));
   }
 
   void _genreAction(Genre genre) {
@@ -64,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         body: CustomScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           slivers: [
             _buildHeader(),
             _buildPopularManga(),
@@ -83,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
       sliver: SliverToBoxAdapter(
         child: Column(
           children: [
-            HeaderProfile(),
+            const HeaderProfile(),
             const SizedBox(height: 20.0),
             MaterialButton(
               onPressed: _searchAction,
@@ -128,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
-          Container(
+          SizedBox(
             height: 200.0,
             child: BlocBuilder<PopularMangaBloc, PopularMangaState>(
               builder: (context, state) {
@@ -136,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ListView.builder(
                     itemCount: state.listPopular.length,
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       PopularManga popularManga = state.listPopular[index];
 
@@ -151,9 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ListView.builder(
                   itemCount: 4,
                   scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return MangaItem.loading();
+                    return const MangaItem.loading();
                   },
                 );
               },
@@ -176,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
-          Container(
+          SizedBox(
             height: 200.0,
             child: BlocBuilder<LatestMangaBloc, LatestMangaState>(
               builder: (context, state) {
@@ -184,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ListView.builder(
                     itemCount: state.listLatest.length,
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       LatestManga latestManga = state.listLatest[index];
 
@@ -199,9 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ListView.builder(
                   itemCount: 4,
                   scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return MangaItem.loading();
+                    return const MangaItem.loading();
                   },
                 );
               },
@@ -248,8 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, state) {
             return GridView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: (3 / 1),
                 crossAxisSpacing: 10.0,
@@ -266,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
-                return GenreButton.loading();
+                return const GenreButton.loading();
               },
             );
           },

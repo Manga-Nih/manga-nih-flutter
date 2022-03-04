@@ -1,13 +1,16 @@
 import 'package:equatable/equatable.dart';
 
 abstract class PopularMangaEvent extends Equatable {
-  PopularMangaEvent();
+  const PopularMangaEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class PopularMangaFetch extends PopularMangaEvent {
   final int page;
 
-  PopularMangaFetch({this.page = 1});
+  const PopularMangaFetch({this.page = 1});
 
   @override
   List<Object?> get props => [page];

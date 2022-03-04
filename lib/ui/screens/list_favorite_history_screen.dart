@@ -88,7 +88,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(130.0),
+          preferredSize: const Size.fromHeight(130.0),
           child: _buildHeader(),
         ),
         body: Padding(
@@ -113,7 +113,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
           child: FloatingActionButton(
             onPressed: _clearHistoryAction,
             backgroundColor: Colors.red,
-            child: Icon(Icons.delete),
+            child: const Icon(Icons.delete),
           ),
         ),
       ),
@@ -125,8 +125,8 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+          const Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: HeaderProfile(),
           ),
           const SizedBox(height: 20.0),
@@ -174,7 +174,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
         }
       },
       child: ListView.builder(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           if (_listFavoriteManga != null) {
             return MangaCard<FavoriteManga>(
@@ -182,7 +182,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
               onTap: _detailMangaAction,
             );
           } else {
-            return MangaCard.loading();
+            return const MangaCard.loading();
           }
         },
         itemCount:
@@ -199,7 +199,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
         }
       },
       child: ListView.builder(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           if (_listHistoryManga != null) {
             return MangaCard<HistoryManga>(
@@ -207,7 +207,7 @@ class _ListFavoriteHistoryScreenState extends State<ListFavoriteHistoryScreen> {
               onTap: _chapterAction,
             );
           } else {
-            return MangaCard.loading();
+            return const MangaCard.loading();
           }
         },
         itemCount: (_listHistoryManga != null) ? _listHistoryManga!.length : 1,

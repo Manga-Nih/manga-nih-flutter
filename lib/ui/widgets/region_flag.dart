@@ -23,7 +23,7 @@ class RegionFlag extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(color: Colors.grey.shade300, width: 1.0),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
                 blurRadius: 5.0,

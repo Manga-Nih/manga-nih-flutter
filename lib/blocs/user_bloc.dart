@@ -12,8 +12,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final FirebaseStorage _firebaseStorage;
 
   UserBloc()
-      : this._firebaseAuth = FirebaseAuth.instance,
-        this._firebaseStorage = FirebaseStorage.instance,
+      : _firebaseAuth = FirebaseAuth.instance,
+        _firebaseStorage = FirebaseStorage.instance,
         super(UserUninitialized()) {
     on(_onUserFetch);
     on(_onUserUpdateProfile);
@@ -22,7 +22,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     // if login
     if (_firebaseAuth.currentUser != null) {
-      this.add(UserFetch());
+      add(UserFetch());
     }
   }
 

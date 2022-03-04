@@ -16,11 +16,12 @@ class PrimaryButton extends StatelessWidget {
   })  : isLoading = false,
         super(key: key);
 
-  const PrimaryButton.loading()
+  const PrimaryButton.loading({Key? key})
       : label = null,
         onTap = null,
         maxWidth = 150,
-        isLoading = true;
+        isLoading = true,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +51,13 @@ class PrimaryButton extends StatelessWidget {
           vertical: 15.0,
         ),
         child: isLoading
-            ? LoadingIndicator(
+            ? const LoadingIndicator(
                 indicatorType: Indicator.ballPulse,
                 colors: [Colors.white],
               )
             : Text(
                 label!,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
       ),
     );

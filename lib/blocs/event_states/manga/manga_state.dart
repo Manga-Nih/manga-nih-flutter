@@ -2,29 +2,23 @@ import 'package:equatable/equatable.dart';
 import 'package:komiku_sdk/models.dart';
 
 abstract class MangaState extends Equatable {
-  MangaState();
-}
+  const MangaState();
 
-class MangaUninitialized extends MangaState {
   @override
   List<Object?> get props => [];
 }
 
-class MangaLoading extends MangaState {
-  @override
-  List<Object?> get props => [];
-}
+class MangaUninitialized extends MangaState {}
 
-class MangaError extends MangaState {
-  @override
-  List<Object?> get props => [];
-}
+class MangaLoading extends MangaState {}
+
+class MangaError extends MangaState {}
 
 class MangaFetchSuccess extends MangaState {
   final List<Manga> listManga;
   final int nextPage;
 
-  MangaFetchSuccess({
+  const MangaFetchSuccess({
     required this.listManga,
     required this.nextPage,
   });

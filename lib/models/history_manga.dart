@@ -15,7 +15,7 @@ class HistoryManga {
     required this.thumb,
     required this.endpoint,
     required this.lastChapter,
-  }) : this.typeImage = typeMangaImage(type);
+  }) : typeImage = typeMangaImage(type);
 
   factory HistoryManga.fromJson(Map<String, dynamic> map) {
     return HistoryManga(

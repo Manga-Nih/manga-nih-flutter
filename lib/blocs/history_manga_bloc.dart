@@ -11,8 +11,8 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
   final FirebaseFirestore _firestore;
 
   HistoryMangaBloc()
-      : this._firebaseAuth = FirebaseAuth.instance,
-        this._firestore = FirebaseFirestore.instance,
+      : _firebaseAuth = FirebaseAuth.instance,
+        _firestore = FirebaseFirestore.instance,
         super(HistoryMangaUninitialized()) {
     on(_onHistoryMangaAdd);
     on(_onHistoryMangaClear);
@@ -46,7 +46,7 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
         doc.set({'data': data});
       }
 
-      this.add(HistoryMangaFetchList());
+      add(HistoryMangaFetchList());
     } catch (e) {
       emit(HistoryMangaError());
 
@@ -62,7 +62,7 @@ class HistoryMangaBloc extends Bloc<HistoryMangaEvent, HistoryMangaState> {
       DocumentReference doc = _historiesDoc;
       await doc.delete();
 
-      this.add(HistoryMangaFetchList());
+      add(HistoryMangaFetchList());
     } catch (e) {
       emit(HistoryMangaError());
 

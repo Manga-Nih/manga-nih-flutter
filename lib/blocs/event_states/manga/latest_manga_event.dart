@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 abstract class LatestMangaEvent extends Equatable {
-  LatestMangaEvent();
-}
+  const LatestMangaEvent();
 
-class LatestMangaFetch extends LatestMangaEvent {
   @override
   List<Object?> get props => [];
 }
+
+class LatestMangaFetch extends LatestMangaEvent {}

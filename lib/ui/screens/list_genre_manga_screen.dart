@@ -19,11 +19,11 @@ class ListGenreManga extends StatefulWidget {
 }
 
 class _ListGenreMangaState extends State<ListGenreManga> {
+  final List<Map<Genre, PagingController<int, Manga>>> _listPagingController =
+      [];
   late GenreMangaBloc _genreMangaBloc;
   late GenreBloc _genreBloc;
   late Genre _genre;
-  late List<Map<Genre, PagingController<int, Manga>>> _listPagingController =
-      [];
   late ItemScrollController _genreScrollController;
 
   @override
@@ -61,7 +61,9 @@ class _ListGenreMangaState extends State<ListGenreManga> {
 
   @override
   void dispose() {
-    _listPagingController.forEach((element) => element.values.first.dispose());
+    for (var element in _listPagingController) {
+      element.values.first.dispose();
+    }
 
     super.dispose();
   }
@@ -102,7 +104,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(130.0),
+          preferredSize: const Size.fromHeight(130.0),
           child: _buildHeader(),
         ),
         body: Padding(
@@ -133,7 +135,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
                   },
                   child: PagedListView<int, Manga>(
                     pagingController: pagingController,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     builderDelegate: PagedChildBuilderDelegate<Manga>(
                         itemBuilder: (context, item, index) {
                       Manga genreManga = item;
@@ -143,9 +145,9 @@ class _ListGenreMangaState extends State<ListGenreManga> {
                         onTap: _mangaAction,
                       );
                     }, newPageProgressIndicatorBuilder: (context) {
-                      return MangaCard.loading();
+                      return const MangaCard.loading();
                     }, firstPageProgressIndicatorBuilder: (context) {
-                      return MangaCard.loading();
+                      return const MangaCard.loading();
                     }),
                   ),
                 ),
@@ -162,8 +164,8 @@ class _ListGenreMangaState extends State<ListGenreManga> {
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+          const Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: HeaderProfile(),
           ),
           const SizedBox(height: 20.0),
@@ -188,7 +190,7 @@ class _ListGenreMangaState extends State<ListGenreManga> {
                   );
                 }
 
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               },
             ),
           ),

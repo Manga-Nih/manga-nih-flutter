@@ -23,7 +23,7 @@ class LogoutDialog extends StatelessWidget {
         style:
             Theme.of(context).textTheme.headline6!.copyWith(color: Colors.red),
       ),
-      content: Text('Are you sure want to log out ?'),
+      content: const Text('Are you sure want to log out ?'),
       actions: [
         MaterialButton(
           onPressed: () => Get.back(),
@@ -32,7 +32,7 @@ class LogoutDialog extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50.0),
           ),
-          child: Text(
+          child: const Text(
             'I will stay',
             style: TextStyle(color: Colors.white),
           ),
@@ -43,7 +43,7 @@ class LogoutDialog extends StatelessWidget {
 
             await onLogout();
 
-            Get.offAll(() => LoginScreen());
+            Get.offAll(() => const LoginScreen());
           },
           minWidth: 70.0,
           shape: RoundedRectangleBorder(

@@ -18,10 +18,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -37,14 +39,14 @@ class _MyAppState extends State<MyApp> {
     _firestore = FirebaseFirestore.instance;
 
     // set persistance
-    _firestore.settings = Settings(persistenceEnabled: true);
+    _firestore.settings = const Settings(persistenceEnabled: true);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.white,
       statusBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
@@ -87,8 +89,8 @@ class _MyAppState extends State<MyApp> {
         home: Builder(
           builder: (context) {
             return (_firebaseAuth.currentUser == null)
-                ? LoginScreen()
-                : HomeScreen();
+                ? const LoginScreen()
+                : const HomeScreen();
           },
         ),
       ),

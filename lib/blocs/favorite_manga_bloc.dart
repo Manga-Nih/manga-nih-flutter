@@ -12,8 +12,8 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
   final FirebaseFirestore _firestore;
 
   FavoriteMangaBloc()
-      : this._firebaseAuth = FirebaseAuth.instance,
-        this._firestore = FirebaseFirestore.instance,
+      : _firebaseAuth = FirebaseAuth.instance,
+        _firestore = FirebaseFirestore.instance,
         super(FavoriteMangaUninitialized()) {
     on(_onFavoriteMangaAddRemove);
     on(_onFavoriteMangaFetchList);
@@ -51,7 +51,7 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
         doc.set({'data': data});
       }
 
-      this.add(FavoriteMangaFetchList());
+      add(FavoriteMangaFetchList());
     } catch (e) {
       emit(FavoriteMangaError());
 

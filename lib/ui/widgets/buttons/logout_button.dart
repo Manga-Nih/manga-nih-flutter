@@ -11,14 +11,14 @@ class LogoutButton extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50.0),
-        side: BorderSide(
+        side: const BorderSide(
           color: Colors.red,
         ),
       ),
       color: Colors.white,
       child: Row(
         children: [
-          Icon(Icons.logout, color: Colors.red),
+          const Icon(Icons.logout, color: Colors.red),
           const SizedBox(width: 25.0),
           Text(
             'Logout',

@@ -66,7 +66,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(130.0),
+          preferredSize: const Size.fromHeight(130.0),
           child: _buildHeader(),
         ),
         body: _buildListMangaCard(),
@@ -79,8 +79,8 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+          const Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: HeaderProfile(),
           ),
           const SizedBox(height: 20.0),
@@ -146,7 +146,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // if type manga selected, then trigger paging to add some item
     // addPageRequestListener
     if (_mangaType == MangaType.manhua &&
-        !(_manhuaBloc.state is ManhuaFetchSuccess)) {
+        _manhuaBloc.state is! ManhuaFetchSuccess) {
       _pagingManhuaController.notifyListeners();
     }
 
@@ -168,7 +168,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
       },
       child: PagedListView<int, Manga>(
         pagingController: _pagingManhuaController,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         builderDelegate: PagedChildBuilderDelegate<Manga>(
             itemBuilder: (context, item, index) {
           Manga manga = item;
@@ -178,9 +178,9 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             onTap: _mangaAction,
           );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard.loading();
+          return const MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard.loading();
+          return const MangaCard.loading();
         }),
       ),
     );
@@ -190,7 +190,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // if type manga selected, then trigger paging to add some item
     // addPageRequestListener
     if (_mangaType == MangaType.manga &&
-        !(_mangaBloc.state is MangaFetchSuccess)) {
+        _mangaBloc.state is! MangaFetchSuccess) {
       _pagingMangaController.notifyListeners();
     }
 
@@ -212,7 +212,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
       },
       child: PagedListView<int, Manga>(
         pagingController: _pagingMangaController,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         builderDelegate: PagedChildBuilderDelegate<Manga>(
             itemBuilder: (context, item, index) {
           Manga manga = item;
@@ -222,9 +222,9 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             onTap: _mangaAction,
           );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard.loading();
+          return const MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard.loading();
+          return const MangaCard.loading();
         }),
       ),
     );
@@ -234,7 +234,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // if type manga selected, then trigger paging to add some item
     // addPageRequestListener
     if (_mangaType == MangaType.manhwa &&
-        !(_manhwaBloc.state is ManhwaFetchSuccess)) {
+        _manhwaBloc.state is! ManhwaFetchSuccess) {
       _pagingManhwaController.notifyListeners();
     }
 
@@ -256,7 +256,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
       },
       child: PagedListView<int, Manga>(
         pagingController: _pagingManhwaController,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         builderDelegate: PagedChildBuilderDelegate<Manga>(
             itemBuilder: (context, item, index) {
           Manga manga = item;
@@ -266,9 +266,9 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
             onTap: _mangaAction,
           );
         }, newPageProgressIndicatorBuilder: (context) {
-          return MangaCard.loading();
+          return const MangaCard.loading();
         }, firstPageProgressIndicatorBuilder: (context) {
-          return MangaCard.loading();
+          return const MangaCard.loading();
         }),
       ),
     );

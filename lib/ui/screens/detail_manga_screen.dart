@@ -117,7 +117,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
           child: BlocBuilder<DetailMangaBloc, DetailMangaState>(
             builder: (context, state) {
               return CustomScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 slivers: [
                   _buildAppBar(),
                   _buildMangaInfo(state),
@@ -132,7 +132,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   }
 
   Widget _buildAppBar() {
-    return SliverAppBar(title: Text('Detail Manga'));
+    return const SliverAppBar(title: Text('Detail Manga'));
   }
 
   Widget _buildMangaInfo(DetailMangaState state) {
@@ -144,7 +144,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
           children: [
             (state is DetailMangaFetchSuccess)
                 ? DetailMangaCard(mangaDetail: state.mangaDetail)
-                : DetailMangaCard.loading(),
+                : const DetailMangaCard.loading(),
             const SizedBox(width: 20.0),
             Expanded(
               child: Column(
@@ -170,21 +170,19 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                         ),
                   const SizedBox(height: 20.0),
                   (state is DetailMangaFetchSuccess)
-                      ? Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'by ${state.mangaDetail.writer}',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              const SizedBox(height: 5.0),
-                              Text(
-                                state.mangaDetail.genre,
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'by ${state.mangaDetail.writer}',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                            const SizedBox(height: 5.0),
+                            Text(
+                              state.mangaDetail.genre,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ],
                         )
                       : Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
@@ -220,7 +218,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                                       ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
-                                      stops: [0.5, 0.8],
+                                      stops: const [0.5, 0.8],
                                     ),
                                   ),
                                   child: Icon(
@@ -261,12 +259,12 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
 
     return SliverFillRemaining(
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         child: Container(
           margin: const EdgeInsets.only(top: 10.0),
           padding: const EdgeInsets.all(20.0),
           height: screenSize.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30.0),
@@ -313,7 +311,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
                         ),
-                        child: Text('Information'),
+                        child: const Text('Information'),
                       ),
                     ),
                     const SizedBox(width: 10.0),
@@ -329,7 +327,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50.0),
                         ),
-                        child: Text('Chapter'),
+                        child: const Text('Chapter'),
                       ),
                     ),
                   ],
@@ -360,7 +358,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
   Widget _buildInformationSection(DetailMangaState state) {
     return ListView(
       padding: const EdgeInsets.only(bottom: 20.0),
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -480,7 +478,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
 
               return ListView.builder(
                 padding: const EdgeInsets.only(bottom: 20.0),
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: state.mangaDetail.chapters.length,
                 itemBuilder: (context, index) {
                   Chapter chapter = state.mangaDetail.chapters[index];
@@ -530,7 +528,7 @@ class _DetailMangaScreenState extends State<DetailMangaScreen> {
         : ListView.builder(
             itemCount: 5,
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return Shimmer.fromColors(
                 baseColor: Colors.grey.shade300,
