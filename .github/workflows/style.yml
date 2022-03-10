@@ -46,6 +46,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: firebase-options-artifact
+          path: lib/
 
       - name: Install dependencies
         run: flutter pub get
