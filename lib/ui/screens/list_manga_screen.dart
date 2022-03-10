@@ -147,7 +147,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // addPageRequestListener
     if (_mangaType == MangaType.manhua &&
         _manhuaBloc.state is! ManhuaFetchSuccess) {
-      _pagingManhuaController.notifyListeners();
+      _pagingManhuaController.notifyPageRequestListeners(0);
     }
 
     _pagingManhuaController.addPageRequestListener((pageKey) {
@@ -191,7 +191,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // addPageRequestListener
     if (_mangaType == MangaType.manga &&
         _mangaBloc.state is! MangaFetchSuccess) {
-      _pagingMangaController.notifyListeners();
+      _pagingMangaController.notifyPageRequestListeners(0);
     }
 
     _pagingMangaController.addPageRequestListener((pageKey) {
@@ -235,7 +235,7 @@ class _ListMangaScreenState extends State<ListMangaScreen> {
     // addPageRequestListener
     if (_mangaType == MangaType.manhwa &&
         _manhwaBloc.state is! ManhwaFetchSuccess) {
-      _pagingManhwaController.notifyListeners();
+      _pagingManhwaController.notifyPageRequestListeners(0);
     }
 
     _pagingManhwaController.addPageRequestListener((pageKey) {

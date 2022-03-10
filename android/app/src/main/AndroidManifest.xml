@@ -12,7 +12,7 @@
    </queries>
 
    <application
-        android:label="Manga Nih"
+        android:label="Manga nih"
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
         <activity

@@ -14,12 +14,45 @@ jobs:
         with:
           flutter-version: "2.10.1"
 
+      - name: Fetch submodule
+        run: git submodule update --init --recursive
+
+      - name: Checkout main in submodule
+        run: git submodule foreach git checkout main
+
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Install pubspec version
         run: flutter pub global activate pubspec_version
 
       - name: Get version
         id: pubversion
         run: echo ::set-output name=version::$(pubver get)
+
+      - name: Create keystore
+        env:
+          ZERA_KEYSTORE_B64: ${{ secrets.ZERA_KEYSTORE_B64 }}
+        run: |
+          cd android/app/
+          echo "$ZERA_KEYSTORE_B64" > zera-keystore.jks.b64
+          base64 -d -i zera-keystore.jks.b64 > zera-keystore.jks
+
+      - name: Create local.properties
+        env:
+          LOCAL_PROPERTIES_B64: ${{ secrets.LOCAL_PROPERTIES_B64 }}
+        run: |
+          cd android/
+          echo "$LOCAL_PROPERTIES_B64" > local.properties.b64
+          base64 -d -i local.properties.b64 > local.properties
+
+      - name: Create key.properties
+        env:
+          KEY_PROPERTIES_B64: ${{ secrets.KEY_PROPERTIES_B64 }}
+        run: |
+          cd android/
+          echo "$KEY_PROPERTIES_B64" > key.properties.b64
+          base64 -d -i key.properties.b64 > key.properties
 
       - name: Build APK
         run: flutter build apk --no-sound-null-safety
