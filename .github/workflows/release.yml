@@ -34,6 +34,24 @@ jobs:
           echo "$KEY_PROPERTIES_B64" > key.properties.b64
           base64 -d -i key.properties.b64 > key.properties
 
+      - name: Upload keystore
+        uses: actions/upload-artifact@v2
+        with:
+          name: keystore
+          path: android/app/firebase_options.dart
+
+      - name: Upload local.properties
+        uses: actions/upload-artifact@v2
+        with:
+          name: local-properties
+          path: android/local.properties
+
+      - name: Upload key.properties
+        uses: actions/upload-artifact@v2
+        with:
+          name: key-properties
+          path: android/key.properties
+
   firebase:
     name: Firebase Options
     runs-on: ubuntu-20.04
@@ -47,6 +65,12 @@ jobs:
           echo "$FIREBASE_OPTIONS_B64" > firebase_options.dart.b64
           base64 -d -i firebase_options.dart.b64 > firebase_options.dart
 
+      - name: Upload firebase artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: firebase-options-artifact
+          path: lib/firebase_options.dart
+
   build:
     name: Release build
     runs-on: ubuntu-20.04
@@ -56,6 +80,30 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "2.10.1"
+
+      - name: Download keystore
+        uses: actions/download-artifact@v2
+        with:
+          name: keystore
+          path: android/app/
+
+      - name: Download local.properties
+        uses: actions/download-artifact@v2
+        with:
+          name: local-properties
+          path: android/
+
+      - name: Download key.properties
+        uses: actions/download-artifact@v2
+        with:
+          name: key-properties
+          path: android/
+
+      - name: Download firebase options artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: firebase-options-artifact
+          path: lib/
 
       - name: Fetch submodule
         run: git submodule update --init --recursive
