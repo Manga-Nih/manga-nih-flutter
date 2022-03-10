@@ -1,0 +1,25 @@
+name: Style checking
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  style:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "2.10.1"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Formatting
+        run: flutter format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: flutter analyze
