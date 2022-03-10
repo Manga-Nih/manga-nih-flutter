@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: keystore
-          path: android/app/firebase_options.dart
+          path: android/app/zera-keystore.jks
 
       - name: Upload local.properties
         uses: actions/upload-artifact@v2
