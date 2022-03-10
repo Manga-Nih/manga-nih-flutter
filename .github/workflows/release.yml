@@ -1,0 +1,37 @@
+name: Create android release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Release build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "2.10.1"
+
+      - name: Install pubspec version
+        run: flutter pub global activate pubspec_version
+
+      - name: Get version
+        id: pubversion
+        run: echo ::set-output name=version::$(pubver get)
+
+      - name: Build APK
+        run: flutter build apk --no-sound-null-safety
+
+      - name: Build APP Bundle
+        run: flutter build appbundle --no-sound-null-safety
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: "build/app/outputs/apk/release/app-release.apk,build/app/outputs/bundle/release/app-release.aab"
+          token: ${{ secrets.GH_TOKEN }}
+          tag: ${{ steps.pubversion.outputs.version }}
+          commit: ${{ github.sha }}
