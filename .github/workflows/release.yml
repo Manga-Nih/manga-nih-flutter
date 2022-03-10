@@ -5,31 +5,11 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    name: Release build
+  properties:
+    name: File properties
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "2.10.1"
-
-      - name: Fetch submodule
-        run: git submodule update --init --recursive
-
-      - name: Checkout main in submodule
-        run: git submodule foreach git checkout main
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Install pubspec version
-        run: flutter pub global activate pubspec_version
-
-      - name: Get version
-        id: pubversion
-        run: echo ::set-output name=version::$(pubver get)
-
       - name: Create keystore
         env:
           ZERA_KEYSTORE_B64: ${{ secrets.ZERA_KEYSTORE_B64 }}
@@ -53,6 +33,45 @@ jobs:
           cd android/
           echo "$KEY_PROPERTIES_B64" > key.properties.b64
           base64 -d -i key.properties.b64 > key.properties
+
+  firebase:
+    name: Firebase Options
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create firebase options
+        env:
+          FIREBASE_OPTIONS_B64: ${{ secrets.FIREBASE_OPTIONS_B64 }}
+        run: |
+          cd lib/
+          echo "$FIREBASE_OPTIONS_B64" > firebase_options.dart.b64
+          base64 -d -i firebase_options.dart.b64 > firebase_options.dart
+
+  build:
+    name: Release build
+    runs-on: ubuntu-20.04
+    needs: [properties, firebase]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "2.10.1"
+
+      - name: Fetch submodule
+        run: git submodule update --init --recursive
+
+      - name: Checkout main in submodule
+        run: git submodule foreach git checkout main
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install pubspec version
+        run: flutter pub global activate pubspec_version
+
+      - name: Get version
+        id: pubversion
+        run: echo ::set-output name=version::$(pubver get)
 
       - name: Build APK
         run: flutter build apk --no-sound-null-safety

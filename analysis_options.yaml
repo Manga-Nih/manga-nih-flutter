@@ -28,4 +28,4 @@ linter:
 # https://dart.dev/guides/language/analysis-options
 
 analyzer:
-  exclude: [plugins/**, lib/main.dart]
+  exclude: [plugins/**]

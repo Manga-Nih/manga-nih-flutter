@@ -7,8 +7,23 @@ on:
     branches: [main]
 
 jobs:
-  style:
+  firebase:
+    name: Firebase Options
     runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create firebase options
+        env:
+          FIREBASE_OPTIONS_B64: ${{ secrets.FIREBASE_OPTIONS_B64 }}
+        run: |
+          cd lib/
+          echo "$FIREBASE_OPTIONS_B64" > firebase_options.dart.b64
+          base64 -d -i firebase_options.dart.b64 > firebase_options.dart
+
+  style:
+    name: Style and analyze
+    runs-on: ubuntu-20.04
+    needs: [firebase]
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v2
