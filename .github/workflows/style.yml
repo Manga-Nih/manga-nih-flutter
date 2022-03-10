@@ -7,8 +7,29 @@ on:
     branches: [main]
 
 jobs:
-  style:
+  firebase:
+    name: Firebase Options
     runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create firebase options
+        env:
+          FIREBASE_OPTIONS_B64: ${{ secrets.FIREBASE_OPTIONS_B64 }}
+        run: |
+          cd lib/
+          echo "$FIREBASE_OPTIONS_B64" > firebase_options.dart.b64
+          base64 -d -i firebase_options.dart.b64 > firebase_options.dart
+
+      - name: Upload firebase artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: firebase-options-artifact
+          path: lib/firebase_options.dart
+
+  style:
+    name: Style and analyze
+    runs-on: ubuntu-20.04
+    needs: [firebase]
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v2
@@ -20,6 +41,12 @@ jobs:
 
       - name: Checkout main in submodule
         run: git submodule foreach git checkout main
+
+      - name: Download firebase options artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: firebase-options-artifact
+          path: lib/
 
       - name: Install dependencies
         run: flutter pub get
