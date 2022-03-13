@@ -122,10 +122,10 @@ jobs:
         run: echo ::set-output name=version::$(pubver get)
 
       - name: Build APK
-        run: flutter build apk --no-sound-null-safety
+        run: flutter build apk
 
       - name: Build APP Bundle
-        run: flutter build appbundle --no-sound-null-safety
+        run: flutter build appbundle
 
       - name: Create release
         uses: ncipollo/release-action@v1
