@@ -53,23 +53,23 @@ jobs:
           path: android/key.properties
 
   firebase:
-    name: Firebase Options
+    name: Firebase Config
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Create firebase options
+      - name: Create firebase config
         env:
-          FIREBASE_OPTIONS_B64: ${{ secrets.FIREBASE_OPTIONS_B64 }}
+          GOOGLE_SERVICE_B64: ${{ secrets.GOOGLE_SERVICE_B64 }}
         run: |
-          cd lib/
-          echo "$FIREBASE_OPTIONS_B64" > firebase_options.dart.b64
-          base64 -d -i firebase_options.dart.b64 > firebase_options.dart
+          cd android/app/
+          echo "$GOOGLE_SERVICE_B64" > google_service.json.b64
+          base64 -d -i google_service.json.b64 > google_service.json
 
       - name: Upload firebase artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: firebase-options-artifact
-          path: lib/firebase_options.dart
+          name: firebase-config-artifact
+          path: android/app/google_service.json
 
   build:
     name: Release build
@@ -99,11 +99,11 @@ jobs:
           name: key-properties
           path: android/
 
-      - name: Download firebase options artifacts
+      - name: Download firebase config artifact
         uses: actions/download-artifact@v2
         with:
-          name: firebase-options-artifact
-          path: lib/
+          name: firebase-config-artifact
+          path: android/app/
 
       - name: Fetch submodule
         run: git submodule update --init --recursive
