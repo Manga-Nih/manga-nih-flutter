@@ -16,6 +16,12 @@ jobs:
         with:
           flutter-version: "2.10.1"
 
+      - name: Fetch submodule
+        run: git submodule update --init --recursive
+
+      - name: Checkout main in submodule
+        run: git submodule foreach git checkout main
+
       - name: Install dependencies
         run: flutter pub get
 
