@@ -53,23 +53,23 @@ jobs:
           path: android/key.properties
 
   firebase:
-    name: Firebase Config
+    name: Google services
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Create firebase config
+      - name: Create google services
         env:
-          GOOGLE_SERVICE_B64: ${{ secrets.GOOGLE_SERVICE_B64 }}
+          GOOGLE_SERVICES_B64: ${{ secrets.GOOGLE_SERVICES_B64 }}
         run: |
           cd android/app/
-          echo "$GOOGLE_SERVICE_B64" > google_service.json.b64
-          base64 -d -i google_service.json.b64 > google_service.json
+          echo "$GOOGLE_SERVICES_B64" > google-services.json.b64
+          base64 -d -i google-services.json.b64 > google-services.json
 
-      - name: Upload firebase artifacts
+      - name: Upload google services artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: firebase-config-artifact
-          path: android/app/google_service.json
+          name: google-services-artifact
+          path: android/app/google-services.json
 
   build:
     name: Release build
@@ -99,10 +99,10 @@ jobs:
           name: key-properties
           path: android/
 
-      - name: Download firebase config artifact
+      - name: Download google services artifact
         uses: actions/download-artifact@v2
         with:
-          name: firebase-config-artifact
+          name: google-services-artifact
           path: android/app/
 
       - name: Fetch submodule
