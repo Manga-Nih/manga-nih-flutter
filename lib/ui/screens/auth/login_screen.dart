@@ -63,6 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _forgotPasswordAction() {
+    Get.to(() => ForgotPasswordCubit());
+  }
+
   void _registerAction() {
     Get.to(() => const RegisterScreen());
   }
@@ -89,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 10.0),
+                    vertical: 20.0,
+                    horizontal: 10.0,
+                  ),
                   width: screenSize.width * 0.9,
                   child: Form(
                     key: _key,
@@ -110,10 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'Hello, welcome back to Manga nih',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(color: Colors.grey.shade700),
+                            style: TextStyle(color: Colors.grey.shade700),
                           ),
                         ),
                         const SizedBox(height: 25.0),
@@ -130,6 +133,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           isPassword: true,
                           controller: _passwordController,
                           errorText: _passwordErrorText,
+                        ),
+                        const SizedBox(height: 10.0),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: _forgotPasswordAction,
+                            child: Text(
+                              'Forgot password',
+                              style: TextStyle(
+                                color: Pallette.gradientStartColor,
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 25.0),
                         BlocConsumer<UserBloc, UserState>(
@@ -159,11 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: _registerAction,
                               child: Text(
                                 'Create an account',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                        color: Pallette.gradientStartColor),
+                                style: TextStyle(
+                                    color: Pallette.gradientStartColor),
                               ),
                             ),
                           ],

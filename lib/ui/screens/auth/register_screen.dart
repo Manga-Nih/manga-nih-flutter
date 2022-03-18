@@ -121,10 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             'Register a new account to read manga',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(color: Colors.grey.shade700),
+                            style: TextStyle(color: Colors.grey.shade700),
                           ),
                         ),
                         const SizedBox(height: 25.0),
@@ -184,11 +181,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               onPressed: _loginAction,
                               child: Text(
                                 'Login an account',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                        color: Pallette.gradientStartColor),
+                                style: TextStyle(
+                                    color: Pallette.gradientStartColor),
                               ),
                             ),
                           ],

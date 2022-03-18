@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/blocs/email_verification_cubit.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/core/core.dart';
 import 'package:manga_nih/models/models.dart';

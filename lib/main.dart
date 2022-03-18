@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:manga_nih/blocs/blocs.dart';
-import 'package:manga_nih/blocs/email_verification_cubit.dart';
 import 'package:manga_nih/core/core.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 
@@ -21,6 +20,10 @@ void _foregroundDynamicLink(PendingDynamicLinkData? onData) {
         BlocProvider.of<EmailVerificationCubit>(Get.context!);
 
     emailCubit.verifyCode(code);
+  }
+
+  if (code != null && mode == 'resetPassword') {
+    Get.to(() => ResetPasswordScreen(code: code));
   }
 }
 

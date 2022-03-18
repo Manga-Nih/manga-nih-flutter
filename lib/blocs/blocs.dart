@@ -12,3 +12,7 @@ export 'favorite_manga_bloc.dart';
 export 'history_manga_bloc.dart';
 export 'user_bloc.dart';
 export 'feedback_bloc.dart';
+
+// Cubit
+export 'email_verification_cubit.dart';
+export 'forgot_password_cubit.dart';

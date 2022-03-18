@@ -56,7 +56,7 @@ class _InputFieldState extends State<InputField> {
           textInputAction: widget.textInputAction,
           validator: (value) {
             if (value!.isEmpty) {
-              return 'fill this field';
+              return 'Fill this field';
             }
 
             return null;

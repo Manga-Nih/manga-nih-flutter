@@ -9,6 +9,8 @@ export 'list_favorite_history_screen.dart';
 // Auth
 export 'auth/login_screen.dart';
 export 'auth/register_screen.dart';
+export 'auth/forgot_password_screen.dart';
+export 'auth/reset_password_screen.dart';
 
 // Profile
 export 'profile/profile_screen.dart';
