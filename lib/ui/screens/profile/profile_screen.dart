@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/core/core.dart';
+import 'package:manga_nih/models/models.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 import 'package:manga_nih/ui/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,11 +19,17 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late UserBloc _userBloc;
+  late User _user;
 
   @override
   void initState() {
     // init bloc
     _userBloc = BlocProvider.of<UserBloc>(context);
+
+    UserState state = _userBloc.state;
+    if (state is UserFetchSuccess) {
+      _user = state.user;
+    }
 
     super.initState();
   }
@@ -64,6 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await launch(Constants.freepik);
   }
 
+  void _verifyEmailAction() {
+    _userBloc.sendEmailVerification();
+
+    SnackbarModel.custom(false, 'Check your email to verify');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -74,7 +88,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
             physics: const BouncingScrollPhysics(),
             children: [
               _buildHeader(),
-              const SizedBox(height: 40.0),
+              const SizedBox(height: 20.0),
+              if (!_user.emailVerified)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(5.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 2.0,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Your email not verified',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      MaterialButton(
+                        onPressed: _verifyEmailAction,
+                        color: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: const Text(
+                          'Verify now',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 20.0),
               _buildBody(),
               const SizedBox(height: 30.0),
               LogoutButton(onPressed: _logoutAction),

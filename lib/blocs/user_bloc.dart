@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:manga_nih/blocs/event_states/event_states.dart';
+import 'package:manga_nih/core/constants.dart';
 import 'package:manga_nih/models/models.dart';
 import 'package:path/path.dart' as path;
 
@@ -151,5 +152,28 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   Future<void> userLogout() async {
     await _firebaseAuth.signOut();
+  }
+
+  Future<void> sendEmailVerification() async {
+    User user = _firebaseAuth.currentUser!;
+
+    Uri uri =
+        Uri.https(Constants.webDomain, DynamicLinksType.emailVerification, {
+      'uid': user.uid,
+      'time': DateTime.now().millisecondsSinceEpoch.toString(),
+    });
+
+    log(uri.toString());
+
+    await user.sendEmailVerification(
+      ActionCodeSettings(
+        url: uri.toString(),
+        androidPackageName: Constants.androidPackage,
+        dynamicLinkDomain: Constants.dynamicLink,
+        handleCodeInApp: true,
+        androidInstallApp: true,
+        iOSBundleId: Constants.iosPackage,
+      ),
+    );
   }
 }
