@@ -24,7 +24,7 @@ class FavoriteMangaBloc extends Bloc<FavoriteMangaEvent, FavoriteMangaState> {
     try {
       DocumentReference doc = _favoritesDoc;
       DocumentSnapshot snapshot = await doc.get();
-      List data = (snapshot.data() as Map<String, dynamic>)['data'] ?? [];
+      List data = (snapshot.data() as Map<String, dynamic>?)?['data'] ?? [];
 
       MangaDetail detail = event.favoriteManga;
       FavoriteManga favoriteManga = FavoriteManga(
