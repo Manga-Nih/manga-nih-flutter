@@ -10,12 +10,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:manga_nih/blocs/blocs.dart';
+import 'package:manga_nih/blocs/email_verification_cubit.dart';
 import 'package:manga_nih/core/core.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
 
 void _foregroundDynamicLink(PendingDynamicLinkData? onData) {
-  log(onData.toString());
-  log(onData!.link.toString());
+  String? code = onData?.link.queryParameters['oobCode'];
+  String? mode = onData?.link.queryParameters['mode'];
+
+  if (code != null && mode == 'verifyEmail') {
+    EmailVerificationCubit emailCubit =
+        BlocProvider.of<EmailVerificationCubit>(Get.context!);
+
+    emailCubit.verifyCode(code);
+  }
 }
 
 void main() async {
@@ -54,6 +62,8 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserBloc>(create: (_) => UserBloc()),
+        BlocProvider<EmailVerificationCubit>(
+            create: (_) => EmailVerificationCubit()),
         BlocProvider<PopularMangaBloc>(create: (_) => PopularMangaBloc()),
         BlocProvider<LatestMangaBloc>(create: (_) => LatestMangaBloc()),
         BlocProvider<GenreBloc>(create: (_) => GenreBloc()),

@@ -6,6 +6,7 @@ export 'chapter_image_event.dart';
 export 'chapter_image_state.dart';
 export 'user_event.dart';
 export 'user_state.dart';
+export 'user_email_state.dart';
 
 // Manga
 export 'manga/popular_manga_event.dart';

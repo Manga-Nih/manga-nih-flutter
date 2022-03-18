@@ -48,7 +48,9 @@ class Avatar extends StatelessWidget {
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
         backgroundImage: isNetwork
-            ? CachedNetworkImageProvider(image)
+            ? (image.toString().startsWith('https')
+                ? CachedNetworkImageProvider(image)
+                : AssetImage(image)) as ImageProvider
             : (image is String ? AssetImage(image) : FileImage(image))
                 as ImageProvider,
         radius: radius,
