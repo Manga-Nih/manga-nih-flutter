@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,14 +12,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:manga_nih/blocs/blocs.dart';
 import 'package:manga_nih/core/core.dart';
 import 'package:manga_nih/ui/screens/screens.dart';
-import 'firebase_options.dart';
+
+void _foregroundDynamicLink(PendingDynamicLinkData? onData) {
+  log(onData.toString());
+  log(onData!.link.toString());
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
+
+  // firebase dynamic link
+  FirebaseDynamicLinks.instance.onLink.listen(_foregroundDynamicLink);
 
   runApp(const MyApp());
 }
@@ -40,8 +48,6 @@ class _MyAppState extends State<MyApp> {
 
     // set persistance
     _firestore.settings = const Settings(persistenceEnabled: true);
-
-    super.initState();
   }
 
   @override
@@ -88,6 +94,9 @@ class _MyAppState extends State<MyApp> {
         ),
         home: Builder(
           builder: (context) {
+            FirebaseDynamicLinks.instance
+                .getInitialLink()
+                .then((value) => log(value.toString()));
             return (_firebaseAuth.currentUser == null)
                 ? const LoginScreen()
                 : const HomeScreen();

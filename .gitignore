@@ -45,8 +45,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Firebase option
-lib/firebase_options.dart
-
 # Base64
 *.b64
