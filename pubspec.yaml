@@ -30,6 +30,7 @@ dependencies:
   firebase_auth: ^3.3.9
   firebase_core: ^1.13.1
   firebase_database: ^9.0.8
+  firebase_dynamic_links: ^4.1.1
   firebase_storage: ^10.2.9
   flutter:
     sdk: flutter
