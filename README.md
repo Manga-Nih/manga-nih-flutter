@@ -18,6 +18,23 @@ Edit file `local.properties` inside `Android` folder and add some line.
  flutter.targetSdkVersion=31
 ```
 
+## Lefthook
+
+- To improve style and format code.
+- Install [lefhook](https://github.com/evilmartians/lefthook).
+- Add lefthook executable to path environment.
+- Open Manga nih project and execute lefthook command.
+  ```bash
+  lefthook install
+  ```
+
 ## Komiku SDK
 
-[komiku_sdk](https://github.com/zalviandyr/komiku_sdk)
+- Install submodule
+  ```bash
+  git submodule update --init --recursive
+  ```
+- Checkout main
+  ```bash
+  git submodule foreach git checkout main
+  ```
