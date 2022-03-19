@@ -407,7 +407,7 @@ packages:
       path: "plugins/komiku_sdk"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   lints:
     dependency: transitive
     description:

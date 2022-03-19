@@ -7,7 +7,7 @@ import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
 class SearchMangaBloc extends Bloc<SearchMangaEvent, SearchMangaState> {
-  final Komiku _komiku = Komiku();
+  final Komiku _komiku = Komiku.instance;
 
   SearchMangaBloc() : super(SearchMangaUninitialized()) {
     on(_onSearchMangaFetch);

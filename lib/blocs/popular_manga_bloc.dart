@@ -7,7 +7,7 @@ import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
 class PopularMangaBloc extends Bloc<PopularMangaEvent, PopularMangaState> {
-  final Komiku _komiku = Komiku();
+  final Komiku _komiku = Komiku.instance;
   final List<PopularManga> _listPopular = [];
 
   PopularMangaBloc() : super(PopularMangaUninitialized()) {

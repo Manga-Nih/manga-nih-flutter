@@ -7,7 +7,7 @@ import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
 class ManhuaBloc extends Bloc<ManhuaEvent, ManhuaState> {
-  final Komiku _komiku = Komiku();
+  final Komiku _komiku = Komiku.instance;
   final List<Manga> _listManhua = [];
 
   ManhuaBloc() : super(ManhuaUninitialized()) {

@@ -7,7 +7,7 @@ import 'package:manga_nih/blocs/event_states/event_states.dart';
 import 'package:manga_nih/models/models.dart';
 
 class LatestMangaBloc extends Bloc<LatestMangaEvent, LatestMangaState> {
-  final Komiku _komiku = Komiku();
+  final Komiku _komiku = Komiku.instance;
 
   LatestMangaBloc() : super(LatestMangaUninitialized()) {
     on(_onLatestMangaEvent);
