@@ -96,10 +96,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       if (e.code == 'user-not-found') {
         SnackbarModel.custom(true, 'Oops.. User not found');
-      }
-
-      if (e.code == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         SnackbarModel.custom(true, 'Oops.. Wrong password');
+      } else if (e.code == 'too-many-requests') {
+        SnackbarModel.custom(true, 'Oops.. Too many requests');
       }
     } catch (e) {
       emit(UserError());
