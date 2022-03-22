@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _forgotPasswordAction() {
-    Get.to(() => ForgotPasswordCubit());
+    Get.to(() => const ForgotPasswordScreen());
   }
 
   void _registerAction() {
