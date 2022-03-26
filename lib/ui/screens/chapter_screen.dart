@@ -32,11 +32,12 @@ class ChapterScreen extends StatefulWidget {
 
 class _ChapterScreenState extends State<ChapterScreen> {
   final ValueNotifier<bool> _visibleNotifier = ValueNotifier(true);
+  final ScrollController _scrollController = ScrollController();
+  final TransformationController _transformationController =
+      TransformationController();
   late DetailMangaBloc _detailMangaBloc;
   late ChapterImageBloc _chapterImageBloc;
   late HistoryMangaBloc _historyMangaBloc;
-  late ScrollController _scrollController;
-  late TransformationController _transformationController;
   late List<Chapter> _listChapter;
   late MangaDetail? _curManga;
   late Chapter _curChapter;
@@ -51,10 +52,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
     _detailMangaBloc = BlocProvider.of<DetailMangaBloc>(context);
     _chapterImageBloc = BlocProvider.of<ChapterImageBloc>(context);
     _historyMangaBloc = BlocProvider.of<HistoryMangaBloc>(context);
-
-    // init controller
-    _scrollController = ScrollController();
-    _transformationController = TransformationController();
 
     // set
     _isZoomed = false;
@@ -190,6 +187,22 @@ class _ChapterScreenState extends State<ChapterScreen> {
     }
   }
 
+  void _panAction(PointerMoveEvent mouseEvent) {
+    if (_isZoomed) {
+      Matrix4 matrix4 = _transformationController.value;
+      double screenWidth = MediaQuery.of(context).size.width;
+      double newSwipeVal = matrix4.getRow(0).a + mouseEvent.delta.dx;
+
+      // prevent user swipe out of screen
+      if (newSwipeVal <= 0 && newSwipeVal >= (screenWidth * -1)) {
+        matrix4.setEntry(0, 3, newSwipeVal);
+
+        _transformationController.value = matrix4;
+        setState(() {});
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -207,32 +220,32 @@ class _ChapterScreenState extends State<ChapterScreen> {
             builder: (context, state) {
               return Stack(
                 children: [
-                  GestureDetector(
-                    onDoubleTap: () {},
-                    onDoubleTapDown: _zoomAction,
-                    child: InteractiveViewer(
-                      transformationController: _transformationController,
-                      minScale: 0.5,
-                      maxScale: 2,
-                      child: GlowingOverscrollIndicator(
-                        axisDirection: AxisDirection.down,
-                        color: Colors.white,
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: (state is ChapterImageFetchSuccess)
-                              ? state.chapterDetail.images.length
-                              : 1,
-                          itemBuilder: (context, index) {
-                            if (state is ChapterImageFetchSuccess) {
-                              List<ChapterImage> images =
-                                  state.chapterDetail.images;
+                  Listener(
+                    onPointerMove: _panAction,
+                    child: GestureDetector(
+                      onDoubleTap: () {},
+                      onDoubleTapDown: _zoomAction,
+                      child: InteractiveViewer(
+                        transformationController: _transformationController,
+                        minScale: 0.5,
+                        maxScale: 2,
+                        child: GlowingOverscrollIndicator(
+                          axisDirection: AxisDirection.down,
+                          color: Colors.white,
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: (state is ChapterImageFetchSuccess)
+                                ? state.chapterDetail.images.length
+                                : 1,
+                            itemBuilder: (context, index) {
+                              if (state is ChapterImageFetchSuccess) {
+                                List<ChapterImage> images =
+                                    state.chapterDetail.images;
 
-                              return CachedNetworkImage(
-                                fit: BoxFit.fill,
-                                imageUrl: images[index].image,
-                                progressIndicatorBuilder:
-                                    (context, url, progress) {
-                                  return Wrap(
+                                return CachedNetworkImage(
+                                  fit: BoxFit.fill,
+                                  imageUrl: images[index].image,
+                                  placeholder: (context, url) => Wrap(
                                     alignment: WrapAlignment.center,
                                     children: [
                                       Container(
@@ -241,30 +254,21 @@ class _ChapterScreenState extends State<ChapterScreen> {
                                             const CircularProgressIndicator(),
                                       )
                                     ],
-                                  );
-                                },
-                                // placeholder: (context, url) => Wrap(
-                                //   alignment: WrapAlignment.center,
-                                //   children: [
-                                //     Container(
-                                //       margin: const EdgeInsets.all(5.0),
-                                //       child: const CircularProgressIndicator(),
-                                //     )
-                                //   ],
-                                // ),
-                              );
-                            }
+                                  ),
+                                );
+                              }
 
-                            return Wrap(
-                              alignment: WrapAlignment.center,
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: CircularProgressIndicator(),
-                                )
-                              ],
-                            );
-                          },
+                              return Wrap(
+                                alignment: WrapAlignment.center,
+                                children: const [
+                                  Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: CircularProgressIndicator(),
+                                  )
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
