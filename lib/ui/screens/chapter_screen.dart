@@ -97,6 +97,11 @@ class _ChapterScreenState extends State<ChapterScreen> {
       }
     });
 
+    _transformationController.addListener(() {
+      double scale = _transformationController.value.entry(0, 0);
+      _isZoomed = scale != 1.0;
+    });
+
     super.initState();
   }
 
@@ -176,14 +181,12 @@ class _ChapterScreenState extends State<ChapterScreen> {
     if (_isZoomed) {
       Matrix4 matrix = Matrix4.identity().scaled(1.0, 1.0, 1.0);
       _transformationController.value = matrix;
-      _isZoomed = false;
     } else {
       // scale x and y to 2.0 base on maxScale InteractiveViewer
       Matrix4 matrix = Matrix4.identity().scaled(2.0, 2.0, 1.0);
       // multiply 0.5 to get x and y value before scaled
       matrix.translate(x * 0.5, y * 0.5);
       _transformationController.value = matrix;
-      _isZoomed = true;
     }
   }
 
@@ -232,43 +235,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                         child: GlowingOverscrollIndicator(
                           axisDirection: AxisDirection.down,
                           color: Colors.white,
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            itemCount: (state is ChapterImageFetchSuccess)
-                                ? state.chapterDetail.images.length
-                                : 1,
-                            itemBuilder: (context, index) {
-                              if (state is ChapterImageFetchSuccess) {
-                                List<ChapterImage> images =
-                                    state.chapterDetail.images;
-
-                                return CachedNetworkImage(
-                                  fit: BoxFit.fill,
-                                  imageUrl: images[index].image,
-                                  placeholder: (context, url) => Wrap(
-                                    alignment: WrapAlignment.center,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.all(5.0),
-                                        child:
-                                            const CircularProgressIndicator(),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              return Wrap(
-                                alignment: WrapAlignment.center,
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: CircularProgressIndicator(),
-                                  )
-                                ],
-                              );
-                            },
-                          ),
+                          child: _buildChapters(state),
                         ),
                       ),
                     ),
@@ -281,6 +248,44 @@ class _ChapterScreenState extends State<ChapterScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildChapters(ChapterImageState state) {
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: (state is ChapterImageFetchSuccess)
+          ? state.chapterDetail.images.length
+          : 1,
+      itemBuilder: (context, index) {
+        if (state is ChapterImageFetchSuccess) {
+          List<ChapterImage> images = state.chapterDetail.images;
+
+          return CachedNetworkImage(
+            fit: BoxFit.fill,
+            imageUrl: images[index].image,
+            placeholder: (context, url) => Wrap(
+              alignment: WrapAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: const CircularProgressIndicator(),
+                )
+              ],
+            ),
+          );
+        }
+
+        return Wrap(
+          alignment: WrapAlignment.center,
+          children: const [
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: CircularProgressIndicator(),
+            )
+          ],
+        );
+      },
     );
   }
 
