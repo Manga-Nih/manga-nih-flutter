@@ -31,6 +31,7 @@ class ChapterScreen extends StatefulWidget {
 }
 
 class _ChapterScreenState extends State<ChapterScreen> {
+  final ValueNotifier<bool> _visibleNotifier = ValueNotifier(true);
   late DetailMangaBloc _detailMangaBloc;
   late ChapterImageBloc _chapterImageBloc;
   late HistoryMangaBloc _historyMangaBloc;
@@ -40,7 +41,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
   late MangaDetail? _curManga;
   late Chapter _curChapter;
   late int _curIndexChapter;
-  late bool _isVisible;
   late bool _isHasPrev;
   late bool _isHasNext;
   late bool _isZoomed;
@@ -57,7 +57,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
     _transformationController = TransformationController();
 
     // set
-    _isVisible = true;
     _isZoomed = false;
     _isHasNext = false;
     _isHasPrev = false;
@@ -92,12 +91,12 @@ class _ChapterScreenState extends State<ChapterScreen> {
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
-        setState(() => _isVisible = false);
+        _visibleNotifier.value = false;
       }
 
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
-        setState(() => _isVisible = true);
+        _visibleNotifier.value = true;
       }
     });
 
@@ -173,6 +172,24 @@ class _ChapterScreenState extends State<ChapterScreen> {
     _chapterImageBloc.add(ChapterImageFetch(endpoint: nextChapter.endpoint));
   }
 
+  void _zoomAction(TapDownDetails details) {
+    double x = -1 * details.globalPosition.dx;
+    double y = -1 * details.globalPosition.dy;
+
+    if (_isZoomed) {
+      Matrix4 matrix = Matrix4.identity().scaled(1.0, 1.0, 1.0);
+      _transformationController.value = matrix;
+      _isZoomed = false;
+    } else {
+      // scale x and y to 2.0 base on maxScale InteractiveViewer
+      Matrix4 matrix = Matrix4.identity().scaled(2.0, 2.0, 1.0);
+      // multiply 0.5 to get x and y value before scaled
+      matrix.translate(x * 0.5, y * 0.5);
+      _transformationController.value = matrix;
+      _isZoomed = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -192,25 +209,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
                 children: [
                   GestureDetector(
                     onDoubleTap: () {},
-                    onDoubleTapDown: (details) {
-                      double x = -1 * details.globalPosition.dx;
-                      double y = -1 * details.globalPosition.dy;
-
-                      if (_isZoomed) {
-                        Matrix4 matrix =
-                            Matrix4.identity().scaled(1.0, 1.0, 1.0);
-                        _transformationController.value = matrix;
-                        _isZoomed = false;
-                      } else {
-                        // scale x and y to 2.0 base on maxScale InteractiveViewer
-                        Matrix4 matrix =
-                            Matrix4.identity().scaled(2.0, 2.0, 1.0);
-                        // multiply 0.5 to get x and y value before scaled
-                        matrix.translate(x * 0.5, y * 0.5);
-                        _transformationController.value = matrix;
-                        _isZoomed = true;
-                      }
-                    },
+                    onDoubleTapDown: _zoomAction,
                     child: InteractiveViewer(
                       transformationController: _transformationController,
                       minScale: 0.5,
@@ -231,15 +230,28 @@ class _ChapterScreenState extends State<ChapterScreen> {
                               return CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl: images[index].image,
-                                placeholder: (context, url) => Wrap(
-                                  alignment: WrapAlignment.center,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(5.0),
-                                      child: const CircularProgressIndicator(),
-                                    )
-                                  ],
-                                ),
+                                progressIndicatorBuilder:
+                                    (context, url, progress) {
+                                  return Wrap(
+                                    alignment: WrapAlignment.center,
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(5.0),
+                                        child:
+                                            const CircularProgressIndicator(),
+                                      )
+                                    ],
+                                  );
+                                },
+                                // placeholder: (context, url) => Wrap(
+                                //   alignment: WrapAlignment.center,
+                                //   children: [
+                                //     Container(
+                                //       margin: const EdgeInsets.all(5.0),
+                                //       child: const CircularProgressIndicator(),
+                                //     )
+                                //   ],
+                                // ),
                               );
                             }
 
@@ -273,22 +285,28 @@ class _ChapterScreenState extends State<ChapterScreen> {
       top: 0,
       left: 0,
       right: 0,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: _isVisible ? 60.0 : 0.0,
-        child: Container(
-          color: Colors.white60,
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Center(
-            child: Text(
-              (state is ChapterImageFetchSuccess) ? _curChapter.title : '',
-              style: Theme.of(context).textTheme.headline6,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-      ),
+      child: ValueListenableBuilder<bool>(
+          valueListenable: _visibleNotifier,
+          builder: (context, isVisible, child) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: isVisible ? 60.0 : 0.0,
+              child: Container(
+                color: Colors.white60,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Center(
+                  child: Text(
+                    (state is ChapterImageFetchSuccess)
+                        ? _curChapter.title
+                        : '',
+                    style: Theme.of(context).textTheme.headline6,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
 
@@ -297,49 +315,53 @@ class _ChapterScreenState extends State<ChapterScreen> {
       bottom: 0,
       left: 0,
       right: 0,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: _isVisible ? 60.0 : 0.0,
-        child: Container(
-          color: Colors.white60,
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _isHasPrev && (state is ChapterImageFetchSuccess)
-                  ? MaterialButton(
-                      onPressed: _prevAction,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.chevron_left),
-                          const SizedBox(width: 3.0),
-                          Text(
-                            'Previous',
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ],
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              _isHasNext && (state is ChapterImageFetchSuccess)
-                  ? MaterialButton(
-                      onPressed: _nextAction,
-                      child: Row(
-                        children: [
-                          Text(
-                            'Next',
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                          const SizedBox(width: 3.0),
-                          const Icon(Icons.chevron_right),
-                        ],
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ],
-          ),
-        ),
-      ),
+      child: ValueListenableBuilder<bool>(
+          valueListenable: _visibleNotifier,
+          builder: (context, isVisible, child) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: isVisible ? 60.0 : 0.0,
+              child: Container(
+                color: Colors.white60,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _isHasPrev && (state is ChapterImageFetchSuccess)
+                        ? MaterialButton(
+                            onPressed: _prevAction,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.chevron_left),
+                                const SizedBox(width: 3.0),
+                                Text(
+                                  'Previous',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                    _isHasNext && (state is ChapterImageFetchSuccess)
+                        ? MaterialButton(
+                            onPressed: _nextAction,
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Next',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                const SizedBox(width: 3.0),
+                                const Icon(Icons.chevron_right),
+                              ],
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 }
