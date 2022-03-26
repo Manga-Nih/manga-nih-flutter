@@ -51,6 +51,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ));
   }
 
+  void _donationAction() {
+    Get.to(() => const DonationScreen());
+  }
+
   void _logoutAction() async {
     showDialog(
       context: context,
@@ -271,6 +275,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           label: 'Feedback',
           icon: Icons.report_problem,
           onPressed: _feedbackAction,
+        ),
+        const SizedBox(height: 10.0),
+        ProfileButton(
+          label: 'Donation',
+          icon: Icons.bakery_dining_outlined,
+          onPressed: _donationAction,
         ),
       ],
     );

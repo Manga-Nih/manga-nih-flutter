@@ -16,3 +16,4 @@ export 'auth/reset_password_screen.dart';
 export 'profile/profile_screen.dart';
 export 'profile/edit_profile_screen.dart';
 export 'profile/feedback_screen.dart';
+export 'profile/donation_screen.dart';
