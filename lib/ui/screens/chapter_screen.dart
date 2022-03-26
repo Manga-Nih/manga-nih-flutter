@@ -32,9 +32,12 @@ class ChapterScreen extends StatefulWidget {
 
 class _ChapterScreenState extends State<ChapterScreen> {
   final ValueNotifier<bool> _visibleNotifier = ValueNotifier(true);
+  final ValueNotifier<int> _itemLengthNotifier = ValueNotifier(4);
   final ScrollController _scrollController = ScrollController();
   final TransformationController _transformationController =
       TransformationController();
+  final int _itemLength = 2;
+  final double _threshold = 250;
   late DetailMangaBloc _detailMangaBloc;
   late ChapterImageBloc _chapterImageBloc;
   late HistoryMangaBloc _historyMangaBloc;
@@ -45,6 +48,7 @@ class _ChapterScreenState extends State<ChapterScreen> {
   late bool _isHasPrev;
   late bool _isHasNext;
   late bool _isZoomed;
+  bool _isImageLoading = true;
 
   @override
   void initState() {
@@ -79,11 +83,25 @@ class _ChapterScreenState extends State<ChapterScreen> {
         _chapterImageBloc
             .add(ChapterImageFetch(endpoint: _curChapter.endpoint));
       }
+
+      _registerListener(chapterImageState);
     } else {
       // fetch data image
       _chapterImageBloc.add(ChapterImageFetch(endpoint: _curChapter.endpoint));
     }
 
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _transformationController.dispose();
+
+    super.dispose();
+  }
+
+  void _registerListener(ChapterImageFetchSuccess state) {
     // set controller to handle visibility app bar and bottom bar
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
@@ -95,22 +113,24 @@ class _ChapterScreenState extends State<ChapterScreen> {
           ScrollDirection.forward) {
         _visibleNotifier.value = true;
       }
+
+      if (!_isImageLoading) {
+        // handle dynamic item length
+        int imagesLength = state.chapterDetail.images.length;
+        int newItemLength = _itemLengthNotifier.value + _itemLength;
+
+        // if user scroll to base on threshold
+        if (_scrollController.offset > _threshold * _itemLengthNotifier.value) {
+          _itemLengthNotifier.value =
+              newItemLength > imagesLength ? imagesLength : newItemLength;
+        }
+      }
     });
 
     _transformationController.addListener(() {
       double scale = _transformationController.value.entry(0, 0);
       _isZoomed = scale != 1.0;
     });
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _transformationController.dispose();
-
-    super.dispose();
   }
 
   void _isHavePrevNextChapter() {
@@ -142,24 +162,6 @@ class _ChapterScreenState extends State<ChapterScreen> {
       lastChapter: _curChapter,
     );
     _historyMangaBloc.add(HistoryMangaAdd(historyManga: historyManga));
-  }
-
-  void _chapterChangeListener(BuildContext context, ChapterImageState state) {
-    // update chapter when prev or next
-    if (state is ChapterImageFetchSuccess) {
-      // check if _curChapter don't equal, to avoid re build prev and next chapter
-      if (_curChapter.endpoint != state.chapterDetail.endpoint) {
-        // get title from detail manga list chapter
-        Chapter chapter = _curManga!.chapters
-            .where(
-                (element) => element.endpoint == state.chapterDetail.endpoint)
-            .first;
-
-        _curChapter = chapter;
-        _isHavePrevNextChapter();
-        _addHistory();
-      }
-    }
   }
 
   void _prevAction() {
@@ -206,20 +208,42 @@ class _ChapterScreenState extends State<ChapterScreen> {
     }
   }
 
+  void _detailMangaListener(BuildContext context, DetailMangaState state) {
+    // fetch data if from ListFavoriteHistoryManga
+    if (state is DetailMangaFetchSuccess) {
+      _curManga = state.mangaDetail;
+      _isHavePrevNextChapter();
+    }
+  }
+
+  void _chapterListener(BuildContext context, ChapterImageState state) {
+    // update chapter when prev or next
+    if (state is ChapterImageFetchSuccess) {
+      // check if _curChapter don't equal, to avoid re build prev and next chapter
+      if (_curChapter.endpoint != state.chapterDetail.endpoint) {
+        // get title from detail manga list chapter
+        Chapter chapter = _curManga!.chapters
+            .where(
+                (element) => element.endpoint == state.chapterDetail.endpoint)
+            .first;
+
+        _curChapter = chapter;
+        _isHavePrevNextChapter();
+        _addHistory();
+      }
+
+      _registerListener(state);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: BlocListener<DetailMangaBloc, DetailMangaState>(
-          listener: (context, state) {
-            // fetch data if from ListFavoriteHistoryManga
-            if (state is DetailMangaFetchSuccess) {
-              _curManga = state.mangaDetail;
-              _isHavePrevNextChapter();
-            }
-          },
+          listener: _detailMangaListener,
           child: BlocConsumer<ChapterImageBloc, ChapterImageState>(
-            listener: _chapterChangeListener,
+            listener: _chapterListener,
             builder: (context, state) {
               return Stack(
                 children: [
@@ -252,41 +276,57 @@ class _ChapterScreenState extends State<ChapterScreen> {
   }
 
   Widget _buildChapters(ChapterImageState state) {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: (state is ChapterImageFetchSuccess)
-          ? state.chapterDetail.images.length
-          : 1,
-      itemBuilder: (context, index) {
-        if (state is ChapterImageFetchSuccess) {
-          List<ChapterImage> images = state.chapterDetail.images;
+    return ValueListenableBuilder<int>(
+        valueListenable: _itemLengthNotifier,
+        builder: (context, itemCount, child) {
+          return ListView.builder(
+            controller: _scrollController,
+            itemCount: (state is ChapterImageFetchSuccess)
+                // ? state.chapterDetail.images.length
+                ? itemCount
+                : 1,
+            itemBuilder: (context, index) {
+              if (state is ChapterImageFetchSuccess) {
+                List<ChapterImage> images = state.chapterDetail.images;
 
-          return CachedNetworkImage(
-            fit: BoxFit.fill,
-            imageUrl: images[index].image,
-            placeholder: (context, url) => Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(5.0),
-                  child: const CircularProgressIndicator(),
-                )
-              ],
-            ),
+                return CachedNetworkImage(
+                  fit: BoxFit.fill,
+                  imageUrl: images[index].image,
+                  imageBuilder: (context, provider) {
+                    _isImageLoading = false;
+
+                    return Image(image: provider);
+                  },
+                  progressIndicatorBuilder: (context, url, progress) {
+                    _isImageLoading = true;
+
+                    return Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(5.0),
+                          child: CircularProgressIndicator(
+                            value: progress.progress,
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                );
+              }
+
+              return Wrap(
+                alignment: WrapAlignment.center,
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: CircularProgressIndicator(),
+                  )
+                ],
+              );
+            },
           );
-        }
-
-        return Wrap(
-          alignment: WrapAlignment.center,
-          children: const [
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: CircularProgressIndicator(),
-            )
-          ],
-        );
-      },
-    );
+        });
   }
 
   Widget _buildHeader(ChapterImageState state) {
